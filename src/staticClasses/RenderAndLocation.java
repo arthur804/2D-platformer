@@ -232,9 +232,9 @@ public class RenderAndLocation {
 						continue;
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 						if (yIsBigger)
-							movingObject.touchingX(-small+1, staticObjects[ii].type);
+							movingObject.touchingX(-small+2, staticObjects[ii].type);
 						else
-							movingObject.touchingX(-big+1, staticObjects[ii].type);
+							movingObject.touchingX(-big+2, staticObjects[ii].type);
 					
 						movingObject.touchingLeft = true;
 						
