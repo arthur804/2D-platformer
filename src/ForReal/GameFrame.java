@@ -30,6 +30,9 @@ public class GameFrame extends JPanel{
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 					System.exit(0);
+//				else if (e.getKeyChar() == (' ')){
+//					p.derp();
+//				}
 				else
 					p.move(e.getKeyChar());
 			}
@@ -52,6 +55,10 @@ public class GameFrame extends JPanel{
 			update();
 		});
 		time.start();
+	}
+	private void derp(){
+		repaint();
+		update();
 	}
 
 	@Override

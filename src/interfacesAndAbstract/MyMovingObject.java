@@ -16,7 +16,9 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt{
 	public Rectangle nextTangleOnlyY(int i) {
 		return new Rectangle(myRectangle.x, myRectangle.y + i, myRectangle.width, myRectangle.height);
 	}
-	
+	public Rectangle nextTangleOnlyX(int i) {
+		return new Rectangle(myRectangle.x + i, myRectangle.y, myRectangle.width, myRectangle.height);
+	}
 	public Rectangle nextTangle(int nextX, int nextY) {
 		return new Rectangle(myRectangle.x + nextX, myRectangle.y + nextY, myRectangle.width, myRectangle.height);
 	}
@@ -24,15 +26,15 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt{
 	public void touchingX(int x, char c) {
 		touching[0] = c;
 		vector[0] = 0;
+		//TODO
 		myRectangle.x = myRectangle.x + x;
-		myRectangle.setLocation(myRectangle.x, myRectangle.y);
 	}
 	
 	public void touchingY(int y, char c) {
 		touching[1] = c;
 		vector[1] = 0;
+		//TODO
 		myRectangle.y = myRectangle.y + y;
-		myRectangle.setLocation(myRectangle.x, myRectangle.y);
 	}
 		
 	public void reTrue(){
@@ -47,4 +49,6 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt{
 		calcNextX();
 		calcNextY();
 	}
+
+	
 }

@@ -15,15 +15,20 @@ public class MyPlayer extends MyMovingObject {
 	private int slowdownSpeed;
 	private int speed;
 	
+	private boolean lookingRight = true;
+	
+	private boolean wallJumpalbe = false;
+	
+	private int slowCalcWalk = 0;
 
-	private int maxJumpVector = 5;
+	private int maxJumpVector = 5;//TODO 5
 	private int grafity = 0;
 	private int walky = 0;
 	
 	public MyPlayer(Point rec) {
 		super(new Rectangle(rec, new Dimension(16,16)), 'p');
 		this.slowdownSpeed = 1;
-		this.maxSpeed = 3;
+		this.maxSpeed = 6;
 	}
 
 	private int grafityCalc() {
@@ -35,10 +40,20 @@ public class MyPlayer extends MyMovingObject {
 	}
 	
 	private int walkCalc() {
-		walky++;
+		//TODO
+		walky += 2;
 		int vecPlus = Formulas.walkingSpeed(walky);
 		if (vecPlus != 0)
 			walky = 0;
+		return vecPlus;
+	}
+	
+	private int slowWalkCalc(){
+		//TODO
+		slowCalcWalk++;
+		int vecPlus = Formulas.walkingSpeed(slowCalcWalk);
+		if (vecPlus != 0)
+			slowCalcWalk = 0;
 		return vecPlus;
 	}
 	
@@ -50,30 +65,47 @@ public class MyPlayer extends MyMovingObject {
 
 	/** plz dont use */
 	public void calcNextX() {
-		speed = walkCalc();
+		int speed = walkCalc();
+		int slowSpeed = slowWalkCalc();
+		
+//		if (touchingRight && !touchingDown && up)
+//			wallJump((byte)-1);
+//		else if (touchingLeft && !touchingDown && up)
+//			wallJump((byte)1);
+		
+//		if ((touchingLeft || touchingRight) && !touchingDown && !up)
+//			wallJumpalbe = true;
+		
+//		if (touchingLeft)
+//		System.out.println(touchingLeft);
+		
 		if (vector[0] > 0) {
-			if (left && !right && !touchingLeft) {
+			if (left){
 				vector[0] -= speed;
-			} else if (!left && right && !touchingRight) {
+				lookingRight = false;
+			}else if (right)
 				vector[0] += speed;
-			} else if (!touchingRight){
-				vector[0] -= slowdownSpeed;
-			}
+			else
+				vector[0] -= slowSpeed;
+
+			
 		} else if (vector[0] < 0) {
-			if (left && !right && !touchingLeft) {
+			if (left)
 				vector[0] -= speed;
-			} else if (!left && right && !touchingRight) {
+			else if (right){
 				vector[0] += speed;
-			} else if (!touchingLeft){
-				vector[0] += slowdownSpeed;
-			}
+				lookingRight = true;
+			}else
+				vector[0] += slowSpeed;
 			
 		} else {
-			if (!left && right && !touchingRight)
+			if (!left && right){
 				vector[0] += speed;
-			else if (left && !right && !touchingLeft)
+				lookingRight = true;
+			}else if (left && !right){
 				vector[0] -= speed;
-			
+				lookingRight = false;
+			}
 		}
 		if (vector[0] < -this.maxSpeed)
 			vector[0] = -this.maxSpeed;
@@ -87,14 +119,18 @@ public class MyPlayer extends MyMovingObject {
 			return 0;
 		return vector[1];
 	}
+	
+	public void specialAction(char c){
+		//TODO als ik iets dodelijks aan raak dan moet dat hier gevonden worden
+	}
 
 	/** plz dont use */
 	public void calcNextY() {
-		
+		int speed = grafityCalc();
 		if (!touchingDown) {
-			vector[1] += grafityCalc();
+			vector[1] += speed;
 			// going Down
-		} else if (up&&!touchingUp) {
+		} else if (up) {
 			jump();
 			// going Up
 		}
@@ -108,6 +144,16 @@ public class MyPlayer extends MyMovingObject {
 
 	public void jump() {
 		vector[1] = -maxJumpVector;
+		grafity = 0;// omdat anders de sprong hoogte verschilt
+		wallJumpalbe = false;
+	}
+	
+	private void wallJump(byte n){
+		if (!wallJumpalbe)
+			return;
+		vector[1] = -(maxJumpVector/2);
+		vector[0] = n*maxSpeed;
+		wallJumpalbe = false;
 	}
 
 	public void draw(Graphics2D g) {
@@ -120,16 +166,20 @@ public class MyPlayer extends MyMovingObject {
 		return new int[] { 0, 0 };
 	}
 
-	public boolean canJump() {
-		// TODO
-		return false;
-	}
-
 	public void controls(boolean[] keysPressed) {
 		left = keysPressed[0];
 		up = keysPressed[1];
 		right = keysPressed[3];
 		down = keysPressed[2];
 	}
+	
+//	@Override
+//	public void reTrue(){
+//		if (!(touchingLeft && left))
+//			touchingLeft = false;
+//		if (!(touchingRight && right))
+//			touchingRight = false;
+//		touchingUp = touchingDown = false;
+//	}
 
 }

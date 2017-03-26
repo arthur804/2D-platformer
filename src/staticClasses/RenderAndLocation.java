@@ -10,9 +10,8 @@ public class RenderAndLocation {
 	private RenderAndLocation() {
 	}
 
-	public static boolean isObjectInSight(GameObject object, int beginX, int beginY, int endX, int endY) {
+	public static boolean isObjectInSight(Rectangle shape, int beginX, int beginY, int endX, int endY) {
 
-		Rectangle shape = object.myRectangle;
 		boolean seen = false;
 		if (shape.x < endX && shape.y < endY) {
 			if (shape.x < beginX) {
@@ -39,14 +38,9 @@ public class RenderAndLocation {
 	// ---------------- seen
 
 	/**
-	 * returns true if points are on top of this wall THIS TAKES THE POINT AT
-	 * THE LEFT BOTTOM
-	 */
-
-	/**
 	 * 0 top 1 left 2 down 3 right
 	 */
-	public static boolean wallTester(Rectangle shapeMoving, Rectangle shape, byte choice) {
+	private static boolean wallTester(Rectangle shapeMoving, Rectangle shape, byte choice) {
 
 		switch (choice) {
 		default:
@@ -116,7 +110,6 @@ public class RenderAndLocation {
 			/* Up and left */
 			if (nextX < 0){
 				calcLeftRight(movingObject, nextX, nextY, true, true, staticObjects);
-				
 			}
 			/* Up and right */
 			else if (nextX > 0){
@@ -173,9 +166,6 @@ public class RenderAndLocation {
 		if (positiveX < positiveY) {
 //			amountTest = (int) positiveY;
 //			divY = 1;
-			byte numb = 1;
-			if (nextX < 0)
-				numb = -1;
 //			divX = (positiveX / positiveY) * numb;
 			biggest = positiveY;
 			smallest = positiveX;
@@ -183,42 +173,47 @@ public class RenderAndLocation {
 		} else {
 //			amountTest = (int) positiveX;
 //			divX = 1;
-			byte numb = 1;
-			if (nextY < 0)
-				numb = -1;
 			biggest = positiveX;
 			smallest = positiveY;
 //			divY = (positiveY / positiveX) * numb;
 			yIsBigger = false;
 		}
 
-		for (int big = 0; big <= biggest; big++) 
-			for (int small = 0; small <= smallest; small++) {
+//		if (biggest == smallest)
+//			smallest = 1;
+//		else if (smallest != 0)
+//			smallest = biggest/smallest+1;
+		for (int big = 0; big <= biggest + 1; big++) 
+			for (int small = 0; small <= smallest + 1; small++) {
 			// if (movingObject.touchingRight || movingObject.touchingLeft)
 			// break;
 			
 			Rectangle tangle;
 			
 			if (yIsBigger)
-				tangle = movingObject.nextTangle(small, big);
+				tangle = nextTangle(movingObject, small, big, goingUp, goingLeft);
 			else
-				tangle = movingObject.nextTangle(big, small);
+				tangle = nextTangle(movingObject, big, small, goingUp, goingLeft);
 			if (!movingObject.touchingUp && !movingObject.touchingDown) {
-				if (goingUp)
+				if (goingUp && !movingObject.touchingUp)
 					for (int ii = 0; ii < staticObjects.length; ii++) {
+						if (!staticObjects[ii].seen)
+							continue;
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 0)) {
 
 							if (yIsBigger)
-								movingObject.touchingY(big, staticObjects[ii].type);
+								movingObject.touchingY(-big, staticObjects[ii].type);
 							else
-								movingObject.touchingY(small, staticObjects[ii].type);
+								movingObject.touchingY(-small, staticObjects[ii].type);
 							movingObject.touchingUp = true;
 
 							break;
 						}
 					}
-				else
+				else if (!movingObject.touchingDown)
 					for (int ii = 0; ii < staticObjects.length; ii++) {
+						if (!staticObjects[ii].seen)
+							continue;
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 2)) {
 
 							movingObject.touchingDown = true;
@@ -231,36 +226,49 @@ public class RenderAndLocation {
 						}
 					}
 			}
-			if (goingLeft)
+			if (goingLeft && !movingObject.touchingLeft)
 				for (int ii = 0; ii < staticObjects.length; ii++) {
+					if (!staticObjects[ii].seen)
+						continue;
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 						if (yIsBigger)
-							movingObject.touchingX(small, staticObjects[ii].type);
+							movingObject.touchingX(-small+1, staticObjects[ii].type);
 						else
-							movingObject.touchingX(big, staticObjects[ii].type);
+							movingObject.touchingX(-big+1, staticObjects[ii].type);
 					
 						movingObject.touchingLeft = true;
-
+						
 						break;
 					}
 				}
-			else // goingRight
+			else if (!movingObject.touchingRight)
 				for (int ii = 0; ii < staticObjects.length; ii++) {
+					if (!staticObjects[ii].seen)
+						continue;
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
 
 						movingObject.touchingRight = true;
 						if (yIsBigger)
-							movingObject.touchingX(small, staticObjects[ii].type);
+							movingObject.touchingX(small-1, staticObjects[ii].type);
 						else
-							movingObject.touchingX(big, staticObjects[ii].type);
-
+							movingObject.touchingX(big-1, staticObjects[ii].type);
+ 
 						break;
 					}
 				}
-			if (movingObject.touchingRight || movingObject.touchingLeft && movingObject.touchingDown || movingObject.touchingUp)
-				//System.exit(0);
+			if ((movingObject.touchingRight || movingObject.touchingLeft) && (movingObject.touchingDown || movingObject.touchingUp)){
+				System.out.println(true);
 				break;
+			}
 		}
+	}
+
+	private static Rectangle nextTangle(MyMovingObject movingObject, int x, int y, boolean goingUp, boolean goingLeft) {
+		if (goingUp)
+			y = -y;
+		if (goingLeft)
+			x = -x;
+		return movingObject.nextTangle(x, y);
 	}
 
 	private static void calcUpDown(GameObject[] staticObjects, MyMovingObject movingObject, int nextY,
@@ -273,22 +281,25 @@ public class RenderAndLocation {
 			choice = 2;
 		int amountTest;
 		byte pos = 1;
-		if (nextY < 0) {
+		if (goingUp) {
 			amountTest = (int) -nextY;
 			pos = (byte) -pos;
 		} else
 			amountTest = (int) nextY;
 		int awnser = -1;
 		out: for (int i = 0; i <= amountTest; i++) {
-			for (int ii = 0; ii < staticObjects.length; ii++)
+			for (int ii = 0; ii < staticObjects.length; ii++){
+				if (!staticObjects[ii].seen)
+					continue;
 				if (wallTester(movingObject.nextTangleOnlyY(i * pos), staticObjects[ii].myRectangle, (byte) choice)) {
 					awnser = ii;
-					if (nextY < 0)
+					if (goingUp)
 						nextY = -i;
 					else
 						nextY = i;
 					break out;
 				}
+			}
 		}
 		if (awnser != -1) {
 			if (goingUp) {
@@ -300,5 +311,5 @@ public class RenderAndLocation {
 		}
 
 	}
-
+	
 }
