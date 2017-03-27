@@ -183,8 +183,8 @@ public class RenderAndLocation {
 //			smallest = 1;
 //		else if (smallest != 0)
 //			smallest = biggest/smallest+1;
-		for (int big = 0; big <= biggest + 1; big++) 
-			for (int small = 0; small <= smallest + 1; small++) {
+		for (int big = 0; big <= biggest; big++) 
+			for (int small = 0; small <= smallest; small++) {
 			// if (movingObject.touchingRight || movingObject.touchingLeft)
 			// break;
 			
@@ -210,7 +210,7 @@ public class RenderAndLocation {
 							break;
 						}
 					}
-				else if (!movingObject.touchingDown)
+				else if (!goingUp && !movingObject.touchingDown)
 					for (int ii = 0; ii < staticObjects.length; ii++) {
 						if (!staticObjects[ii].seen)
 							continue;
@@ -230,18 +230,20 @@ public class RenderAndLocation {
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
+					//TODO
+					//System.out.println(false);
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 						if (yIsBigger)
-							movingObject.touchingX(-small+2, staticObjects[ii].type);
+							movingObject.touchingX(-small+1, staticObjects[ii].type);
 						else
-							movingObject.touchingX(-big+2, staticObjects[ii].type);
-					
+							movingObject.touchingX(-big+1, staticObjects[ii].type);
+						//System.out.println(true);
 						movingObject.touchingLeft = true;
 						
 						break;
 					}
 				}
-			else if (!movingObject.touchingRight)
+			else if (!goingLeft && !movingObject.touchingRight)//TODO right bool
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
@@ -249,15 +251,14 @@ public class RenderAndLocation {
 
 						movingObject.touchingRight = true;
 						if (yIsBigger)
-							movingObject.touchingX(small-1, staticObjects[ii].type);
+							movingObject.touchingX(small, staticObjects[ii].type);
 						else
-							movingObject.touchingX(big-1, staticObjects[ii].type);
+							movingObject.touchingX(big, staticObjects[ii].type);
  
 						break;
 					}
 				}
 			if ((movingObject.touchingRight || movingObject.touchingLeft) && (movingObject.touchingDown || movingObject.touchingUp)){
-				System.out.println(true);
 				break;
 			}
 		}

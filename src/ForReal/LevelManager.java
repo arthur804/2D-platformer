@@ -24,5 +24,12 @@ public class LevelManager {
 	
 	public void controls(boolean[] keysPressed){
 		lvl2.controls(keysPressed);
+		if (keysPressed[7]){
+			restartLevel();
+		}
+	}
+	
+	public void restartLevel(){
+		lvl2.restartMoi();
 	}
 }

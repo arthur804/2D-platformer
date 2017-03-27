@@ -13,9 +13,10 @@ import javax.swing.Timer;
 public class GameFrame extends JPanel{
 
 	private static final long serialVersionUID = 1042398314087468935L;
-	private boolean[] keysB = new boolean[7];
+	
 	private Timer time;
-	private char[] keysC = new char[] { 'a', 'w', 's', 'd', 'j', 'k', 'l' };
+	private char[] keysC = new char[] { 'a', 'w', 's', 'd', 'j', 'k', 'l' , 'r'};
+	private boolean[] keysB = new boolean[keysC.length];
 	private LevelManager theMan;
 	
 	public static void main(String[] args){
@@ -73,7 +74,7 @@ public class GameFrame extends JPanel{
 	}
 	
 	public void move(char key) {
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < keysC.length; i++)
 			if (key == keysC[i]){
 				keysB[i] = true;
 				break;
@@ -81,7 +82,7 @@ public class GameFrame extends JPanel{
 		theMan.controls(keysB);
 	}
 	public void stopMove(int key) {
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < keysC.length; i++)
 			if (key == keysC[i]){
 				keysB[i] = false;
 				break;

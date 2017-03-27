@@ -61,4 +61,10 @@ public abstract class BasicLevel {
 		//TODO camera
 	}
 
+	public void restartMoi() {
+		// TODO 
+		pl = new MyPlayer(new Point(50,500));
+		System.out.println(true);
+	}
+
 }

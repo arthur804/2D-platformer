@@ -14,7 +14,7 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	public int maxSpeed;
 	public char[] touching = new char[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
-	public final int INCRESE = 100;
+	public final int INCREASE = 100;
 	// public final int AMOUNTZERO = 2;
 
 	/**
@@ -22,8 +22,8 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	 */
 	public MyMovingObject(char t, Rectangle bounds) {
 		super(bounds, t);
-		absoluteLocation[0] = bounds.x * INCRESE;
-		absoluteLocation[1] = bounds.y * INCRESE;
+		absoluteLocation[0] = bounds.x * INCREASE;
+		absoluteLocation[1] = bounds.y * INCREASE;
 	}
 
 	// public Rectangle nextTangleOnlyX(int i) {
@@ -43,14 +43,14 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		touching[0] = c;
 		vector[0] = 0;
 		// TODO
-		absoluteLocation[0] = (absoluteLocation[0] / INCRESE * INCRESE) + x * INCRESE;
+		absoluteLocation[0] = (absoluteLocation[0] / INCREASE * INCREASE) + x * INCREASE;
 	}
 
 	public void touchingY(int y, char c) {
 		touching[1] = c;
 		vector[1] = 0;
 		// TODO
-		absoluteLocation[1] = (absoluteLocation[1] / INCRESE * INCRESE) + y * INCRESE;
+		absoluteLocation[1] = (absoluteLocation[1] / INCREASE * INCREASE) + y * INCREASE;
 	}
 
 	public void reTrue() {
@@ -60,7 +60,7 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	public void update() {
 		absoluteLocation[0] += vector[0];
 		absoluteLocation[1] += vector[1];
-		myRectangle.setLocation(absoluteLocation[0] / INCRESE, absoluteLocation[1] / INCRESE);
+		myRectangle.setLocation(absoluteLocation[0] / INCREASE, absoluteLocation[1] / INCREASE);
 	}
 
 	public void preUpdate() {

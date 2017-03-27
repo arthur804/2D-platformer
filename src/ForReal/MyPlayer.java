@@ -63,12 +63,12 @@ public class MyPlayer extends MyMovingObject {
 	public int nextX() {
 		if ((touchingLeft && vector[0] < 0) || (touchingRight && vector[0] > 0))
 			return 0;
-		return vector[0]/INCRESE;
+		return (absoluteLocation[0]%INCREASE+vector[0])/INCREASE;
 	}
 
 	/** plz dont use */
 	public void calcNextX() {
-		int speed = 30;
+		int speed = 80;
 		int slowSpeed = 10;
 				
 		if (vector[0] > 0) {
@@ -104,13 +104,14 @@ public class MyPlayer extends MyMovingObject {
 
 		if (vector[0] > this.maxSpeed)
 			vector[0] = this.maxSpeed;
-		System.out.println(vector[0]);
+		
+		
 	}
 
 	public int nextY() {
 		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
 			return 0;
-		return vector[1]/INCRESE;
+		return (absoluteLocation[1]%INCREASE+vector[1])/INCREASE;
 	}
 	
 	public void specialAction(char c){
