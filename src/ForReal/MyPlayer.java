@@ -63,12 +63,22 @@ public class MyPlayer extends MyMovingObject {
 	public int nextX() {
 		if ((touchingLeft && vector[0] < 0) || (touchingRight && vector[0] > 0))
 			return 0;
-		return (absoluteLocation[0]%INCREASE+vector[0])/INCREASE;
+		return calc(0);
 	}
-
+	public int nextY() {
+		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
+			return 0;
+		return calc(1);
+	}
+	private int calc(int i){
+		if (absoluteLocation[i] < 0)
+			return (-absoluteLocation[i]%INCREASE+vector[i])/INCREASE;
+		else
+			return (absoluteLocation[i]%INCREASE+vector[i])/INCREASE;
+	}
 	/** plz dont use */
 	public void calcNextX() {
-		int speed = 80;
+		int speed = 30;
 		int slowSpeed = 10;
 				
 		if (vector[0] > 0) {
@@ -108,11 +118,6 @@ public class MyPlayer extends MyMovingObject {
 		
 	}
 
-	public int nextY() {
-		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
-			return 0;
-		return (absoluteLocation[1]%INCREASE+vector[1])/INCREASE;
-	}
 	
 	public void specialAction(char c){
 		//TODO als ik iets dodelijks aan raak dan moet dat hier gevonden worden

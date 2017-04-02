@@ -226,24 +226,23 @@ public class RenderAndLocation {
 						}
 					}
 			}
-			if (goingLeft && !movingObject.touchingLeft)
+			if (goingLeft && !movingObject.touchingLeft){
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
-					//TODO
-					//System.out.println(false);
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 						if (yIsBigger)
-							movingObject.touchingX(-small+1, staticObjects[ii].type);
+							movingObject.touchingX(-small + 5, staticObjects[ii].type);
 						else
-							movingObject.touchingX(-big+1, staticObjects[ii].type);
+							movingObject.touchingX(-big + 5, staticObjects[ii].type);
 						//System.out.println(true);
 						movingObject.touchingLeft = true;
 						
 						break;
 					}
 				}
-			else if (!goingLeft && !movingObject.touchingRight)//TODO right bool
+			}
+			else if (!goingLeft && !movingObject.touchingRight){
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
@@ -251,13 +250,14 @@ public class RenderAndLocation {
 
 						movingObject.touchingRight = true;
 						if (yIsBigger)
-							movingObject.touchingX(small, staticObjects[ii].type);
+							movingObject.touchingX(small - 1, staticObjects[ii].type);
 						else
-							movingObject.touchingX(big, staticObjects[ii].type);
+							movingObject.touchingX(big - 1, staticObjects[ii].type);
  
 						break;
 					}
 				}
+			}
 			if ((movingObject.touchingRight || movingObject.touchingLeft) && (movingObject.touchingDown || movingObject.touchingUp)){
 				break;
 			}

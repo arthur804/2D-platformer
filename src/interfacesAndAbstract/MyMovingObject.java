@@ -43,14 +43,14 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		touching[0] = c;
 		vector[0] = 0;
 		// TODO
-		absoluteLocation[0] = (absoluteLocation[0] / INCREASE * INCREASE) + x * INCREASE;
+		absoluteLocation[0] = absoluteLocation[0]+ x * INCREASE;
 	}
 
 	public void touchingY(int y, char c) {
 		touching[1] = c;
 		vector[1] = 0;
 		// TODO
-		absoluteLocation[1] = (absoluteLocation[1] / INCREASE * INCREASE) + y * INCREASE;
+		absoluteLocation[1] = absoluteLocation[1] + y * INCREASE;
 	}
 
 	public void reTrue() {
