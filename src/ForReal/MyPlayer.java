@@ -61,13 +61,13 @@ public class MyPlayer extends MyMovingObject {
 //	}
 	
 	public int nextX() {
-		if ((touchingLeft && vector[0] < 0) || (touchingRight && vector[0] > 0))
-			return 0;
+//		if ((touchingLeft && vector[0] < 0) || (touchingRight && vector[0] > 0))
+//			return 0;
 		return calc(0);
 	}
 	public int nextY() {
-		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
-			return 0;
+//		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
+//			return 0;
 		return calc(1);
 	}
 	private int calc(int i){

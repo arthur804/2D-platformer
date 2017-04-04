@@ -39,11 +39,15 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		return new Rectangle(myRectangle.x + nextX, myRectangle.y + nextY, myRectangle.width, myRectangle.height);
 	}
 
-	public void touchingX(int x, char c) {
+	public void touchingX(int x, char c, boolean goingLeft) {
 		touching[0] = c;
 		vector[0] = 0;
 		// TODO
-		absoluteLocation[0] = absoluteLocation[0]+ x * INCREASE;
+//		System.out.println((-absoluteLocation[0])%INCREASE);
+		if (goingLeft)
+			absoluteLocation[0] = absoluteLocation[0]+(-absoluteLocation[0])%INCREASE+ x * INCREASE;
+		else
+			absoluteLocation[0] = absoluteLocation[0]-(absoluteLocation[0]%INCREASE)+ x * INCREASE;
 	}
 
 	public void touchingY(int y, char c) {

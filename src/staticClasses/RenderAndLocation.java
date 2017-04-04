@@ -230,13 +230,13 @@ public class RenderAndLocation {
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
+						movingObject.touchingLeft = true;
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 						if (yIsBigger)
-							movingObject.touchingX(-small + 5, staticObjects[ii].type);
+							movingObject.touchingX(-small, staticObjects[ii].type, goingLeft);
 						else
-							movingObject.touchingX(-big + 5, staticObjects[ii].type);
+							movingObject.touchingX(-big, staticObjects[ii].type, goingLeft);
 						//System.out.println(true);
-						movingObject.touchingLeft = true;
 						
 						break;
 					}
@@ -250,9 +250,9 @@ public class RenderAndLocation {
 
 						movingObject.touchingRight = true;
 						if (yIsBigger)
-							movingObject.touchingX(small - 1, staticObjects[ii].type);
+							movingObject.touchingX(small, staticObjects[ii].type, goingLeft);
 						else
-							movingObject.touchingX(big - 1, staticObjects[ii].type);
+							movingObject.touchingX(big, staticObjects[ii].type, goingLeft);
  
 						break;
 					}
