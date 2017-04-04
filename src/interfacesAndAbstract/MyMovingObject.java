@@ -43,11 +43,13 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		touching[0] = c;
 		vector[0] = 0;
 		// TODO
-//		System.out.println((-absoluteLocation[0])%INCREASE);
+//		System.out.println( "xx -" + (INCREASE - (absoluteLocation[0]%INCREASE)));
 		if (goingLeft)
-			absoluteLocation[0] = absoluteLocation[0]+(-absoluteLocation[0])%INCREASE+ x * INCREASE;
+			absoluteLocation[0] = absoluteLocation[0] - (absoluteLocation[0]%INCREASE) + (x	) * INCREASE;
 		else
 			absoluteLocation[0] = absoluteLocation[0]-(absoluteLocation[0]%INCREASE)+ x * INCREASE;
+
+		System.out.println(absoluteLocation[0]);
 	}
 
 	public void touchingY(int y, char c) {

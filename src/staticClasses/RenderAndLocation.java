@@ -200,12 +200,11 @@ public class RenderAndLocation {
 						if (!staticObjects[ii].seen)
 							continue;
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 0)) {
-
+							movingObject.touchingUp = true;
 							if (yIsBigger)
 								movingObject.touchingY(-big, staticObjects[ii].type);
 							else
 								movingObject.touchingY(-small, staticObjects[ii].type);
-							movingObject.touchingUp = true;
 
 							break;
 						}
@@ -215,7 +214,6 @@ public class RenderAndLocation {
 						if (!staticObjects[ii].seen)
 							continue;
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 2)) {
-
 							movingObject.touchingDown = true;
 							if (yIsBigger)
 								movingObject.touchingY(big, staticObjects[ii].type);
@@ -230,14 +228,16 @@ public class RenderAndLocation {
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
-						movingObject.touchingLeft = true;
-					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
-						if (yIsBigger)
-							movingObject.touchingX(-small, staticObjects[ii].type, goingLeft);
-						else
-							movingObject.touchingX(-big, staticObjects[ii].type, goingLeft);
-						//System.out.println(true);
 						
+					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
+						movingObject.touchingLeft = true;
+
+						System.out.println(tangle);
+						if (yIsBigger){
+							movingObject.touchingX(-small, staticObjects[ii].type, goingLeft);
+						}else{
+							movingObject.touchingX(-big, staticObjects[ii].type, goingLeft);
+						}
 						break;
 					}
 				}
@@ -246,14 +246,13 @@ public class RenderAndLocation {
 				for (int ii = 0; ii < staticObjects.length; ii++) {
 					if (!staticObjects[ii].seen)
 						continue;
+					
 					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
-
 						movingObject.touchingRight = true;
 						if (yIsBigger)
 							movingObject.touchingX(small, staticObjects[ii].type, goingLeft);
 						else
-							movingObject.touchingX(big, staticObjects[ii].type, goingLeft);
- 
+							movingObject.touchingX(big, staticObjects[ii].type, goingLeft); 
 						break;
 					}
 				}
