@@ -1,6 +1,7 @@
 package staticClasses;
 
 import java.awt.Rectangle;
+import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
@@ -135,7 +136,6 @@ public class RenderAndLocation {
 			else{
 				calcUpDown(staticObjects, movingObject, nextY, false);
 			}
-
 		}
 	}
 	// private static void calcTheX(ArrayList<GameObject> staticObjects,
@@ -178,15 +178,8 @@ public class RenderAndLocation {
 //			divY = (positiveY / positiveX) * numb;
 			yIsBigger = false;
 		}
-
-//		if (biggest == smallest)
-//			smallest = 1;
-//		else if (smallest != 0)
-//			smallest = biggest/smallest+1;
 		for (int big = 0; big <= biggest; big++) 
 			for (int small = 0; small <= smallest; small++) {
-			// if (movingObject.touchingRight || movingObject.touchingLeft)
-			// break;
 			
 			Rectangle tangle;
 			
@@ -224,40 +217,41 @@ public class RenderAndLocation {
 						}
 					}
 			}
-			if (goingLeft && !movingObject.touchingLeft){
-				for (int ii = 0; ii < staticObjects.length; ii++) {
-					if (!staticObjects[ii].seen)
-						continue;
-						
-					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
-						movingObject.touchingLeft = true;
-
-						System.out.println(tangle);
-						if (yIsBigger){
-							movingObject.touchingX(-small, staticObjects[ii].type, goingLeft);
-						}else{
-							movingObject.touchingX(-big, staticObjects[ii].type, goingLeft);
+			if (!movingObject.touchingLeft && !movingObject.touchingRight) {
+				
+				if (goingLeft){
+					for (int ii = 0; ii < staticObjects.length; ii++) {
+						if (!staticObjects[ii].seen)
+							continue;
+							
+						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
+							movingObject.touchingLeft = true;
+							if (yIsBigger){
+								movingObject.touchingX(-small, staticObjects[ii].type);
+							}else{
+								movingObject.touchingX(-big, staticObjects[ii].type);
+							}
+							break;
 						}
-						break;
+					}
+				}
+				else if (!goingLeft){
+					for (int ii = 0; ii < staticObjects.length; ii++) {
+						if (!staticObjects[ii].seen)
+							continue;
+						
+						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
+							movingObject.touchingRight = true;
+							if (yIsBigger)
+								movingObject.touchingX(small, staticObjects[ii].type);
+							else
+								movingObject.touchingX(big, staticObjects[ii].type); 
+							break;
+						}
 					}
 				}
 			}
-			else if (!goingLeft && !movingObject.touchingRight){
-				for (int ii = 0; ii < staticObjects.length; ii++) {
-					if (!staticObjects[ii].seen)
-						continue;
-					
-					if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
-						movingObject.touchingRight = true;
-						if (yIsBigger)
-							movingObject.touchingX(small, staticObjects[ii].type, goingLeft);
-						else
-							movingObject.touchingX(big, staticObjects[ii].type, goingLeft); 
-						break;
-					}
-				}
-			}
-			if ((movingObject.touchingRight || movingObject.touchingLeft) && (movingObject.touchingDown || movingObject.touchingUp)){
+			else if (movingObject.touchingDown || movingObject.touchingUp){
 				break;
 			}
 		}

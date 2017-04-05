@@ -19,7 +19,6 @@ public abstract class GameObject implements GameInt{
 		if (!seen)
 			return;
 		//TODO
-		g.draw(myRectangle);
 		g.fill(myRectangle);
 	}
 	

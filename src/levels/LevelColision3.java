@@ -35,7 +35,7 @@ public class LevelColision3 extends BasicLevel {
 				new Wall(new Rectangle(224,258,8,8)),
 				new Wall(new Rectangle(301,264,5,15)),
 				new Wall(new Rectangle(180,177,10,15)),
-				new Wall(new Rectangle(333,137,7,120)),
+				new Wall(new Rectangle(333,157,1,100)),
 				new Wall(new Rectangle(442,407,726,119))
 
 			}, new MyMovingObject[] {

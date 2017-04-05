@@ -22,6 +22,9 @@ public class MyPlayer extends MyMovingObject {
 	private int slowCalcWalk = 0;
 	
 	private final int FALINGSPEED = 20;
+	
+	//TODO this is temporarly
+	private Rectangle eyeTangle = new Rectangle(0,0,5,3);
 
 	private final int MAXJUMPVECTOR = 600;//TODO 5
 //	private int grafity = 0;
@@ -33,41 +36,15 @@ public class MyPlayer extends MyMovingObject {
 		this.maxSpeed = 600;
 		
 	}
-
-//	private int grafityCalc() {
-//		grafity++;
-//		int vecPlus = Formulas.grafity(grafity);
-//		if (vecPlus != 0)
-//			grafity = 0;
-//		return vecPlus;
-//	}
-	
-//	private int walkCalc() {
-//		//TODO
-//		walky += 2;
-//		int vecPlus = Formulas.walkingSpeed(walky);
-//		if (vecPlus != 0)
-//			walky = 0;
-//		return vecPlus;
-//	}
-//	
-//	private int slowWalkCalc(){
-//		//TODO
-//		slowCalcWalk++;
-//		int vecPlus = Formulas.walkingSpeed(slowCalcWalk);
-//		if (vecPlus != 0)
-//			slowCalcWalk = 0;
-//		return vecPlus;
-//	}
 	
 	public int nextX() {
-//		if ((touchingLeft && vector[0] < 0) || (touchingRight && vector[0] > 0))
-//			return 0;
-		return calc(0);
+		if (vector[0] >= 0)
+			return calc(0);
+		else
+			return calc(0) - 1; // omdat 1300 - 30 = 12 TODO Fix
 	}
+	
 	public int nextY() {
-//		if ((touchingUp && vector[1] < 0) || (touchingDown && vector[1] > 1))
-//			return 0;
 		return calc(1);
 	}
 	private int calc(int i){
@@ -81,9 +58,12 @@ public class MyPlayer extends MyMovingObject {
 		int speed = 30;
 		int slowSpeed = 10;
 				
+//		if (touchingLeft)
+//			return;
 		if (vector[0] > 0) {
-			if (left){
+			if (left){ // going left
 				vector[0] -= speed;
+				
 				lookingRight = false;
 			}else if (right)
 				vector[0] += speed;
@@ -155,9 +135,25 @@ public class MyPlayer extends MyMovingObject {
 		wallJumpalbe = false;
 	}
 
+	//TODO remove this its teporarly for the eye
+	@Override
+	public void update() {
+		absoluteLocation[0] += vector[0];
+		absoluteLocation[1] += vector[1];
+		
+		myRectangle.setLocation(absoluteLocation[0] / INCREASE, absoluteLocation[1] / INCREASE);
+		if (!lookingRight)
+			eyeTangle.setLocation(myRectangle.x + 2, myRectangle.y + 3);
+		else
+			eyeTangle.setLocation(myRectangle.x + myRectangle.width - 2 - eyeTangle.width, myRectangle.y + 3);
+	}
+	
 	public void draw(Graphics2D g) {
 		g.setColor(Color.yellow);
-		super.baseDraw(g);
+		g.fill(myRectangle);
+		g.setColor(Color.BLUE);
+		g.fill(eyeTangle);
+//		super.baseDraw(g);
 	}
 
 	public int[] getCameraLocation(int height, int length) {
