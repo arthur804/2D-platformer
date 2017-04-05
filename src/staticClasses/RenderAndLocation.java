@@ -101,19 +101,20 @@ public class RenderAndLocation {
 	// ---------- location renderCalculation
 
 	public static void walltest(MyMovingObject movingObject, GameObject[] staticObjects) {
+		movingObject.reTrue();//TODO should this go here? wanna make return bool[]
 		int nextX = movingObject.nextX();
 		int nextY = movingObject.nextY();
-		movingObject.reTrue();
+		
 
 		// ------------------------------------------------UP
-		if (nextY < 0) {
+		if (movingObject.goingUp) {
 
 			/* Up and left */
-			if (nextX < 0){
+			if (movingObject.goingLeft){
 				calcLeftRight(movingObject, nextX, nextY, true, true, staticObjects);
 			}
 			/* Up and right */
-			else if (nextX > 0){
+			else if (movingObject.goingRight){
 				calcLeftRight(movingObject, nextX, nextY, true, false, staticObjects);
 			}
 			/* just Up */
@@ -125,11 +126,11 @@ public class RenderAndLocation {
 		else {
 
 			/* Down and left */
-			if (nextX < 0){
+			if (movingObject.goingLeft){
 				calcLeftRight(movingObject, nextX, nextY, false, true, staticObjects);
 			}
 			/* down and right */
-			else if (nextX > 0){
+			else if (movingObject.goingRight){
 				calcLeftRight(movingObject, nextX, nextY, false, false, staticObjects);
 			}
 			/* just down */
@@ -138,10 +139,6 @@ public class RenderAndLocation {
 			}
 		}
 	}
-	// private static void calcTheX(ArrayList<GameObject> staticObjects,
-	// MyMovingObject movingObject, int nextY,
-	// boolean goingLeft) {
-	// }
 
 	/**
 	 * 0 top 1 left 2 down 3 right
@@ -152,11 +149,6 @@ public class RenderAndLocation {
 
 	private static void calcLeftRight(MyMovingObject movingObject, int nextX, int nextY, boolean goingUp,
 			boolean goingLeft, GameObject[] staticObjects) {
-		// TODO testing
-
-//		int amountTest;
-//		int divX;
-//		int divY;
 		int positiveX = Math.abs(nextX);
 		int positiveY = Math.abs(nextY);
 		boolean yIsBigger;
@@ -267,7 +259,6 @@ public class RenderAndLocation {
 
 	private static void calcUpDown(GameObject[] staticObjects, MyMovingObject movingObject, int nextY,
 			boolean goingUp) {
-
 		byte choice;
 		if (goingUp)
 			choice = 0;

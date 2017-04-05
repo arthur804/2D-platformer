@@ -7,45 +7,49 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import interfacesAndAbstract.MyMovingObject;
-import staticClasses.Formulas;
 
 public class MyPlayer extends MyMovingObject {
 
 	public boolean left, right, up, down;
-	private int slowdownSpeed;
-	private int speed;
+	private final int STANDARGD_SLOWDOWNSPEED = 10;
+	private final int STANDARGD_SPEED = 30;
 	
 	private boolean lookingRight = true;
 	
 	private boolean wallJumpalbe = false;
 	
-	private int slowCalcWalk = 0;
-	
 	private final int FALINGSPEED = 20;
+	private final int WALLFALLINGSPEED = 1;
+	private final int MAXWALLSPEED = 300;
+	private final int MORETHEMAXWALLSPEEDSLOWDOWN = 50;
 	
 	//TODO this is temporarly
 	private Rectangle eyeTangle = new Rectangle(0,0,5,3);
 
-	private final int MAXJUMPVECTOR = 600;//TODO 5
-//	private int grafity = 0;
-	private int walky = 0;
+	private final int MAXJUMPVECTOR = 600;
 	
 	public MyPlayer(Point rec) {
 		super('p',new Rectangle(rec, new Dimension(16,16)));
-		this.slowdownSpeed = 1;
 		this.maxSpeed = 600;
-		
 	}
 	
 	public int nextX() {
-		if (vector[0] >= 0)
-			return calc(0);
-		else
-			return calc(0) - 1; // omdat 1300 - 30 = 12 TODO Fix
+		int nextX = calc(0);
+		if (vector[0] > 0){
+			goingRight = true;
+			nextX += 1;
+		} else if (vector[0] < 0){
+			goingLeft = true;
+			nextX -= 1;
+		}
+			return nextX; // omdat 1300 - 30 = 12 TODO Fix
 	}
 	
 	public int nextY() {
-		return calc(1);
+		int nextY = calc(1);
+		if (vector[1] < 0)
+			goingUp = true;
+		return nextY;
 	}
 	private int calc(int i){
 		if (absoluteLocation[i] < 0)
@@ -55,11 +59,10 @@ public class MyPlayer extends MyMovingObject {
 	}
 	/** plz dont use */
 	public void calcNextX() {
-		int speed = 30;
-		int slowSpeed = 10;
+		//If im standing on ice slowdownspeed will change 
+		int speed = STANDARGD_SPEED;
+		int slowSpeed = STANDARGD_SLOWDOWNSPEED; 
 				
-//		if (touchingLeft)
-//			return;
 		if (vector[0] > 0) {
 			if (left){ // going left
 				vector[0] -= speed;
@@ -106,7 +109,13 @@ public class MyPlayer extends MyMovingObject {
 	/** plz dont use */
 	public void calcNextY() {
 		if (!touchingDown) {
-			vector[1] += FALINGSPEED;
+			if (!goingUp && (touchingLeft || touchingRight)){//Sliding walls
+				if (vector[1] < MAXWALLSPEED)
+					vector[1] += WALLFALLINGSPEED;
+				else 
+					vector[1] -= MORETHEMAXWALLSPEEDSLOWDOWN;
+			} else
+				vector[1] += FALINGSPEED;
 			// going Down
 		} else if (up) {
 			jump();
@@ -167,14 +176,5 @@ public class MyPlayer extends MyMovingObject {
 		right = keysPressed[3];
 		down = keysPressed[2];
 	}
-	
-//	@Override
-//	public void reTrue(){
-//		if (!(touchingLeft && left))
-//			touchingLeft = false;
-//		if (!(touchingRight && right))
-//			touchingRight = false;
-//		touchingUp = touchingDown = false;
-//	}
 
 }

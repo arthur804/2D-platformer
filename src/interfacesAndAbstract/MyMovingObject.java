@@ -15,6 +15,9 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	public char[] touching = new char[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
 	public final int INCREASE = 100;
+	public boolean goingUp = false;
+	public boolean goingLeft = false;
+	public boolean goingRight = false;
 	// public final int AMOUNTZERO = 2;
 
 	/**
@@ -50,7 +53,7 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	}
 
 	public void reTrue() {
-		touchingLeft = touchingRight = touchingUp = touchingDown = false;
+		goingLeft = goingRight = goingUp = touchingLeft = touchingRight = touchingUp = touchingDown = false;
 	}
 
 	public void update() {

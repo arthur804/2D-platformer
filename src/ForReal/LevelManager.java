@@ -9,7 +9,7 @@ public class LevelManager {
 	private BasicLevel lvl2;
 	
 	public LevelManager(){
-		lvl2 = new LevelColision3();		
+		lvl2 = new WallPlayTestLevel();		
 	}
 	
 	public void draw(Graphics2D g){
