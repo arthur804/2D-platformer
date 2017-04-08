@@ -4,16 +4,16 @@ import java.awt.Rectangle;
 
 import staticClasses.RenderAndLocation;
 
-public abstract class GameObject implements GameInt{
+public abstract class GameObject {
 
 	public Rectangle myRectangle;
-	public char type;
+	public ThingsInTheWorld type;
 	public boolean seen = true;
 	//public image image or something for sprites
 	
-	public GameObject(Rectangle bounds, char t){
+	public GameObject(Rectangle bounds, ThingsInTheWorld e){
 		myRectangle = bounds;
-		type = t;
+		type = e;
 	}
 	protected void baseDraw(Graphics2D g) {
 		if (!seen)
@@ -26,7 +26,12 @@ public abstract class GameObject implements GameInt{
 		seen = RenderAndLocation.isObjectInSight(myRectangle, beginX, beginY, endX, endY);
 	}
 	
-	public char returnChar(){
+	public ThingsInTheWorld returnChar(){
 		return type;
 	}
+	
+	//TODO look at it
+	
+	public abstract void draw(Graphics2D g);
+	
 }

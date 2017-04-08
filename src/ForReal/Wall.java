@@ -5,17 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import interfacesAndAbstract.GameObject;
+import interfacesAndAbstract.ThingsInTheWorld;
 
 public class Wall extends GameObject{
 
 	public Wall(Rectangle rec) {
-		super(rec, 'w');
+		super(rec, ThingsInTheWorld.WALL);
 	}
 	
-	//Maybe Remove?
-	public Wall(int x, int y, int width, int height) {
-		super(new Rectangle(x, y, width, height), 'w');	
-	}
 	
 	public void draw(Graphics2D g) {
 		g.setColor(Color.white);

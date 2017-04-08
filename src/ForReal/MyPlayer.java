@@ -7,29 +7,27 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import interfacesAndAbstract.MyMovingObject;
+import interfacesAndAbstract.ThingsInTheWorld;
+import staticClasses.Formulas;
 
 public class MyPlayer extends MyMovingObject {
 
 	public boolean left, right, up, down;
-	private final int STANDARGD_SLOWDOWNSPEED = 10;
-	private final int STANDARGD_SPEED = 30;
 	
 	private boolean lookingRight = true;
 	
+	//TODO
 	private boolean wallJumpalbe = false;
 	
 	private final int FALINGSPEED = 20;
-	private final int WALLFALLINGSPEED = 1;
-	private final int MAXWALLSPEED = 300;
-	private final int MORETHEMAXWALLSPEEDSLOWDOWN = 50;
+	private final int MAXJUMPVECTOR = 600;
 	
 	//TODO this is temporarly
 	private Rectangle eyeTangle = new Rectangle(0,0,5,3);
 
-	private final int MAXJUMPVECTOR = 600;
 	
 	public MyPlayer(Point rec) {
-		super('p',new Rectangle(rec, new Dimension(16,16)));
+		super(new Rectangle(rec, new Dimension(16,16)),ThingsInTheWorld.PLAYER);
 		this.maxSpeed = 600;
 	}
 	
@@ -59,9 +57,9 @@ public class MyPlayer extends MyMovingObject {
 	}
 	/** plz dont use */
 	public void calcNextX() {
-		//If im standing on ice slowdownspeed will change 
-		int speed = STANDARGD_SPEED;
-		int slowSpeed = STANDARGD_SLOWDOWNSPEED; 
+		//If im standing on ice slowdownspeed will change  TODO
+		int speed = Formulas.STANDARGD_SPEED;
+		int slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEED; 
 				
 		if (vector[0] > 0) {
 			if (left){ // going left
@@ -110,10 +108,15 @@ public class MyPlayer extends MyMovingObject {
 	public void calcNextY() {
 		if (!touchingDown) {
 			if (!goingUp && (touchingLeft || touchingRight)){//Sliding walls
-				if (vector[1] < MAXWALLSPEED)
-					vector[1] += WALLFALLINGSPEED;
+				//wallJump
+				if (up){
+					wallJump();
+				}
+				//WallSliding
+				if (vector[1] < touching[0].getMaxSlidingSpeed())
+					vector[1] += touching[0].getSlide();
 				else 
-					vector[1] -= MORETHEMAXWALLSPEEDSLOWDOWN;
+					vector[1] -= touching[0].getMaxSlowDown();
 			} else
 				vector[1] += FALINGSPEED;
 			// going Down
@@ -136,12 +139,14 @@ public class MyPlayer extends MyMovingObject {
 		wallJumpalbe = false;
 	}
 	
-	private void wallJump(byte n){
-		if (!wallJumpalbe)
-			return;
-		vector[1] = -(MAXJUMPVECTOR/2);
-		vector[0] = n*maxSpeed;
-		wallJumpalbe = false;
+	private void wallJump(){
+			vector[1] = touching[0].getWallJumpHeight();
+			wallJumpalbe = false;
+		if (touchingLeft){
+			vector[0] = touching[0].getWallJumpDistance();
+		} else if (touchingRight){
+			vector[0] = -touching[0].getWallJumpDistance();
+		}
 	}
 
 	//TODO remove this its teporarly for the eye

@@ -3,16 +3,12 @@ package interfacesAndAbstract;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public abstract class MyMovingObject extends GameObject implements GameMoveInt {
-
-	public MyMovingObject(Rectangle bounds, char t) {
-		super(bounds, t);
-	}
+public abstract class MyMovingObject extends GameObject {
 
 	public boolean touchingLeft, touchingRight, touchingUp, touchingDown;
 	public int[] vector = new int[] { 0, 0 };
 	public int maxSpeed;
-	public char[] touching = new char[2];
+	public ThingsInTheWorld[] touching = new ThingsInTheWorld[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
 	public final int INCREASE = 100;
 	public boolean goingUp = false;
@@ -23,8 +19,8 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 	/**
 	 * use this one if it is a moving object
 	 */
-	public MyMovingObject(char t, Rectangle bounds) {
-		super(bounds, t);
+	public MyMovingObject(Rectangle bounds, ThingsInTheWorld e) {
+		super(bounds, e);
 		absoluteLocation[0] = bounds.x * INCREASE;
 		absoluteLocation[1] = bounds.y * INCREASE;
 	}
@@ -38,14 +34,14 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		return new Rectangle(myRectangle.x + nextX, myRectangle.y + nextY, myRectangle.width, myRectangle.height);
 	}
 
-	public void touchingX(int x, char c) {
+	public void touchingX(int x, ThingsInTheWorld c) {
 		touching[0] = c;
 		vector[0] = 0;
 
 		absoluteLocation[0] = absoluteLocation[0] - (absoluteLocation[0] % INCREASE) + x * INCREASE;
 	}
 
-	public void touchingY(int y, char c) {
+	public void touchingY(int y, ThingsInTheWorld c) {
 		touching[1] = c;
 		vector[1] = 0;
 		// TODO
@@ -67,4 +63,15 @@ public abstract class MyMovingObject extends GameObject implements GameMoveInt {
 		calcNextY();
 	}
 
+	public abstract int nextY();
+	
+	public abstract int nextX();
+		
+	public abstract void jump();
+	
+	//TODO
+	public abstract void calcNextX();
+	//TODO
+	public abstract void calcNextY();
+	
 }
