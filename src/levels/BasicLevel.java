@@ -3,6 +3,9 @@ package levels;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import javax.activity.InvalidActivityException;
+
+import ForReal.Camera;
 import ForReal.MyPlayer;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
@@ -13,14 +16,22 @@ public abstract class BasicLevel {
 	private GameObject[] walls;
 	private MyMovingObject[] guys;
 	protected MyPlayer pl;
+	private Camera cam;
 	
-	public BasicLevel(GameObject[] walls, MyMovingObject[] guys){
+	public BasicLevel(GameObject[] walls, MyMovingObject[] guys){		
 		this.walls = walls;
 		this.guys = guys;
 		pl = new MyPlayer(new Point(50,500));
 	}
 	
+	public void startCam(int widthOfScreen, int heightOfScreen){
+		cam = new Camera(widthOfScreen, heightOfScreen);
+	}
+	
 	public void draw(Graphics2D g){
+		
+		cam.reCamera(pl);
+		g.translate(cam.x, cam.y);
 		
 		pl.draw(g);
 		
@@ -64,7 +75,6 @@ public abstract class BasicLevel {
 	public void restartMoi() {
 		// TODO 
 		pl = new MyPlayer(new Point(50,500));
-		System.out.println(true);
 	}
 
 }

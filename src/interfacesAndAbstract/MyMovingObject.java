@@ -7,7 +7,6 @@ public abstract class MyMovingObject extends GameObject {
 
 	public boolean touchingLeft, touchingRight, touchingUp, touchingDown;
 	public int[] vector = new int[] { 0, 0 };
-	public int maxSpeed;
 	public ThingsInTheWorld[] touching = new ThingsInTheWorld[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
 	public final int INCREASE = 100;

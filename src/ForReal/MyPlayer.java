@@ -14,7 +14,7 @@ public class MyPlayer extends MyMovingObject {
 
 	public boolean left, right, up, down;
 	
-	private boolean lookingRight = true;
+	public boolean lookingRight = true;
 	
 	private boolean wallJumped = false;
 	private boolean jumped = false;
@@ -25,7 +25,6 @@ public class MyPlayer extends MyMovingObject {
 	
 	public MyPlayer(Point rec) {
 		super(new Rectangle(rec, new Dimension(16,16)),ThingsInTheWorld.PLAYER);
-		this.maxSpeed = 600;
 	}
 	
 	public int nextX() {

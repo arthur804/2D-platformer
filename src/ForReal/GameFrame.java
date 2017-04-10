@@ -22,9 +22,9 @@ public class GameFrame extends JPanel{
 	public static void main(String[] args){
 		JFrame frame = new JFrame("Intresting");
 		GameFrame p = new GameFrame();
+		frame.setBounds(100, 100, 800, 800);
 		frame.setContentPane(p);
 		frame.setVisible(true);
-		frame.setBounds(100, 100, 800, 800);
 		frame.setFocusable(true);
 		frame.addKeyListener(new KeyAdapter() {
 			@Override
@@ -49,18 +49,19 @@ public class GameFrame extends JPanel{
 	public GameFrame() {
 		setLayout(null);
 		setBackground(Color.black);
-		theMan = new LevelManager();
 		time = new Timer(10, ActionListener -> 
 		{
 			repaint();
 			update();
 		});
 		time.start();
+		theMan = new LevelManager(800, 800);
 	}
 	private void derp(){
 		repaint();
 		update();
 	}
+	
 
 	@Override
 	public void paintComponent(Graphics g3) {

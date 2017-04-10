@@ -7,11 +7,15 @@ public class LevelManager {
 
 
 	private BasicLevel lvl2;
+	private int width, height;
 	
-	public LevelManager(){
+	public LevelManager(int width, int height){
 		lvl2 = new WallPlayTestLevel();		
+		this.height = height;
+		this.width = width;
+		lvl2.startCam(width, height);
 	}
-	
+	//TODO resize?
 	public void draw(Graphics2D g){
 		lvl2.draw(g);
 	}

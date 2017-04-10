@@ -17,7 +17,7 @@ public class Formulas {
 	public static final int STANDARD_MAXWALKINGSPEED = 400;
 	
 	public static final int STANDARGD_SPEEDFLYING = 20;
-	public static final int STANDARGD_SLOWDOWNSPEEDFLYING = 0;
+	public static final int STANDARGD_SLOWDOWNSPEEDFLYING = 5;
 	
 	public static final int FALINGSPEED = 20;
 	public static final int STANDARDJUMPHEIGHT = 600;
