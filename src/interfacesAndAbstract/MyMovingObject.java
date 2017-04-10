@@ -50,6 +50,7 @@ public abstract class MyMovingObject extends GameObject {
 
 	public void reTrue() {
 		goingLeft = goingRight = goingUp = touchingLeft = touchingRight = touchingUp = touchingDown = false;
+		touching[0] = touching[1] = null;
 	}
 
 	public void update() {
@@ -70,8 +71,8 @@ public abstract class MyMovingObject extends GameObject {
 	public abstract void jump();
 	
 	//TODO
-	public abstract void calcNextX();
+	protected abstract void calcNextX();
 	//TODO
-	public abstract void calcNextY();
+	protected abstract void calcNextY();
 	
 }

@@ -16,11 +16,8 @@ public class MyPlayer extends MyMovingObject {
 	
 	private boolean lookingRight = true;
 	
-	//TODO
-	private boolean wallJumpalbe = false;
-	
-	private final int FALINGSPEED = 20;
-	private final int MAXJUMPVECTOR = 600;
+	private boolean wallJumped = false;
+	private boolean jumped = false;
 	
 	//TODO this is temporarly
 	private Rectangle eyeTangle = new Rectangle(0,0,5,3);
@@ -55,12 +52,28 @@ public class MyPlayer extends MyMovingObject {
 		else
 			return (absoluteLocation[i]%INCREASE+vector[i])/INCREASE;
 	}
-	/** plz dont use */
-	public void calcNextX() {
+
+	protected void calcNextX() {
 		//If im standing on ice slowdownspeed will change  TODO
-		int speed = Formulas.STANDARGD_SPEED;
-		int slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEED; 
-				
+		int speed;
+		int slowSpeed;
+		if (touching[1] != null){
+			speed = touching[1].getWalkingSpeed();
+			slowSpeed = touching[1].getSlowDownSpeed(); 
+		} else{
+			speed = Formulas.STANDARGD_SPEEDFLYING;
+			slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING; 
+		}
+		
+			
+		if (wallJumped && up && !touchingDown)
+			return;
+		if (!up)
+		{
+			wallJumped = false;
+			jumped = false;
+		}
+		
 		if (vector[0] > 0) {
 			if (left){ // going left
 				vector[0] -= speed;
@@ -90,22 +103,16 @@ public class MyPlayer extends MyMovingObject {
 				lookingRight = false;
 			}
 		}
-		if (vector[0] < -this.maxSpeed)
-			vector[0] = -this.maxSpeed;
+		if (vector[0] < -Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = -Formulas.STANDARD_MAXWALKINGSPEED;
 
-		if (vector[0] > this.maxSpeed)
-			vector[0] = this.maxSpeed;
+		if (vector[0] > Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = Formulas.STANDARD_MAXWALKINGSPEED;
 		
 		
 	}
 
-	
-	public void specialAction(char c){
-		//TODO als ik iets dodelijks aan raak dan moet dat hier gevonden worden
-	}
-
-	/** plz dont use */
-	public void calcNextY() {
+	protected void calcNextY() {
 		if (!touchingDown) {
 			if (!goingUp && (touchingLeft || touchingRight)){//Sliding walls
 				//wallJump
@@ -113,40 +120,37 @@ public class MyPlayer extends MyMovingObject {
 					wallJump();
 				}
 				//WallSliding
-				if (vector[1] < touching[0].getMaxSlidingSpeed())
+				else if (vector[1] < touching[0].getMaxSlidingSpeed())
 					vector[1] += touching[0].getSlide();
 				else 
 					vector[1] -= touching[0].getMaxSlowDown();
-			} else
-				vector[1] += FALINGSPEED;
+			} else 
+				vector[1] += Formulas.FALINGSPEED;
 			// going Down
 		} else if (up) {
 			jump();
 			// going Up
 		}
-
-		if (vector[1] < -MAXJUMPVECTOR)
-			vector[1] = -MAXJUMPVECTOR;
-
-		else if (vector[1] > MAXJUMPVECTOR)
-			vector[1] = MAXJUMPVECTOR;
-
 	}
 
 	public void jump() {
-		vector[1] = -MAXJUMPVECTOR;
-//		grafity = 0;// omdat anders de sprong hoogte verschilt
-		wallJumpalbe = false;
+		if (touching[1] != null)
+		vector[1] = -touching[1].getJump();
+		jumped = true;
 	}
 	
 	private void wallJump(){
-			vector[1] = touching[0].getWallJumpHeight();
-			wallJumpalbe = false;
+		if ((jumped || wallJumped) && up)
+			return;
+		
 		if (touchingLeft){
 			vector[0] = touching[0].getWallJumpDistance();
 		} else if (touchingRight){
 			vector[0] = -touching[0].getWallJumpDistance();
-		}
+		} else
+			return;
+		vector[1] = -touching[0].getWallJumpHeight();
+		wallJumped = true;
 	}
 
 	//TODO remove this its teporarly for the eye
