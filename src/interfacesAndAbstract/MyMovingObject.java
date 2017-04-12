@@ -35,16 +35,13 @@ public abstract class MyMovingObject extends GameObject {
 
 	public void touchingX(int x, ThingsInTheWorld c) {
 		touching[0] = c;
-		vector[0] = 0;
-
-		absoluteLocation[0] = absoluteLocation[0] - (absoluteLocation[0] % INCREASE) + x * INCREASE;
+		vector[0] = x * INCREASE;
 	}
 
 	public void touchingY(int y, ThingsInTheWorld c) {
 		touching[1] = c;
-		vector[1] = 0;
+		vector[1] = y * INCREASE;
 		// TODO
-		absoluteLocation[1] = absoluteLocation[1] + y * INCREASE;
 	}
 
 	public void reTrue() {

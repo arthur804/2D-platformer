@@ -16,7 +16,7 @@ public class MyPlayer extends MyMovingObject {
 	
 	public boolean lookingRight = true;
 	
-	private boolean wallJumped = false;
+	public boolean wallJumped = false;
 	private boolean jumped = false;
 	
 	//TODO this is temporarly
@@ -150,6 +150,7 @@ public class MyPlayer extends MyMovingObject {
 			return;
 		vector[1] = -touching[0].getWallJumpHeight();
 		wallJumped = true;
+		lookingRight = !lookingRight;
 	}
 
 	//TODO remove this its teporarly for the eye

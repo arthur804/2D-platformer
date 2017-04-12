@@ -49,13 +49,13 @@ public class GameFrame extends JPanel{
 	public GameFrame() {
 		setLayout(null);
 		setBackground(Color.black);
+		theMan = new LevelManager(800, 800);
 		time = new Timer(10, ActionListener -> 
 		{
 			repaint();
 			update();
 		});
 		time.start();
-		theMan = new LevelManager(800, 800);
 	}
 	private void derp(){
 		repaint();

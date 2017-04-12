@@ -21,4 +21,5 @@ public class Formulas {
 	
 	public static final int FALINGSPEED = 20;
 	public static final int STANDARDJUMPHEIGHT = 600;
+	public static final int STANDARGD_CAMERASPEED = 5;
 }
