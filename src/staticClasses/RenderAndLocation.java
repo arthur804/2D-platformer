@@ -111,31 +111,39 @@ public class RenderAndLocation {
 
 			/* Up and left */
 			if (movingObject.goingLeft){
-				calcLeftRight(movingObject, nextX, nextY, true, true, staticObjects);
+				calcLeftRightUpDown(movingObject, nextX, nextY, true, true, staticObjects);
 			}
 			/* Up and right */
 			else if (movingObject.goingRight){
-				calcLeftRight(movingObject, nextX, nextY, true, false, staticObjects);
+				calcLeftRightUpDown(movingObject, nextX, nextY, true, false, staticObjects);
 			}
 			/* just Up */
 			else{
 				calcUpDown(staticObjects, movingObject, nextY, true);
 			}
 		}
-		// ---------------------------------DOWN  if your not going up your going down not going down is not possible otherwise i would need a calcLeftRightonly
-		else {
+		// ---------------------------------DOWN  
+		else if (movingObject.goingDown){
 
 			/* Down and left */
 			if (movingObject.goingLeft){
-				calcLeftRight(movingObject, nextX, nextY, false, true, staticObjects);
+				calcLeftRightUpDown(movingObject, nextX, nextY, false, true, staticObjects);
 			}
 			/* down and right */
 			else if (movingObject.goingRight){
-				calcLeftRight(movingObject, nextX, nextY, false, false, staticObjects);
+				calcLeftRightUpDown(movingObject, nextX, nextY, false, false, staticObjects);
 			}
 			/* just down */
 			else{
 				calcUpDown(staticObjects, movingObject, nextY, false);
+			}
+		} else {
+			if (movingObject.goingLeft){
+				calcLeftRightOnly(movingObject, staticObjects, nextX, true);
+			}
+			/* down and right */
+			else if (movingObject.goingRight){
+				calcLeftRightOnly(movingObject, staticObjects, nextX, false);
 			}
 		}
 	}
@@ -147,7 +155,7 @@ public class RenderAndLocation {
 	 * @param staticObjects2
 	 */
 
-	private static void calcLeftRight(MyMovingObject movingObject, int nextX, int nextY, boolean goingUp,
+	private static void calcLeftRightUpDown(MyMovingObject movingObject, int nextX, int nextY, boolean goingUp,
 			boolean goingLeft, GameObject[] staticObjects) {
 		int positiveX = Math.abs(nextX);
 		int positiveY = Math.abs(nextY);
@@ -293,6 +301,46 @@ public class RenderAndLocation {
 				movingObject.touchingDown = true;
 			}
 			movingObject.touchingY(nextY, staticObjects[awnser].type);
+		}
+
+	}
+	
+	private static void calcLeftRightOnly(MyMovingObject movingObject, GameObject[] staticObjects, int nextX,
+			boolean goingLeft) {
+		byte choice;
+		if (goingLeft)
+			choice = 3;
+		else
+			choice = 1;
+		int amountTest;
+		byte pos = 1;
+		if (goingLeft) {
+			amountTest = (int) -nextX;
+			pos = (byte) -pos;
+		} else
+			amountTest = (int) nextX;
+		int awnser = -1;
+		out: for (int i = 0; i <= amountTest; i++) {
+			for (int ii = 0; ii < staticObjects.length; ii++){
+				if (!staticObjects[ii].seen)
+					continue;
+				if (wallTester(movingObject.nextTangleOnlyX(i * pos), staticObjects[ii].myRectangle, (byte) choice)) {
+					awnser = ii;
+					if (goingLeft)
+						nextX = -i;
+					else
+						nextX = i;
+					break out;
+				}
+			}
+		}
+		if (awnser != -1) {
+			if (goingLeft) {
+				movingObject.touchingLeft = true;
+			} else {
+				movingObject.touchingRight = true;
+			}
+			movingObject.touchingX(nextX, staticObjects[awnser].type);
 		}
 
 	}

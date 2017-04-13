@@ -5,8 +5,8 @@ import java.awt.Point;
 
 import javax.activity.InvalidActivityException;
 
-import ForReal.Camera;
-import ForReal.MyPlayer;
+import forReal.SMyPlayer;
+import forReal.TCamera;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import staticClasses.RenderAndLocation;
@@ -15,17 +15,17 @@ public abstract class BasicLevel {
 
 	private GameObject[] walls;
 	private MyMovingObject[] guys;
-	protected MyPlayer pl;
-	private Camera cam;
+	protected SMyPlayer pl;
+	private TCamera cam;
 	
 	public BasicLevel(GameObject[] walls, MyMovingObject[] guys){		
 		this.walls = walls;
 		this.guys = guys;
-		pl = new MyPlayer(new Point(50,500));
+		pl = new SMyPlayer(new Point(50,500));
 	}
 	
 	public void startCam(int widthOfScreen, int heightOfScreen){
-		cam = new Camera(widthOfScreen, heightOfScreen);
+		cam = new TCamera(widthOfScreen, heightOfScreen);
 	}
 	
 	public void draw(Graphics2D g){
@@ -74,7 +74,7 @@ public abstract class BasicLevel {
 
 	public void restartMoi() {
 		// TODO 
-		pl = new MyPlayer(new Point(50,500));
+		pl = new SMyPlayer(new Point(50,500));
 	}
 
 }
