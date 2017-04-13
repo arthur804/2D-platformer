@@ -101,7 +101,6 @@ public class RenderAndLocation {
 	// ---------- location renderCalculation
 
 	public static void walltest(MyMovingObject movingObject, GameObject[] staticObjects) {
-		movingObject.reTrue();//TODO should this go here? wanna make return bool[]
 		int nextX = movingObject.nextX();
 		int nextY = movingObject.nextY();
 		
@@ -135,6 +134,7 @@ public class RenderAndLocation {
 			}
 			/* just down */
 			else{
+				System.out.println(nextY);
 				calcUpDown(staticObjects, movingObject, nextY, false);
 			}
 		} else {

@@ -73,15 +73,16 @@ public abstract class MyMovingObject extends GameObject {
 			goingLeft = true;
 			nextX -= 1;
 		}
-			return nextX; // omdat 1300 - 30 = 12 TODO Fix
+		return nextX; // omdat 1300 - 30 = 12 TODO Fix
 	}
 	
 	public int nextY() {
 		int nextY = calc(1);
-		if (vector[1] < 0)
+		if (vector[1] < 0){
 			goingUp = true;
-		if (vector[1] > 0)
+		} else if (vector[1] > 0){
 			goingDown = true;
+		}
 		return nextY;
 	}
 	private int calc(int i){

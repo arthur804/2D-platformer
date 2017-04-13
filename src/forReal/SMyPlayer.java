@@ -99,7 +99,9 @@ public class SMyPlayer extends MyMovingObject {
 		
 	}
 
+			
 	protected void calcNextY() {
+		System.out.println(touchingDown);
 		if (!touchingDown) {
 			if (!goingUp && (touchingLeft || touchingRight)){//Sliding walls
 				//wallJump
@@ -117,6 +119,7 @@ public class SMyPlayer extends MyMovingObject {
 			jump();
 			// going Up
 		}
+		System.out.println(vector[1]);
 	}
 
 	public void jump() {
@@ -161,10 +164,15 @@ public class SMyPlayer extends MyMovingObject {
 //		super.baseDraw(g);
 	}
 
-	public int[] getCameraLocation(int height, int length) {
-		// TODO
-		return new int[] { 0, 0 };
-	}
+//	@Override
+//	public int nextY() {
+//		int number = super.nextY();
+//		if (!goingUp){
+//			goingDown = true;
+//			number++; // otherwise it wont see someone standing on the floor as someone standing on the floor
+//		}
+//		return number;
+//	}
 
 	public void controls(boolean[] keysPressed) {
 		left = keysPressed[0];

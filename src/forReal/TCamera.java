@@ -13,6 +13,7 @@ public class TCamera {// if camera hasnt moved dont recalc seen
 	private final int distanceFromWall;
 	private final int distanceFromFloors; 
 	private final int cameraMovementSpeed;
+	private int whait = 0;
 	
 	//TODO update the Y
 	
@@ -30,12 +31,16 @@ public class TCamera {// if camera hasnt moved dont recalc seen
 //			return false;//als je x en y niet veranderen false ander true mario camera TODO
 //		if (player.goingUp && player.walljumped)
 		int cameraMovementSpeed = -player.nextX();//this.cameraMovementSpeed;
-		if (cameraMovementSpeed == 0)
-			if (player.lookingRight)
-				cameraMovementSpeed = -this.cameraMovementSpeed;
-			else 
-				cameraMovementSpeed = this.cameraMovementSpeed;
-		
+		if (cameraMovementSpeed == 0 && player.touchingDown){
+			if (whait > 50)
+				if (player.lookingRight)
+					cameraMovementSpeed = -this.cameraMovementSpeed;
+				else 
+					cameraMovementSpeed = this.cameraMovementSpeed;
+			else
+				whait++;
+		} else
+			whait = 0;
 		
 		if ((player.goingLeft || player.goingRight) && !player.goingUp)
 			cameraMovementSpeed = cameraMovementSpeed*2;
@@ -75,12 +80,16 @@ public class TCamera {// if camera hasnt moved dont recalc seen
 			if (formula1 < formula2 - x && moving)
 				x += camMove;
 			if (formula1 >= formula2 - x)
-				x = awnser;			
+				x = awnser;
+			if (formula1 >= formula2 - x)
+				x = awnser;
 		} else {
 			if (formula1 > formula2 - x && moving)
 				x += camMove;
 			if (formula1 <= formula2 - x)
 				x = awnser;
+			if (formula1 <= formula2 - x)
+				x = awnser;	
 		}
 	}
 }

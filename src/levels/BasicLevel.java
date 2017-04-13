@@ -46,7 +46,10 @@ public abstract class BasicLevel {
 	
 	public void colision(){
 		//how does this effect me Player 
+		pl.reTrue();
 		RenderAndLocation.walltest(pl, walls);
+
+		RenderAndLocation.walltest(pl, guys);
 		
 		//what are you guys doing with those walls
 		for (int i = 0; i < guys.length; i++)
