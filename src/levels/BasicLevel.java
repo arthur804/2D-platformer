@@ -3,8 +3,6 @@ package levels;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import javax.activity.InvalidActivityException;
-
 import forReal.SMyPlayer;
 import forReal.TCamera;
 import interfacesAndAbstract.GameObject;
@@ -17,11 +15,13 @@ public abstract class BasicLevel {
 	private MyMovingObject[] guys;
 	protected SMyPlayer pl;
 	private TCamera cam;
+	private MyMovingObject[] player;
 	
 	public BasicLevel(GameObject[] walls, MyMovingObject[] guys){		
 		this.walls = walls;
 		this.guys = guys;
 		pl = new SMyPlayer(new Point(50,500));
+		 player = new MyMovingObject[]{ pl };
 	}
 	
 	public void startCam(int widthOfScreen, int heightOfScreen){
@@ -46,9 +46,9 @@ public abstract class BasicLevel {
 	
 	public void colision(){
 		//how does this effect me Player 
-		pl.reTrue();
 		RenderAndLocation.walltest(pl, walls);
 
+		RenderAndLocation.walltest(guys[0], player);
 		RenderAndLocation.walltest(pl, guys);
 		
 		//what are you guys doing with those walls
@@ -78,6 +78,7 @@ public abstract class BasicLevel {
 	public void restartMoi() {
 		// TODO 
 		pl = new SMyPlayer(new Point(50,500));
+		 player = new MyMovingObject[]{ pl };
 	}
 
 }

@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
 import staticClasses.Formulas;
@@ -70,6 +71,28 @@ public class SMovingWall extends MyMovingObject {
 
 	}
 
+	@Override
+	public void touchingX(int x, GameObject staticObject) {
+		if (staticObject instanceof MyMovingObject){
+//			((MyMovingObject) staticObject).touchingX(0, this);
+			
+			int extra;
+			if (goingLeft){
+				extra = absoluteLocation[0] -((MyMovingObject) staticObject).myRectangle.width * INCREASE;
+			} else {
+				extra = absoluteLocation[0] + this.myRectangle.width * INCREASE;
+			}
+			((MyMovingObject) staticObject).pushedX(extra, vector[0], goingLeft);
+		}	
+	}
+
+	@Override
+	public void touchingY(int y, GameObject staticObject) {
+		if (staticObject instanceof MyMovingObject){
+			((MyMovingObject) staticObject).touchingY(this.myRectangle.y, this);				
+		}	
+	}
+	
 	//TODO
 	@Override
 	public void reTrue() {

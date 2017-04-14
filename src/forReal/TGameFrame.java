@@ -37,9 +37,9 @@ public class TGameFrame extends JPanel{
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 					System.exit(0);
-//				else if (e.getKeyChar() == (' ')){
-//					p.derp();
-//				}
+				else if (e.getKeyChar() == (' ')){
+					p.derp();
+				}
 				else
 					p.move(e.getKeyChar());
 			}
@@ -64,8 +64,9 @@ public class TGameFrame extends JPanel{
 		time.start();
 	}
 	//TODO
-	@SuppressWarnings("unused")
 	private void derp(){
+		if (time.isRunning())
+			time.stop();
 		repaint();
 		update();
 	}

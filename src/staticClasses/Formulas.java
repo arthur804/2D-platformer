@@ -4,8 +4,6 @@ public class Formulas {
 
 	private Formulas(){}
 	
-	
-
 	public static final int STANDARGD_WALLFALLINGSPEED = 20;
 	public static final int STANDARGD_WALLJUMPHEIGHT = 400;
 	public static final int STANDARGD_WALLJUMPDISTANCE = 500;

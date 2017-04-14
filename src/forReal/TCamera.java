@@ -30,42 +30,44 @@ public class TCamera {// if camera hasnt moved dont recalc seen
 //		if (x == player.myRectangle.x && y == player.myRectangle.y)
 //			return false;//als je x en y niet veranderen false ander true mario camera TODO
 //		if (player.goingUp && player.walljumped)
-		int cameraMovementSpeed = -player.nextX();//this.cameraMovementSpeed;
-		if (cameraMovementSpeed == 0 && player.touchingDown){
-			if (whait > 50)
-				if (player.lookingRight)
-					cameraMovementSpeed = -this.cameraMovementSpeed;
-				else 
-					cameraMovementSpeed = this.cameraMovementSpeed;
-			else
-				whait++;
-		} else
-			whait = 0;
+//		int cameraMovementSpeed = -player.nextX();//this.cameraMovementSpeed;
+//		if (cameraMovementSpeed == 0 && player.touchingDown){
+//			if (whait > 50)
+//				if (player.lookingRight)
+//					cameraMovementSpeed = -this.cameraMovementSpeed;
+//				else 
+//					cameraMovementSpeed = this.cameraMovementSpeed;
+//			else
+//				whait++;
+//		} else
+//			whait = 0;
+//		
+//		if ((player.goingLeft || player.goingRight) && !player.goingUp)
+//			cameraMovementSpeed = cameraMovementSpeed*2;
+//		if(player.touchingLeft || player.touchingRight){
+//			if (player.touchingRight){
+//				//TODO
+//				camReCalculateX(true, !player.wallJumped, player.myRectangle.x,
+//						distanceFromWall - width/2, 
+//						-(-width/2 + player.myRectangle.x - distanceFromWall), cameraMovementSpeed);
+//			} else {
+//				camReCalculateX(true, !player.wallJumped, player.myRectangle.x,  
+//						width/2 - distanceFromWall, 
+//						-(-width/2 + player.myRectangle.x + distanceFromWall), cameraMovementSpeed);				
+//			}
+//		}else if (player.lookingRight){
+//			camReCalculateX(false, !player.wallJumped, player.myRectangle.x, 
+//					distanceFromWall, 
+//					-(player.myRectangle.x - distanceFromWall), cameraMovementSpeed);			
+//		} else {
+//			camReCalculateX(true, !player.wallJumped, player.myRectangle.x,  
+//					width - distanceFromWall, 
+//					-(-width + player.myRectangle.x + distanceFromWall), cameraMovementSpeed);
+//		
+//
+//		}
 		
-		if ((player.goingLeft || player.goingRight) && !player.goingUp)
-			cameraMovementSpeed = cameraMovementSpeed*2;
-		if(player.touchingLeft || player.touchingRight){
-			if (player.touchingRight){
-				//TODO
-				camReCalculateX(true, !player.wallJumped, player.myRectangle.x,
-						distanceFromWall - width/2, 
-						-(-width/2 + player.myRectangle.x - distanceFromWall), cameraMovementSpeed);
-			} else {
-				camReCalculateX(true, !player.wallJumped, player.myRectangle.x,  
-						width/2 - distanceFromWall, 
-						-(-width/2 + player.myRectangle.x + distanceFromWall), cameraMovementSpeed);				
-			}
-		}else if (player.lookingRight){
-			camReCalculateX(false, !player.wallJumped, player.myRectangle.x, 
-					distanceFromWall, 
-					-(player.myRectangle.x - distanceFromWall), cameraMovementSpeed);			
-		} else {
-			camReCalculateX(true, !player.wallJumped, player.myRectangle.x,  
-					width - distanceFromWall, 
-					-(-width + player.myRectangle.x + distanceFromWall), cameraMovementSpeed);
 		
-
-		}
 //		if (player.goingUp){
 //			if (player.myRectangle.y <= y + distanceFromFloors)
 //				yDir = -cameraMovementSpeed;

@@ -134,7 +134,6 @@ public class RenderAndLocation {
 			}
 			/* just down */
 			else{
-				System.out.println(nextY);
 				calcUpDown(staticObjects, movingObject, nextY, false);
 			}
 		} else {
@@ -195,9 +194,9 @@ public class RenderAndLocation {
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 0)) {
 							movingObject.touchingUp = true;
 							if (yIsBigger)
-								movingObject.touchingY(-big, staticObjects[ii].type);
+								movingObject.touchingY(-big, staticObjects[ii]);
 							else
-								movingObject.touchingY(-small, staticObjects[ii].type);
+								movingObject.touchingY(-small, staticObjects[ii]);
 
 							break;
 						}
@@ -209,9 +208,9 @@ public class RenderAndLocation {
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 2)) {
 							movingObject.touchingDown = true;
 							if (yIsBigger)
-								movingObject.touchingY(big, staticObjects[ii].type);
+								movingObject.touchingY(big, staticObjects[ii]);
 							else
-								movingObject.touchingY(small, staticObjects[ii].type);
+								movingObject.touchingY(small, staticObjects[ii]);
 
 							break;
 						}
@@ -227,9 +226,9 @@ public class RenderAndLocation {
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
 							movingObject.touchingLeft = true;
 							if (yIsBigger){
-								movingObject.touchingX(-small, staticObjects[ii].type);
+								movingObject.touchingX(-small, staticObjects[ii]);
 							}else{
-								movingObject.touchingX(-big, staticObjects[ii].type);
+								movingObject.touchingX(-big, staticObjects[ii]);
 							}
 							break;
 						}
@@ -243,9 +242,9 @@ public class RenderAndLocation {
 						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
 							movingObject.touchingRight = true;
 							if (yIsBigger)
-								movingObject.touchingX(small, staticObjects[ii].type);
+								movingObject.touchingX(small, staticObjects[ii]);
 							else
-								movingObject.touchingX(big, staticObjects[ii].type); 
+								movingObject.touchingX(big, staticObjects[ii]); 
 							break;
 						}
 					}
@@ -300,7 +299,7 @@ public class RenderAndLocation {
 			} else {
 				movingObject.touchingDown = true;
 			}
-			movingObject.touchingY(nextY, staticObjects[awnser].type);
+			movingObject.touchingY(nextY, staticObjects[awnser]);
 		}
 
 	}
@@ -340,7 +339,7 @@ public class RenderAndLocation {
 			} else {
 				movingObject.touchingRight = true;
 			}
-			movingObject.touchingX(nextX, staticObjects[awnser].type);
+			movingObject.touchingX(nextX, staticObjects[awnser]);
 		}
 
 	}

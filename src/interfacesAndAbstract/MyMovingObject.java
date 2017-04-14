@@ -2,6 +2,9 @@ package interfacesAndAbstract;
 
 import java.awt.Rectangle;
 
+import forReal.SMovingWall;
+import staticClasses.Formulas;
+
 public abstract class MyMovingObject extends GameObject {
 
 	public boolean touchingLeft, touchingRight, touchingUp, touchingDown;
@@ -37,13 +40,24 @@ public abstract class MyMovingObject extends GameObject {
 		return new Rectangle(myRectangle.x + nextX, myRectangle.y + nextY, myRectangle.width, myRectangle.height);
 	}
 
-	public void touchingX(int x, ThingsInTheWorld c) {
-		touching[0] = c;
-		vector[0] = x * INCREASE;
+	public void touchingX(int x, GameObject staticObject) {
+		touching[0] = staticObject.type;
+		//TODO i have this part of the method also in the override in SMovingWall try to get this in 1 place so it doesnt take up as much space
+		if (staticObject instanceof SMovingWall){
+			int extra;
+			if (goingRight){
+				extra = ((SMovingWall)staticObject).absoluteLocation[0] - myRectangle.width * INCREASE;
+			} else if (goingLeft){
+				extra = ((SMovingWall)staticObject).absoluteLocation[0] + ((SMovingWall)staticObject).myRectangle.width * INCREASE;
+			} else
+				extra = 0;
+			this.pushedX(extra, ((SMovingWall)staticObject).vector[0], goingRight);
+		}else
+			vector[0] = x * INCREASE;
 	}
 
-	public void touchingY(int y, ThingsInTheWorld c) {
-		touching[1] = c;
+	public void touchingY(int y, GameObject staticObject) {
+		touching[1] = staticObject.type;
 		vector[1] = y * INCREASE;
 		// TODO
 	}
@@ -95,6 +109,21 @@ public abstract class MyMovingObject extends GameObject {
 	protected abstract void calcNextX();
 	//TODO
 	protected abstract void calcNextY();
+
+
+	public void pushedX(int newLocation, int newVector, boolean direction) {
+		absoluteLocation[0] = newLocation;//(this.absoluteLocation[0] + vector[0] + extra);
+		if (direction){
+			if (vector[0] > newVector){
+				vector[0] = newVector;
+			}
+		} else{
+			if (vector[0] < newVector){
+				vector[0] = newVector;				
+			}
+		}
+		calcNextX();
+	}
 
 
 	
