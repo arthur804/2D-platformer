@@ -71,12 +71,12 @@ public class SMovingWall extends MyMovingObject {
 
 	@Override
 	protected void calcNextY() {
-		if (goingDown) {
+		if (goingUp) {
 			if (points[step].y >= myRectangle.y){
 				nextStep();
 			} else
 				vector[1] -= ySpeed;
-		} else if (goingUp) {
+		} else if (goingDown) {
 			if (points[step].y <= myRectangle.y){
 				nextStep();
 			}else
@@ -84,9 +84,9 @@ public class SMovingWall extends MyMovingObject {
 		} else {
 			if (points[step].y != myRectangle.y){
 				if (points[step].y < myRectangle.y){
-					goingDown = true;
-				}else {
 					goingUp = true;
+				}else {
+					goingDown = true;
 				}
 			}
 		}
@@ -95,12 +95,12 @@ public class SMovingWall extends MyMovingObject {
 			vector[1] = flyingSpeed;
 		else if (vector[1] < -flyingSpeed)
 			vector[1] = -flyingSpeed;
-		
 	}
 
 	@Override
 	public void touchingX(int x, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
+			((MyMovingObject) staticObject).touching[0] = this.type;
 			((MyMovingObject) staticObject).pushedX(absoluteLocation[0], this.myRectangle.width * INCREASE, vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x);
 		}	
 	}
@@ -108,7 +108,8 @@ public class SMovingWall extends MyMovingObject {
 	@Override
 	public void touchingY(int y, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
-			((MyMovingObject) staticObject).pushedY(absoluteLocation[0], this.myRectangle.width * INCREASE, vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x, sticky);			
+			((MyMovingObject) staticObject).touching[1] = this.type;
+			((MyMovingObject) staticObject).pushedY(absoluteLocation[1], vector[1], goingUp, staticObject.myRectangle.y < myRectangle.y, sticky);			
 		}	
 	}
 	

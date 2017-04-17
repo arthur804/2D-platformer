@@ -16,6 +16,7 @@ public abstract class MyMovingObject extends GameObject {
 	public boolean goingLeft = false;
 	public boolean goingRight = false;
 	public boolean goingDown = false;
+	public boolean dead = false;
 	// public final int AMOUNTZERO = 2;
 
 	/**
@@ -41,17 +42,24 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 	public void touchingX(int x, GameObject staticObject) {
-		touching[0] = staticObject.type;
-		//TODO i have this part of the method also in the override in SMovingWall try to get this in 1 place so it doesnt take up as much space
+		
+		//the touching gets updated in the touching X of moving wall so if i dont want to do it double i have to put it here
 		if (staticObject instanceof SMovingWall){
 			((SMovingWall)staticObject).touchingX(0, this);
-		} else
+		} else{
 			vector[0] = x * INCREASE;
+			touching[0] = staticObject.type;
+		}
 	}
 
 	public void touchingY(int y, GameObject staticObject) {
-		touching[1] = staticObject.type;
-		vector[1] = y * INCREASE;
+		
+		if (staticObject instanceof SMovingWall){
+			((SMovingWall)staticObject).touchingY(0, this);
+		} else {
+			vector[1] = y * INCREASE;
+			touching[1] = staticObject.type;
+		}
 		// TODO
 	}
 
@@ -118,19 +126,25 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 
-	public void pushedY(int calc2, int calc1, int newVector, boolean movingWallIsGoingUp, boolean playerIsAboveWall, boolean isSticky) {
-		// TODO Auto-generated method stub
+	public void pushedY(int calc1, int newVector, boolean movingWallIsGoingUp, boolean playerIsAboveWall, boolean isSticky) {
+		// TODO
 		if (playerIsAboveWall){
+			vector[1] = newVector;
 			if (movingWallIsGoingUp){
-				
+				absoluteLocation[1] = calc1 - myRectangle.height*INCREASE;
 			} else {
-				
+				absoluteLocation[1] = calc1 - (myRectangle.height+1)*INCREASE;
 			}
 		} else {
+			
 			if (movingWallIsGoingUp){
-							
+				vector[1] = 0; // if you want to hang on to something that moves you need to adapt this
 			} else {
-				
+				if (touchingDown){
+					dead = true;
+				} else {
+					vector[1] = newVector + INCREASE;
+				}
 			}
 		}
 		

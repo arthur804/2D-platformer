@@ -22,8 +22,8 @@ public class WallPlayTestLevel extends BasicLevel {
 //				new LWall(new Rectangle(90, 380, 63, 130))
 				},
 				
-				new MyMovingObject[] { new SMovingWall(new Rectangle(50, 500, 40, 100), ThingsInTheWorld.WALL,
-						new Point[] { new Point(50, 500), new Point(300, 520) }, 10, 10, 100, false) });
+				new MyMovingObject[] { new SMovingWall(new Rectangle(50, 550, 40, 50), ThingsInTheWorld.WALL,
+						new Point[] { new Point(50, 550), new Point(50, 470) }, 10, 10, 100, false) });
 		// TODO Auto-generated constructor stub
 	}
 
