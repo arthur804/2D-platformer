@@ -93,6 +93,14 @@ public class SMyPlayer extends MyMovingObject {
 			vector[0] = Formulas.STANDARD_MAXWALKINGSPEED;
 		else if (vector[0] < -Formulas.STANDARD_MAXWALKINGSPEED)
 			vector[0] = -Formulas.STANDARD_MAXWALKINGSPEED;
+		
+		reTrueX();
+		
+		if (vector[0] > 0){
+			goingRight = true;
+		} else if (vector[0] < 0){
+			goingLeft = true;
+		}
 	}
 
 	protected void calcNextY() {
@@ -100,8 +108,7 @@ public class SMyPlayer extends MyMovingObject {
 			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
 				// wallJump
 				if (up)
-					if (wallJump())
-						;
+					if (wallJump()){}
 					// WallSliding
 					else if (vector[1] < touching[0].getMaxSlidingSpeed())
 						vector[1] += touching[0].getSlide();
@@ -114,6 +121,26 @@ public class SMyPlayer extends MyMovingObject {
 			jump();
 			// going Up
 		}
+		
+		reTrueY();
+		
+		if (vector[1] < 0){
+			goingUp = true;
+		} else if (vector[1] > 0){
+			goingDown = true;
+		}
+	}
+
+	private void reTrueY() {
+		touchingUp = touchingDown = goingUp = goingDown = false;
+		touching[1] = null;
+		
+	}
+	
+	private void reTrueX() {
+		touchingLeft = touchingRight = goingLeft = goingRight = false;
+		touching[0] = null;
+		
 	}
 
 	public void jump() {
@@ -176,10 +203,6 @@ public class SMyPlayer extends MyMovingObject {
 		down = keysPressed[2];
 	}
 
-	@Override
-	public void preUpdate() {
-		super.preUpdate();
-		reTrue();
-	}
+	
 
 }

@@ -44,15 +44,8 @@ public abstract class MyMovingObject extends GameObject {
 		touching[0] = staticObject.type;
 		//TODO i have this part of the method also in the override in SMovingWall try to get this in 1 place so it doesnt take up as much space
 		if (staticObject instanceof SMovingWall){
-			int extra;
-			if (goingRight){
-				extra = ((SMovingWall)staticObject).absoluteLocation[0] - myRectangle.width * INCREASE;
-			} else if (goingLeft){
-				extra = ((SMovingWall)staticObject).absoluteLocation[0] + ((SMovingWall)staticObject).myRectangle.width * INCREASE;
-			} else
-				extra = 0;
-			this.pushedX(extra, ((SMovingWall)staticObject).vector[0], goingRight);
-		}else
+			((SMovingWall)staticObject).touchingX(0, this);
+		} else
 			vector[0] = x * INCREASE;
 	}
 
@@ -60,11 +53,6 @@ public abstract class MyMovingObject extends GameObject {
 		touching[1] = staticObject.type;
 		vector[1] = y * INCREASE;
 		// TODO
-	}
-
-	public void reTrue() {
-		goingLeft = goingRight = goingUp = touchingLeft = touchingRight = touchingUp = touchingDown = goingDown = false;
-		touching[0] = touching[1] = null;
 	}
 
 	public void update() {
@@ -80,11 +68,9 @@ public abstract class MyMovingObject extends GameObject {
 	
 	public int nextX() {
 		int nextX = calc(0);
-		if (vector[0] > 0){
-			goingRight = true;
+		if (goingRight){
 			nextX += 1;
-		} else if (vector[0] < 0){
-			goingLeft = true;
+		} else if (goingLeft){
 			nextX -= 1;
 		}
 		return nextX; // omdat 1300 - 30 = 12 TODO Fix
@@ -92,11 +78,7 @@ public abstract class MyMovingObject extends GameObject {
 	
 	public int nextY() {
 		int nextY = calc(1);
-		if (vector[1] < 0){
-			goingUp = true;
-		} else if (vector[1] > 0){
-			goingDown = true;
-		}
+		
 		return nextY;
 	}
 	private int calc(int i){
@@ -111,18 +93,47 @@ public abstract class MyMovingObject extends GameObject {
 	protected abstract void calcNextY();
 
 
-	public void pushedX(int newLocation, int newVector, boolean direction) {
-		absoluteLocation[0] = newLocation;//(this.absoluteLocation[0] + vector[0] + extra);
-		if (direction){
-			if (vector[0] > newVector){
-				vector[0] = newVector;
+	public void pushedX(int calc2, int calc1, int newVector, boolean movingwallIsGoingLeft, boolean playerIsOnLeft) {
+		//(this.absoluteLocation[0] + vector[0] + extra);
+		int newLocation = 0;
+		if (playerIsOnLeft){
+			newLocation = calc2 - myRectangle.width * INCREASE;			
+			if (movingwallIsGoingLeft){
+				if (vector[0] > newVector)//Doesnt work
+					vector[0] = newVector;
 			}
-		} else{
-			if (vector[0] < newVector){
-				vector[0] = newVector;				
+			else{
+				vector[0] = 0;			
+			}
+		} else {
+			newLocation = calc2 + calc1;
+			if (!movingwallIsGoingLeft){
+				if (vector[0] < newVector)
+					vector[0] = newVector;
+			} else{
+				vector[0] = 0;
 			}
 		}
-		calcNextX();
+		absoluteLocation[0] = newLocation;
+	}
+
+
+	public void pushedY(int calc2, int calc1, int newVector, boolean movingWallIsGoingUp, boolean playerIsAboveWall, boolean isSticky) {
+		// TODO Auto-generated method stub
+		if (playerIsAboveWall){
+			if (movingWallIsGoingUp){
+				
+			} else {
+				
+			}
+		} else {
+			if (movingWallIsGoingUp){
+							
+			} else {
+				
+			}
+		}
+		
 	}
 
 

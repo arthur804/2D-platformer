@@ -17,14 +17,16 @@ public class SMovingWall extends MyMovingObject {
 	private int ySpeed;
 	private int step = 0;
 	private int flyingSpeed;
+	private boolean sticky;
 
-	public SMovingWall(Rectangle bounds, ThingsInTheWorld e, Point[] points, int xSpeed, int ySpeed, int flyingSpeed) {
+	public SMovingWall(Rectangle bounds, ThingsInTheWorld e, Point[] points, int xSpeed, int ySpeed, int flyingSpeed, boolean sticky) {
 		super(bounds, e);
 		this.points = points;
 		step++;
 		this.xSpeed = xSpeed;
 		this.ySpeed = ySpeed;
 		this.flyingSpeed = flyingSpeed;
+		this.sticky = sticky;
 	}
 
 	@Override
@@ -60,6 +62,8 @@ public class SMovingWall extends MyMovingObject {
 		step++;
 		goingLeft = false;
 		goingRight = false;
+		goingUp = false;
+		goingDown = false;
 		if (step == points.length)
 			step = 0;
 		vector[0] = vector[1] = 0;
@@ -67,37 +71,45 @@ public class SMovingWall extends MyMovingObject {
 
 	@Override
 	protected void calcNextY() {
-		// TODO Auto-generated method stub
-
+		if (goingDown) {
+			if (points[step].y >= myRectangle.y){
+				nextStep();
+			} else
+				vector[1] -= ySpeed;
+		} else if (goingUp) {
+			if (points[step].y <= myRectangle.y){
+				nextStep();
+			}else
+				vector[1] += ySpeed;
+		} else {
+			if (points[step].y != myRectangle.y){
+				if (points[step].y < myRectangle.y){
+					goingDown = true;
+				}else {
+					goingUp = true;
+				}
+			}
+		}
+		
+		if (vector[1] > flyingSpeed)
+			vector[1] = flyingSpeed;
+		else if (vector[1] < -flyingSpeed)
+			vector[1] = -flyingSpeed;
+		
 	}
 
 	@Override
 	public void touchingX(int x, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
-//			((MyMovingObject) staticObject).touchingX(0, this);
-			
-			int extra;
-			if (goingLeft){
-				extra = absoluteLocation[0] -((MyMovingObject) staticObject).myRectangle.width * INCREASE;
-			} else {
-				extra = absoluteLocation[0] + this.myRectangle.width * INCREASE;
-			}
-			((MyMovingObject) staticObject).pushedX(extra, vector[0], goingLeft);
+			((MyMovingObject) staticObject).pushedX(absoluteLocation[0], this.myRectangle.width * INCREASE, vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x);
 		}	
 	}
 
 	@Override
 	public void touchingY(int y, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
-			((MyMovingObject) staticObject).touchingY(this.myRectangle.y, this);				
+			((MyMovingObject) staticObject).pushedY(absoluteLocation[0], this.myRectangle.width * INCREASE, vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x, sticky);			
 		}	
-	}
-	
-	//TODO
-	@Override
-	public void reTrue() {
-//		if (step == points.length)
-//			step = 0;
 	}
 	
 	@Override

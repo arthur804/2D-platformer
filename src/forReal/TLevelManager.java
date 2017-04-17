@@ -21,7 +21,6 @@ public class TLevelManager {
 	public void update(){
 		lvl2.preUpdate();
 		lvl2.colision();
-		lvl2.update();
 	}
 	
 	public void controls(boolean[] keysPressed){

@@ -89,6 +89,9 @@ public class TGameFrame extends JPanel{
 				keysB[i] = true;
 				break;
 			}
+		//TODO for testing remove this
+		if (keysB[keysC.length - 1])
+			time.start();
 		theMan.controls(keysB);
 	}
 	public void stopMove(int key) {

@@ -48,21 +48,22 @@ public abstract class BasicLevel {
 		//how does this effect me Player 
 		RenderAndLocation.walltest(pl, walls);
 
-		RenderAndLocation.walltest(guys[0], player);
-		RenderAndLocation.walltest(pl, guys);
-		
-		//what are you guys doing with those walls
-		for (int i = 0; i < guys.length; i++)
+		for (int i = 0; i < guys.length; i++){
+			RenderAndLocation.walltest(guys[i], player);
 			RenderAndLocation.walltest(guys[i], walls);
+			guys[i].update();
+		}
+		RenderAndLocation.walltest(pl, guys);
+		pl.update();
 		
 		//Maybe Also check all guys against all other guys
 	}
 	
-	public void update(){
-		pl.update();
-		for (int i = 0; i < guys.length; i++)
-			guys[i].update();
-	}
+//	public void update(){
+//		for (int i = 0; i < guys.length; i++){
+//			guys[i].update();
+//		}
+//	}
 
 	public void preUpdate() {
 		pl.preUpdate();
