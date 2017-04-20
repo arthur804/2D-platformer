@@ -1,10 +1,10 @@
 package forReal;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
@@ -15,15 +15,18 @@ public class SMyPlayer extends MyMovingObject {
 	public boolean left, right, up, down;
 
 	public boolean lookingRight = true;
+	private boolean imageIsLookingRight = true;
 
 	public boolean wallJumped = false;
 	private boolean jumped = false;
 
-	// TODO this is temporarly
-	private Rectangle eyeTangle = new Rectangle(0, 0, 5, 3);
-
-	public SMyPlayer(Point rec) {
-		super(new Rectangle(rec, new Dimension(16, 16)), ThingsInTheWorld.PLAYER);
+	private Animation myAnimatorWalk;
+	private int animationWalkFrames = 0;
+	private static final int CHANGE_FRAME_AMOUNT = 20;
+	
+	public SMyPlayer(Point rec, BufferedImage spriteSheet, BufferedImage spriteSheetWalk, int sizeSpriteX, int sizeSpriteY, int xPixelsBet,int yPixelsBet){
+		super(new Rectangle(rec, new Dimension(32, 32)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
+		myAnimatorWalk = new Animation(spriteSheetWalk, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
 	}
 
 	protected void calcNextX() {
@@ -55,10 +58,10 @@ public class SMyPlayer extends MyMovingObject {
 				vector[0] -= speed;
 
 				lookingRight = false;
-			} else if (right){
+			} else if (right) {
 				vector[0] += speed;
 				lookingRight = true;
-			}else {
+			} else {
 				vector[0] -= slowSpeed;
 
 				if (vector[0] < 0)
@@ -66,7 +69,7 @@ public class SMyPlayer extends MyMovingObject {
 			}
 
 		} else if (vector[0] < 0) {
-			if (left){
+			if (left) {
 				vector[0] -= speed;
 				lookingRight = false;
 			} else if (right) {
@@ -93,12 +96,12 @@ public class SMyPlayer extends MyMovingObject {
 			vector[0] = Formulas.STANDARD_MAXWALKINGSPEED;
 		else if (vector[0] < -Formulas.STANDARD_MAXWALKINGSPEED)
 			vector[0] = -Formulas.STANDARD_MAXWALKINGSPEED;
-		
+
 		reTrueX();
-		
-		if (vector[0] > 0){
+
+		if (vector[0] > 0) {
 			goingRight = true;
-		} else if (vector[0] < 0){
+		} else if (vector[0] < 0) {
 			goingLeft = true;
 		}
 	}
@@ -108,7 +111,8 @@ public class SMyPlayer extends MyMovingObject {
 			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
 				// wallJump
 				if (up)
-					if (wallJump()){}
+					if (wallJump()) {
+					}
 					// WallSliding
 					else if (vector[1] < touching[0].getMaxSlidingSpeed())
 						vector[1] += touching[0].getSlide();
@@ -121,26 +125,28 @@ public class SMyPlayer extends MyMovingObject {
 			jump();
 			// going Up
 		}
-		
+
 		reTrueY();
+
 		
-		if (vector[1] < 0){
-			goingUp = true;
-		} else if (vector[1] > 0){
-			goingDown = true;
-		}
 	}
 
 	private void reTrueY() {
-		touchingUp = touchingDown = goingUp = goingDown = false;
+		if (vector[1] < 0) {
+			goingUp = true;
+			goingDown = false;
+		} else if (vector[1] > 0) {
+			goingDown = true;
+		}
+		touchingUp = touchingDown = goingUp = false;
 		touching[1] = null;
-		
+
 	}
-	
+
 	private void reTrueX() {
 		touchingLeft = touchingRight = goingLeft = goingRight = false;
 		touching[0] = null;
-		
+
 	}
 
 	public void jump() {
@@ -163,38 +169,12 @@ public class SMyPlayer extends MyMovingObject {
 		lookingRight = !lookingRight;
 		return true;
 	}
-
-	// TODO remove this its teporarly for the eye
+	
 	@Override
-	public void update() {
-		absoluteLocation[0] += vector[0];
-		absoluteLocation[1] += vector[1];
-
-		myRectangle.setLocation(absoluteLocation[0] / INCREASE, absoluteLocation[1] / INCREASE);
-		if (!lookingRight)
-			eyeTangle.setLocation(myRectangle.x + 2, myRectangle.y + 3);
-		else
-			eyeTangle.setLocation(myRectangle.x + myRectangle.width - 2 - eyeTangle.width, myRectangle.y + 3);
+	public void preUpdate() {
+		super.preUpdate();
+		animationWalkFrames++;
 	}
-
-	public void draw(Graphics2D g) {
-		g.setColor(Color.yellow);
-		g.fill(myRectangle);
-		g.setColor(Color.BLUE);
-		g.fill(eyeTangle);
-		// super.baseDraw(g);
-	}
-
-	// @Override
-	// public int nextY() {
-	// int number = super.nextY();
-	// if (!goingUp){
-	// goingDown = true;
-	// number++; // otherwise it wont see someone standing on the floor as
-	// someone standing on the floor
-	// }
-	// return number;
-	// }
 
 	public void controls(boolean[] keysPressed) {
 		left = keysPressed[0];
@@ -203,6 +183,25 @@ public class SMyPlayer extends MyMovingObject {
 		down = keysPressed[2];
 	}
 
-	
+	@Override
+	public void draw(Graphics2D g) {
+		if (lookingRight != imageIsLookingRight){
+			//all animators need to be fliped here
+			myAnimator.flip();
+			myAnimatorWalk.flip();
+			imageIsLookingRight = !imageIsLookingRight;
+		}
+		if (animationWalkFrames == CHANGE_FRAME_AMOUNT){
+			animationWalkFrames = 0;
+			myAnimator.nextFrame();
+			myAnimatorWalk.nextFrame();
+		}
+		System.out.println(touchingDown + " x " + goingDown);
+		if (goingDown && (left || right)){
+			super.baseDraw(g, myRectangle, myAnimatorWalk.getCorrectFrame());
+		}else
+			super.baseDraw(g, myRectangle, myAnimator.getCorrectFrame());
+
+	}
 
 }

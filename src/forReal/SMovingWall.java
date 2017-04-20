@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
-import staticClasses.Formulas;
 
 public class SMovingWall extends MyMovingObject {
 

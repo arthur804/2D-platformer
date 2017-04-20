@@ -8,6 +8,7 @@ import forReal.SMyPlayer;
 import forReal.TCamera;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
+import staticClasses.ImagesOfLevel;
 import staticClasses.RenderAndLocation;
 
 public abstract class BasicLevel {
@@ -17,11 +18,12 @@ public abstract class BasicLevel {
 	protected SMyPlayer pl;
 	private TCamera cam;
 	private MyMovingObject[] player;
+	public static final ImagesOfLevel theBasicLevelImages = new ImagesOfLevel();
 	
 	public BasicLevel(GameObject[] walls, MyMovingObject[] otherMovingObjects){		
 		this.walls = walls;
 		this.otherMovingObjects = otherMovingObjects;
-		pl = new SMyPlayer(new Point(50,500));
+		pl = new SMyPlayer(new Point(50,500), theBasicLevelImages.playerSprites, theBasicLevelImages.playerSpritesWalk,theBasicLevelImages.playerSpritesWidth, theBasicLevelImages.playerSpritesHeight, theBasicLevelImages.xDif, theBasicLevelImages.yDif);
 		 player = new MyMovingObject[]{ pl };
 	}
 	
@@ -84,8 +86,7 @@ public abstract class BasicLevel {
 
 	public void restartMoi() {
 		// TODO 
-		pl = new SMyPlayer(new Point(500,50));
-		 player = new MyMovingObject[]{ pl };
+		pl.absoluteLocation[0] = pl.absoluteLocation[1] = 0;
 	}
 
 }

@@ -1,9 +1,11 @@
 package interfacesAndAbstract;
 
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
+import forReal.Animation;
 import forReal.SMovingWall;
-import staticClasses.Formulas;
 
 public abstract class MyMovingObject extends GameObject {
 
@@ -12,29 +14,28 @@ public abstract class MyMovingObject extends GameObject {
 	public ThingsInTheWorld[] touching = new ThingsInTheWorld[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
 	protected static final int INCREASE = 100;
-	public boolean goingUp;
-	public boolean goingLeft;
-	public boolean goingRight;
-	public boolean goingDown;
-	protected boolean dead;
+	public boolean goingUp = false;
+	public boolean goingLeft = false;
+	public boolean goingRight = false;
+	public boolean goingDown = false;
+	public boolean dead = false;
 	
 	// public final int AMOUNTZERO = 2;
 
 	/**
 	 * use this one if it is a moving object
-	 */
+	 */	
 	public MyMovingObject(Rectangle bounds, ThingsInTheWorld e) {
 		super(bounds, e);
 		absoluteLocation[0] = bounds.x * INCREASE;
 		absoluteLocation[1] = bounds.y * INCREASE;
-		goingUp = false;
-		goingLeft = false;
-		goingRight = false;
-		goingDown = false;
-		dead = false;
-	}
+	}	
 
-
+	 public MyMovingObject(Rectangle bounds, ThingsInTheWorld e, BufferedImage spriteSheet, int sizeSpriteX, int sizeSpriteY, int xPixelsBet,int yPixelsBet){
+		super(bounds, e, spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
+		absoluteLocation[0] = bounds.x * INCREASE;
+		absoluteLocation[1] = bounds.y * INCREASE;
+	}	
 	public Rectangle nextTangleOnlyY(int i) {
 		return new Rectangle(myRectangle.x, myRectangle.y + i, myRectangle.width, myRectangle.height);
 	}
@@ -142,7 +143,7 @@ public abstract class MyMovingObject extends GameObject {
 		}
 		absoluteLocation[0] = newLocation;
 	}
-
+	
 
 	public void pushedY(int calc1, int newVector, boolean movingWallIsGoingUp,
 			boolean playerIsAboveWall, boolean isSticky) {

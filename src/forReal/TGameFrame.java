@@ -54,7 +54,7 @@ public class TGameFrame extends JPanel{
 	
 	public TGameFrame() {
 		setLayout(null);
-		setBackground(Color.black);
+		setBackground(Color.lightGray);
 		theMan = new TLevelManager(800, 800);
 		time = new Timer(10, ActionListener -> 
 		{

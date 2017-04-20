@@ -11,8 +11,8 @@ public class Formulas {
 	
 	public static final int STANDARGD_MAXWALLSPEED = 300;	
 	public static final int STANDARGD_SLOWDOWNSPEED = 10;
-	public static final int STANDARGD_SPEED = 30;
-	public static final int STANDARD_MAXWALKINGSPEED = 400;
+	public static final int STANDARGD_SPEED = 20;
+	public static final int STANDARD_MAXWALKINGSPEED = 100;
 	
 	public static final int STANDARGD_SPEEDFLYING = 20;
 	public static final int STANDARGD_SLOWDOWNSPEEDFLYING = 5;
