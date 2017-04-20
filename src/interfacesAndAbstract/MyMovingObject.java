@@ -11,12 +11,13 @@ public abstract class MyMovingObject extends GameObject {
 	public int[] vector = new int[] { 0, 0 };
 	public ThingsInTheWorld[] touching = new ThingsInTheWorld[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
-	public final int INCREASE = 100;
-	public boolean goingUp = false;
-	public boolean goingLeft = false;
-	public boolean goingRight = false;
-	public boolean goingDown = false;
-	public boolean dead = false;
+	protected static final int INCREASE = 100;
+	public boolean goingUp;
+	public boolean goingLeft;
+	public boolean goingRight;
+	public boolean goingDown;
+	protected boolean dead;
+	
 	// public final int AMOUNTZERO = 2;
 
 	/**
@@ -26,6 +27,11 @@ public abstract class MyMovingObject extends GameObject {
 		super(bounds, e);
 		absoluteLocation[0] = bounds.x * INCREASE;
 		absoluteLocation[1] = bounds.y * INCREASE;
+		goingUp = false;
+		goingLeft = false;
+		goingRight = false;
+		goingDown = false;
+		dead = false;
 	}
 
 
@@ -86,7 +92,11 @@ public abstract class MyMovingObject extends GameObject {
 	
 	public int nextY() {
 		int nextY = calc(1);
-		
+//		if (goingDown){
+//			nextY += 1;
+//		} else if (goingUp){
+//			nextY -= 1;
+//		}
 		return nextY;
 	}
 	private int calc(int i){
@@ -105,34 +115,51 @@ public abstract class MyMovingObject extends GameObject {
 		//(this.absoluteLocation[0] + vector[0] + extra);
 		int newLocation = 0;
 		if (playerIsOnLeft){
-			newLocation = calc2 - myRectangle.width * INCREASE;			
-			if (movingwallIsGoingLeft){
-				if (vector[0] > newVector)//Doesnt work
-					vector[0] = newVector;
-			}
-			else{
-				vector[0] = 0;			
+			if (touchingLeft){
+				dead = true;
+			} else {
+				newLocation = calc2 - myRectangle.width * INCREASE;			
+				if (movingwallIsGoingLeft){
+					if (vector[0] > newVector)//Doesnt work
+						vector[0] = newVector;
+				}
+				else{
+					vector[0] = 0;			
+				}
 			}
 		} else {
-			newLocation = calc2 + calc1;
-			if (!movingwallIsGoingLeft){
-				if (vector[0] < newVector)
-					vector[0] = newVector;
-			} else{
-				vector[0] = 0;
+			if (touchingRight){
+				dead = true;
+			} else {
+				newLocation = calc2 + calc1;
+				if (!movingwallIsGoingLeft){
+					if (vector[0] < newVector)
+						vector[0] = newVector;
+				} else{
+					vector[0] = 0;
+				}
 			}
 		}
 		absoluteLocation[0] = newLocation;
 	}
 
 
-	public void pushedY(int calc1, int newVector, boolean movingWallIsGoingUp, boolean playerIsAboveWall, boolean isSticky) {
+	public void pushedY(int calc1, int newVector, boolean movingWallIsGoingUp,
+			boolean playerIsAboveWall, boolean isSticky) {
 		// TODO
+		
 		if (playerIsAboveWall){
-			vector[1] = newVector;
 			if (movingWallIsGoingUp){
-				absoluteLocation[1] = calc1 - myRectangle.height*INCREASE;
+				if (touchingUp){
+					dead = true;
+				} else {
+					absoluteLocation[1] = (calc1/INCREASE - myRectangle.height)*INCREASE;
+					if (vector[1] > newVector)
+						vector[1] = newVector;
+					touchingDown = true;
+				}
 			} else {
+				vector[1] = newVector;
 				absoluteLocation[1] = calc1 - (myRectangle.height+1)*INCREASE;
 			}
 		} else {

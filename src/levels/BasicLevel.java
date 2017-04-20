@@ -3,6 +3,7 @@ package levels;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import forReal.SMovingWall;
 import forReal.SMyPlayer;
 import forReal.TCamera;
 import interfacesAndAbstract.GameObject;
@@ -12,14 +13,14 @@ import staticClasses.RenderAndLocation;
 public abstract class BasicLevel {
 
 	private GameObject[] walls;
-	private MyMovingObject[] guys;
+	private MyMovingObject[] otherMovingObjects;
 	protected SMyPlayer pl;
 	private TCamera cam;
 	private MyMovingObject[] player;
 	
-	public BasicLevel(GameObject[] walls, MyMovingObject[] guys){		
+	public BasicLevel(GameObject[] walls, MyMovingObject[] otherMovingObjects){		
 		this.walls = walls;
-		this.guys = guys;
+		this.otherMovingObjects = otherMovingObjects;
 		pl = new SMyPlayer(new Point(50,500));
 		 player = new MyMovingObject[]{ pl };
 	}
@@ -39,8 +40,8 @@ public abstract class BasicLevel {
 			walls[i].draw(g);
 		}
 		
-		for(int i = 0; i < guys.length; i++){
-			guys[i].draw(g);
+		for(int i = 0; i < otherMovingObjects.length; i++){
+			otherMovingObjects[i].draw(g);
 		}
 	}
 	
@@ -48,14 +49,19 @@ public abstract class BasicLevel {
 		//how does this effect me Player 
 		RenderAndLocation.walltest(pl, walls);
 
-		for (int i = 0; i < guys.length; i++){
-			RenderAndLocation.walltest(guys[i], player);
-			RenderAndLocation.walltest(guys[i], walls);
-			guys[i].update();
+		RenderAndLocation.walltest(pl, otherMovingObjects);
+		for (int i = 0; i < otherMovingObjects.length; i++){
+			if (otherMovingObjects[i] instanceof SMovingWall)
+				RenderAndLocation.movingWallCalculation(otherMovingObjects[i], player);
+			else
+				RenderAndLocation.walltest(otherMovingObjects[i], player);
+//			RenderAndLocation.walltest(guys[i], walls);
+			otherMovingObjects[i].update();
+			
 		}
-		RenderAndLocation.walltest(pl, guys);
 		pl.update();
-		
+//		for (int i = 0; i < guys.length; i++)
+//			guys[i].update();
 		//Maybe Also check all guys against all other guys
 	}
 	
@@ -67,8 +73,8 @@ public abstract class BasicLevel {
 
 	public void preUpdate() {
 		pl.preUpdate();
-		for (int i = 0; i < guys.length; i++)
-			guys[i].preUpdate();
+		for (int i = 0; i < otherMovingObjects.length; i++)
+			otherMovingObjects[i].preUpdate();
 	}
 
 	public void controls(boolean[] keysPressed) {
@@ -78,7 +84,7 @@ public abstract class BasicLevel {
 
 	public void restartMoi() {
 		// TODO 
-		pl = new SMyPlayer(new Point(50,500));
+		pl = new SMyPlayer(new Point(500,50));
 		 player = new MyMovingObject[]{ pl };
 	}
 

@@ -3,6 +3,7 @@ package staticClasses;
 import java.awt.Rectangle;
 import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 
+import forReal.SMovingWall;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 
@@ -104,7 +105,6 @@ public class RenderAndLocation {
 		int nextX = movingObject.nextX();
 		int nextY = movingObject.nextY();
 		
-
 		// ------------------------------------------------UP
 		if (movingObject.goingUp) {
 
@@ -146,6 +146,26 @@ public class RenderAndLocation {
 			}
 		}
 	}
+	
+	public static void movingWallCalculation(MyMovingObject movingObject, GameObject[] staticObjects){
+		int nextX = movingObject.nextX();
+		int nextY = movingObject.nextY();
+
+		if (movingObject.goingUp)
+			calcUpDown(staticObjects, movingObject, nextY, true);
+		
+		else if (movingObject.goingDown)
+			calcUpDown(staticObjects, movingObject, nextY, false);
+		
+		if (movingObject.goingLeft){
+			calcLeftRightOnly(movingObject, staticObjects, nextX, true);
+		}
+		
+		else if (movingObject.goingRight){
+			calcLeftRightOnly(movingObject, staticObjects, nextX, false);
+			
+		}
+	}
 
 	/**
 	 * 0 top 1 left 2 down 3 right
@@ -160,25 +180,25 @@ public class RenderAndLocation {
 		int positiveY = Math.abs(nextY);
 		boolean yIsBigger;
 		int biggest;
-		int smallest;
+		int smallestInSteps;
 
 		if (positiveX < positiveY) {
 //			amountTest = (int) positiveY;
 //			divY = 1;
 //			divX = (positiveX / positiveY) * numb;
 			biggest = positiveY;
-			smallest = positiveX;
+			smallestInSteps = positiveX;
 			yIsBigger = true;
 		} else {
 //			amountTest = (int) positiveX;
 //			divX = 1;
 			biggest = positiveX;
-			smallest = positiveY;
+			smallestInSteps = positiveY;
 //			divY = (positiveY / positiveX) * numb;
 			yIsBigger = false;
 		}
 		for (int big = 0; big <= biggest; big++) 
-			for (int small = 0; small <= smallest; small++) {
+			for (int small = 0; small <= smallestInSteps; small++) {
 			
 			Rectangle tangle;
 			
@@ -250,9 +270,10 @@ public class RenderAndLocation {
 					}
 				}
 			}
-			else if (movingObject.touchingDown || movingObject.touchingUp){
-				break;
-			}
+//			else if (movingObject.touchingDown || movingObject.touchingUp){
+//				break;
+//			}
+
 		}
 	}
 

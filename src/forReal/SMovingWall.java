@@ -15,14 +15,16 @@ public class SMovingWall extends MyMovingObject {
 	private Point[] points;
 	private int xSpeed;
 	private int ySpeed;
-	private int step = 0;
+	private int stepY = 0;
 	private int flyingSpeed;
 	private boolean sticky;
+	private int stepX = 0;
 
 	public SMovingWall(Rectangle bounds, ThingsInTheWorld e, Point[] points, int xSpeed, int ySpeed, int flyingSpeed, boolean sticky) {
 		super(bounds, e);
 		this.points = points;
-		step++;
+		stepY++;
+		stepX++;
 		this.xSpeed = xSpeed;
 		this.ySpeed = ySpeed;
 		this.flyingSpeed = flyingSpeed;
@@ -32,58 +34,64 @@ public class SMovingWall extends MyMovingObject {
 	@Override
 	protected void calcNextX() {
 		if (goingLeft) {
-			if (points[step].x >= myRectangle.x){
-				nextStep();
+			if (points[stepX].x >= myRectangle.x){
+				nextStepX();
 			} else
 				vector[0] -= xSpeed;
 		} else if (goingRight) {
-			if (points[step].x <= myRectangle.x){
-				nextStep();
+			if (points[stepX].x <= myRectangle.x){
+				nextStepX();
 			}else
 				vector[0] += xSpeed;
 		} else {
-			if (points[step].x != myRectangle.x){
-				if (points[step].x < myRectangle.x){
+			if (points[stepX].x != myRectangle.x){
+				if (points[stepX].x < myRectangle.x){
 					goingLeft = true;
 				}else {
 					goingRight = true;
 				}
 			}
 		}
-		
 		if (vector[0] > flyingSpeed)
 			vector[0] = flyingSpeed;
 		else if (vector[0] < -flyingSpeed)
 			vector[0] = -flyingSpeed;
-		
+//		
 	}
 	
-	public void nextStep(){
-		step++;
-		goingLeft = false;
-		goingRight = false;
+	private void nextStepY(){
+		stepY++;
 		goingUp = false;
 		goingDown = false;
-		if (step == points.length)
-			step = 0;
-		vector[0] = vector[1] = 0;
+		if (stepY == points.length)
+			stepY = 0;
+		vector[1] = 0;
+	}
+	
+	private void nextStepX(){
+		stepX++;
+		goingLeft = false;
+		goingRight = false;
+		if (stepX == points.length)
+			stepX = 0;
+		vector[0] = 0;
 	}
 
 	@Override
 	protected void calcNextY() {
 		if (goingUp) {
-			if (points[step].y >= myRectangle.y){
-				nextStep();
+			if (points[stepY].y >= myRectangle.y){
+				nextStepY();
 			} else
 				vector[1] -= ySpeed;
 		} else if (goingDown) {
-			if (points[step].y <= myRectangle.y){
-				nextStep();
+			if (points[stepY].y <= myRectangle.y){
+				nextStepY();
 			}else
 				vector[1] += ySpeed;
 		} else {
-			if (points[step].y != myRectangle.y){
-				if (points[step].y < myRectangle.y){
+			if (points[stepY].y != myRectangle.y){
+				if (points[stepY].y < myRectangle.y){
 					goingUp = true;
 				}else {
 					goingDown = true;
@@ -109,7 +117,8 @@ public class SMovingWall extends MyMovingObject {
 	public void touchingY(int y, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
 			((MyMovingObject) staticObject).touching[1] = this.type;
-			((MyMovingObject) staticObject).pushedY(absoluteLocation[1], vector[1], goingUp, staticObject.myRectangle.y < myRectangle.y, sticky);			
+			((MyMovingObject) staticObject).pushedY(absoluteLocation[1], vector[1], goingUp, 
+					staticObject.myRectangle.y < myRectangle.y, sticky);			
 		}	
 	}
 	
