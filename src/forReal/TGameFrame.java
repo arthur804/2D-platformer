@@ -45,7 +45,7 @@ public class TGameFrame extends JPanel{
 			}
 
 			public void keyReleased(KeyEvent e) {
-				p.stopMove(e.getKeyChar());
+				p.stopMove(e.getKeyChar(), e.isAltDown());
 			}
 
 		});
@@ -94,12 +94,14 @@ public class TGameFrame extends JPanel{
 			time.start();
 		theMan.controls(keysB);
 	}
-	public void stopMove(int key) {
-		for (int i = 0; i < keysC.length; i++)
-			if (key == keysC[i]){
-				keysB[i] = false;
-				break;
-			}
-		theMan.controls(keysB);
+	public void stopMove(int key, boolean altIsDown) {
+		if (!altIsDown){
+			for (int i = 0; i < keysC.length; i++)
+				if (key == keysC[i]){
+					keysB[i] = false;
+					break;
+				}
+			theMan.controls(keysB);
+		}
 	}
 }

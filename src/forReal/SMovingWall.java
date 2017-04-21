@@ -94,7 +94,7 @@ public class SMovingWall extends MyMovingObject {
 					goingUp = true;
 				}else {
 					goingDown = true;
-				}
+				}   
 			}
 		}
 		

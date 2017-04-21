@@ -97,44 +97,41 @@ public class SMyPlayer extends MyMovingObject {
 
 		reTrueX();
 
-		if (vector[0] > 0) {
-			goingRight = true;
-		} else if (vector[0] < 0) {
-			goingLeft = true;
-		}
 	}
 
 	protected void calcNextY() {
-		// something to jump TODO put this where it belongs
-		if (!up) {
-			wallJumped = false;
-			jumped = false;
-		}
-
-		if (!touchingDown) {
-			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
-				// wallJump
-				if (up)
-					if (wallJump()) {
-					}
-					// WallSliding
-					else if (vector[1] < touching[0].getMaxSlidingSpeed())
-						vector[1] += touching[0].getSlide();
-					else
-						vector[1] -= touching[0].getMaxSlowDown();
-			} else
-				vector[1] += Formulas.FALINGSPEED;
-			// going Down
-		} else if (up) {
-			jump();
-			// going Up
-		}
-
+		vector[1] = 40000;
+//		if (!up) {
+//			wallJumped = false;
+//			jumped = false;
+//		}
+//
+//		if (!touchingDown) {
+//			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
+//				// wallJump
+//				if (up)
+//					if (wallJump()) {
+//					}
+//					// WallSliding
+//					else if (vector[1] < touching[0].getMaxSlidingSpeed())
+//						vector[1] += touching[0].getSlide();
+//					else
+//						vector[1] -= touching[0].getMaxSlowDown();
+//			} else
+//				vector[1] += Formulas.FALINGSPEED;
+//			// going Down
+//		} else if (up) {
+//			jump();
+//			// going Up
+//		}
+//
 		reTrueY();
 
 	}
 
 	private void reTrueY() {
+		if (touchingUp && touchingDown)
+			dead = true;
 		if (vector[1] < 0) {
 			goingUp = true;
 			goingDown = false;
@@ -148,8 +145,16 @@ public class SMyPlayer extends MyMovingObject {
 	}
 
 	private void reTrueX() {
+		if (touchingLeft && touchingRight)
+			dead = true;
 		touchingLeft = touchingRight = goingLeft = goingRight = false;
 		touching[0] = null;
+		
+		if (vector[0] > 0) {
+			goingRight = true;
+		} else if (vector[0] < 0) {
+			goingLeft = true;
+		}
 
 	}
 
@@ -209,8 +214,7 @@ public class SMyPlayer extends MyMovingObject {
 
 	@Override
 	public void touchingX(int x, GameObject staticObject) {
-
-		if (staticObject.myRectangle.y > myRectangle.y + STEP_UP) {
+		if (staticObject.myRectangle.y > myRectangle.y + STEP_UP && staticObject.myRectangle.y < myRectangle.y + myRectangle.width +1) {
 			absoluteLocation[1] = (staticObject.myRectangle.y - myRectangle.height) * INCREASE;
 			if (staticObject instanceof SMovingWall) {
 				((SMovingWall) staticObject).touchingX(0, this);

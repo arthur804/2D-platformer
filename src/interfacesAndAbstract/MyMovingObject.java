@@ -108,30 +108,27 @@ public abstract class MyMovingObject extends GameObject {
 		//(this.absoluteLocation[0] + vector[0] + extra);
 		int newLocation = 0;
 		if (playerIsOnLeft){
-			if (touchingLeft){
-				dead = true;
-			} else {
-				newLocation = calc2 - myRectangle.width * INCREASE;			
-				if (movingwallIsGoingLeft){
-					if (vector[0] > newVector)//Doesnt work
-						vector[0] = newVector;
-				}
-				else{
-					vector[0] = 0;			
-				}
+			newLocation = 0;//calc2 - myRectangle.width * INCREASE;			
+			if (movingwallIsGoingLeft){
+				if (vector[0] > newVector + INCREASE)
+					vector[0] = newVector + INCREASE;
+				newLocation = calc2 - myRectangle.width * INCREASE - 3*INCREASE;
 			}
+			else{
+				vector[0] = 0;			
+				newLocation = calc2 - myRectangle.width * INCREASE;		
+			}
+			
 		} else {
-			if (touchingRight){
-				dead = true;
-			} else {
-				newLocation = calc2 + calc1;
-				if (!movingwallIsGoingLeft){
-					if (vector[0] < newVector)
-						vector[0] = newVector;
-				} else{
-					vector[0] = 0;
-				}
+			
+			newLocation = calc2 + calc1;
+			if (!movingwallIsGoingLeft){
+				if (vector[0] < newVector)
+					vector[0] = newVector;
+			} else{
+				vector[0] = 0;
 			}
+			
 		}
 		absoluteLocation[0] = newLocation;
 	}
@@ -143,15 +140,15 @@ public abstract class MyMovingObject extends GameObject {
 		
 		if (playerIsAboveWall){
 			if (movingWallIsGoingUp){
-				if (touchingUp){
-					dead = true;
-				} else {
+				
 					absoluteLocation[1] = (calc1/INCREASE - myRectangle.height)*INCREASE;
 					if (vector[1] > newVector)
 						vector[1] = newVector;
 					touchingDown = true;
-				}
-			} else {
+				
+			}else {
+				goingDown = true;
+				goingUp = false;
 				vector[1] = newVector;
 				absoluteLocation[1] = calc1 - (myRectangle.height+1)*INCREASE;
 			}
@@ -160,11 +157,11 @@ public abstract class MyMovingObject extends GameObject {
 			if (movingWallIsGoingUp){
 				vector[1] = 0; // if you want to hang on to something that moves you need to adapt this
 			} else {
-				if (touchingDown){
-					dead = true;
-				} else {
-					vector[1] = newVector + INCREASE;
-				}
+				//needs to be a check
+				goingDown = true;
+				goingUp = false;
+				vector[1] = newVector + INCREASE;
+				
 			}
 		}
 		

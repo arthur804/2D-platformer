@@ -34,7 +34,7 @@ public abstract class BasicLevel {
 	public void draw(Graphics2D g){
 		
 		cam.reCamera(pl);
-		g.translate(cam.x, cam.y);
+		g.translate(- cam.x, cam.y);
 		
 		pl.draw(g);
 		
@@ -53,20 +53,24 @@ public abstract class BasicLevel {
 			pl.dead = false;
 		}
 		pl.preUpdate();
+
 		for (int i = 0; i < otherMovingObjects.length; i++)
 			otherMovingObjects[i].preUpdate();
 		//how does this effect me, Player 
 		RenderAndLocation.walltest(pl, walls);
 
-		RenderAndLocation.walltest(pl, otherMovingObjects);
+		
 		for (int i = 0; i < otherMovingObjects.length; i++){
-			if (otherMovingObjects[i] instanceof SMovingWall)
-				RenderAndLocation.movingWallCalculation(otherMovingObjects[i], player);
-			else
-				RenderAndLocation.walltest(otherMovingObjects[i], player);
+//			if (otherMovingObjects[i] instanceof SMovingWall)
+//				RenderAndLocation.movingWallCalculation(otherMovingObjects[i], player);
+//			else
+//				RenderAndLocation.walltest(otherMovingObjects[i], player);
 			otherMovingObjects[i].update();
-			
 		}
+//		if (pl.goingDown != needsExstraTestintTest){
+//			RenderAndLocation.walltest(pl, walls);
+//			System.out.println(true);
+//		}
 		pl.update();
 	}
 	
