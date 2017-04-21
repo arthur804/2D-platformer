@@ -1,9 +1,7 @@
 package staticClasses;
 
 import java.awt.Rectangle;
-import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 
-import forReal.SMovingWall;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 

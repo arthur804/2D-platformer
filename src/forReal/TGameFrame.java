@@ -20,7 +20,7 @@ public class TGameFrame extends JPanel{
 	private TLevelManager theMan;
 	
 	/*
-	 * things that begin with T are importent to display the game
+	 * things that begin with T are important to display the game
 	 * things that begin with M are movingObjects
 	 * things that begin with L are not moving objects
 	 */
@@ -63,7 +63,8 @@ public class TGameFrame extends JPanel{
 		});
 		time.start();
 	}
-	//TODO
+
+	//Debug next Frame
 	private void derp(){
 		if (time.isRunning())
 			time.stop();
@@ -71,7 +72,6 @@ public class TGameFrame extends JPanel{
 		update();
 	}
 	
-
 	@Override
 	public void paintComponent(Graphics g3) {
 		super.paintComponent(g3);
@@ -89,7 +89,7 @@ public class TGameFrame extends JPanel{
 				keysB[i] = true;
 				break;
 			}
-		//TODO for testing remove this
+		//for testing if you press R(not actualy R but in this version it is its actualy the last key in the list)
 		if (keysB[keysC.length - 1])
 			time.start();
 		theMan.controls(keysB);

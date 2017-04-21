@@ -41,9 +41,9 @@ public abstract class GameObject {
 		if (!seen)
 			return;
 		//TODO
-		if (image != null)
-			g.drawImage(image, rec.x, rec.y, null);
-		else
+//		if (image != null)
+//			g.drawImage(image, rec.x, rec.y, null);
+//		else
 			g.fill(myRectangle);
 	}
 	

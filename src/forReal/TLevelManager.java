@@ -13,13 +13,13 @@ public class TLevelManager {
 		lvl2 = new WallPlayTestLevel();		
 		lvl2.startCam(width, height);
 	}
-	//TODO resize?
+
+//there is no way to resize but it should be possible to implement it without too much hassle
 	public void draw(Graphics2D g){
 		lvl2.draw(g);
 	}
 	
 	public void update(){
-		lvl2.preUpdate();
 		lvl2.colision();
 	}
 	

@@ -1,10 +1,8 @@
 package interfacesAndAbstract;
 
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import forReal.Animation;
 import forReal.SMovingWall;
 
 public abstract class MyMovingObject extends GameObject {
@@ -49,8 +47,6 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 	public void touchingX(int x, GameObject staticObject) {
-		
-		//the touching gets updated in the touching X of moving wall so if i dont want to do it double i have to put it here
 		if (staticObject instanceof SMovingWall){
 			((SMovingWall)staticObject).touchingX(0, this);
 		} else{
@@ -60,14 +56,12 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 	public void touchingY(int y, GameObject staticObject) {
-		
 		if (staticObject instanceof SMovingWall){
 			((SMovingWall)staticObject).touchingY(0, this);
 		} else {
 			vector[1] = y * INCREASE;
 			touching[1] = staticObject.type;
 		}
-		// TODO
 	}
 
 	public void update() {
@@ -83,12 +77,10 @@ public abstract class MyMovingObject extends GameObject {
 	
 	public int nextX() {
 		int nextX = calc(0);
-		if (goingRight){
-			nextX += 1;
-		} else if (goingLeft){
+		if (goingLeft){
 			nextX -= 1;
 		}
-		return nextX; // omdat 1300 - 30 = 12 TODO Fix
+		return nextX; // (1300 - 30 )/INCREASE = 12
 	}
 	
 	public int nextY() {
@@ -106,9 +98,9 @@ public abstract class MyMovingObject extends GameObject {
 		else
 			return (absoluteLocation[i]%INCREASE+vector[i])/INCREASE;
 	}
-	//TODO
+
 	protected abstract void calcNextX();
-	//TODO
+
 	protected abstract void calcNextY();
 
 

@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 
 public class ImagesOfLevel {
 	
-	//TODO make this whole thing better
 	public ImagesOfLevel(){
 		
 		try {

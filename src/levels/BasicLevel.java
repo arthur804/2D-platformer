@@ -48,7 +48,14 @@ public abstract class BasicLevel {
 	}
 	
 	public void colision(){
-		//how does this effect me Player 
+		if (pl.dead){
+			restartMoi();
+			pl.dead = false;
+		}
+		pl.preUpdate();
+		for (int i = 0; i < otherMovingObjects.length; i++)
+			otherMovingObjects[i].preUpdate();
+		//how does this effect me, Player 
 		RenderAndLocation.walltest(pl, walls);
 
 		RenderAndLocation.walltest(pl, otherMovingObjects);
@@ -57,35 +64,18 @@ public abstract class BasicLevel {
 				RenderAndLocation.movingWallCalculation(otherMovingObjects[i], player);
 			else
 				RenderAndLocation.walltest(otherMovingObjects[i], player);
-//			RenderAndLocation.walltest(guys[i], walls);
 			otherMovingObjects[i].update();
 			
 		}
 		pl.update();
-//		for (int i = 0; i < guys.length; i++)
-//			guys[i].update();
-		//Maybe Also check all guys against all other guys
 	}
 	
-//	public void update(){
-//		for (int i = 0; i < guys.length; i++){
-//			guys[i].update();
-//		}
-//	}
-
-	public void preUpdate() {
-		pl.preUpdate();
-		for (int i = 0; i < otherMovingObjects.length; i++)
-			otherMovingObjects[i].preUpdate();
-	}
 
 	public void controls(boolean[] keysPressed) {
 		pl.controls(keysPressed);
-		//TODO camera
 	}
 
 	public void restartMoi() {
-		// TODO 
 		pl.absoluteLocation[0] = pl.absoluteLocation[1] = 0;
 	}
 

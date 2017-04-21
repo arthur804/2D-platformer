@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
 import staticClasses.Formulas;
@@ -23,14 +24,16 @@ public class SMyPlayer extends MyMovingObject {
 	private Animation myAnimatorWalk;
 	private int animationWalkFrames = 0;
 	private static final int CHANGE_FRAME_AMOUNT = 20;
-	
-	public SMyPlayer(Point rec, BufferedImage spriteSheet, BufferedImage spriteSheetWalk, int sizeSpriteX, int sizeSpriteY, int xPixelsBet,int yPixelsBet){
-		super(new Rectangle(rec, new Dimension(32, 32)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
+	private static final int STEP_UP = 5;
+
+	public SMyPlayer(Point rec, BufferedImage spriteSheet, BufferedImage spriteSheetWalk, int sizeSpriteX,
+			int sizeSpriteY, int xPixelsBet, int yPixelsBet) {
+		super(new Rectangle(rec, new Dimension(30, 30)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY,
+				xPixelsBet, yPixelsBet);
 		myAnimatorWalk = new Animation(spriteSheetWalk, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
 	}
 
 	protected void calcNextX() {
-		// If im standing on ice slowdownspeed will change TODO
 		int speed;
 		int slowSpeed;
 
@@ -47,11 +50,6 @@ public class SMyPlayer extends MyMovingObject {
 		if (wallJumped && up && !touchingDown)
 			return;
 		// when you dont press up you need to be able to jump again if you touch
-		// something to jump TODO put this where it belongs
-		if (!up) {
-			wallJumped = false;
-			jumped = false;
-		}
 
 		if (vector[0] > 0) {
 			if (left) { // going left
@@ -107,6 +105,12 @@ public class SMyPlayer extends MyMovingObject {
 	}
 
 	protected void calcNextY() {
+		// something to jump TODO put this where it belongs
+		if (!up) {
+			wallJumped = false;
+			jumped = false;
+		}
+
 		if (!touchingDown) {
 			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
 				// wallJump
@@ -128,7 +132,6 @@ public class SMyPlayer extends MyMovingObject {
 
 		reTrueY();
 
-		
 	}
 
 	private void reTrueY() {
@@ -137,8 +140,9 @@ public class SMyPlayer extends MyMovingObject {
 			goingDown = false;
 		} else if (vector[1] > 0) {
 			goingDown = true;
+			goingUp = false;
 		}
-		touchingUp = touchingDown = goingUp = false;
+		touchingUp = touchingDown = false;
 		touching[1] = null;
 
 	}
@@ -169,7 +173,7 @@ public class SMyPlayer extends MyMovingObject {
 		lookingRight = !lookingRight;
 		return true;
 	}
-	
+
 	@Override
 	public void preUpdate() {
 		super.preUpdate();
@@ -185,23 +189,37 @@ public class SMyPlayer extends MyMovingObject {
 
 	@Override
 	public void draw(Graphics2D g) {
-		if (lookingRight != imageIsLookingRight){
-			//all animators need to be fliped here
+		if (lookingRight != imageIsLookingRight) {
+			// all animators need to be fliped here
 			myAnimator.flip();
 			myAnimatorWalk.flip();
 			imageIsLookingRight = !imageIsLookingRight;
 		}
-		if (animationWalkFrames == CHANGE_FRAME_AMOUNT){
+		if (animationWalkFrames == CHANGE_FRAME_AMOUNT) {
 			animationWalkFrames = 0;
 			myAnimator.nextFrame();
 			myAnimatorWalk.nextFrame();
 		}
-		System.out.println(touchingDown + " x " + goingDown);
-		if (goingDown && (left || right)){
+		if (goingDown && (left || right)) {
 			super.baseDraw(g, myRectangle, myAnimatorWalk.getCorrectFrame());
-		}else
+		} else
 			super.baseDraw(g, myRectangle, myAnimator.getCorrectFrame());
 
+	}
+
+	@Override
+	public void touchingX(int x, GameObject staticObject) {
+
+		if (staticObject.myRectangle.y > myRectangle.y + STEP_UP) {
+			absoluteLocation[1] = (staticObject.myRectangle.y - myRectangle.height) * INCREASE;
+			if (staticObject instanceof SMovingWall) {
+				((SMovingWall) staticObject).touchingX(0, this);
+				return;
+			}
+			if (goingDown)
+				vector[1] = 0;
+		} else
+			super.touchingX(x, staticObject);
 	}
 
 }

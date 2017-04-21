@@ -13,7 +13,6 @@ public class LWall extends GameObject{
 		super(rec, ThingsInTheWorld.WALL);
 	}
 	
-	
 	public void draw(Graphics2D g) {
 		g.setColor(Color.white);
 		super.baseDraw(g);
