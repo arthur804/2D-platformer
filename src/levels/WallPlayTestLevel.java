@@ -21,7 +21,7 @@ public class WallPlayTestLevel extends BasicLevel {
 						new Point[] { new Point(200, 450), new Point(200, 440) }, 10, 10, 100, false), 
 ////					
 					new SMovingWall(new Rectangle(250, 450, 40, 50), ThingsInTheWorld.WALL,
-							new Point[] { new Point(250, 450), new Point(300, 550) }, 10, 10, 100, false), 
+							new Point[] { new Point(250, 450), new Point(300, 550) }, 10, 10, 100, true), 
 					
 //					new SMovingWall(new Rectangle(300, 550, 140, 50), ThingsInTheWorld.WALL,
 //						new Point[] { new Point(300, 500), new Point(310, 510) }, 10, 10, 100, false)

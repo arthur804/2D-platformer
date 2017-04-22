@@ -36,7 +36,7 @@ public class SMyPlayer extends MyMovingObject {
 	protected void calcNextX() {
 		int speed;
 		int slowSpeed;
-
+		int standardSpeed = standardVector;
 		// get what speed we are able to walk at
 		if (touching[1] != null) {
 			speed = touching[1].getWalkingSpeed();
@@ -44,6 +44,7 @@ public class SMyPlayer extends MyMovingObject {
 		} else {
 			speed = Formulas.STANDARGD_SPEEDFLYING;
 			slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING;
+			standardVector = 0;
 		}
 
 		// if you are flying after a wall jump dont calculate new vector
@@ -51,7 +52,7 @@ public class SMyPlayer extends MyMovingObject {
 			return;
 		// when you dont press up you need to be able to jump again if you touch
 
-		if (vector[0] > 0) {
+		if (vector[0] > standardSpeed) {
 			if (left) { // going left
 				vector[0] -= speed;
 
@@ -62,11 +63,11 @@ public class SMyPlayer extends MyMovingObject {
 			} else {
 				vector[0] -= slowSpeed;
 
-				if (vector[0] < 0)
-					vector[0] = 0;
+				if (vector[0] < standardSpeed)
+					vector[0] = standardSpeed;
 			}
 
-		} else if (vector[0] < 0) {
+		} else if (vector[0] < standardSpeed) {
 			if (left) {
 				vector[0] -= speed;
 				lookingRight = false;
@@ -75,8 +76,8 @@ public class SMyPlayer extends MyMovingObject {
 				lookingRight = true;
 			} else {
 				vector[0] += slowSpeed;
-				if (vector[0] > 0)
-					vector[0] = 0;
+				if (vector[0] > standardSpeed)
+					vector[0] = standardSpeed;
 			}
 
 		} else {
@@ -90,10 +91,10 @@ public class SMyPlayer extends MyMovingObject {
 		}
 
 		// TODO use what you are waling on
-		if (vector[0] > Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = Formulas.STANDARD_MAXWALKINGSPEED;
-		else if (vector[0] < -Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = -Formulas.STANDARD_MAXWALKINGSPEED;
+		if (vector[0] > standardSpeed + Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardSpeed + Formulas.STANDARD_MAXWALKINGSPEED;
+		else if (vector[0] < standardSpeed -Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardSpeed -Formulas.STANDARD_MAXWALKINGSPEED;
 
 		reTrueX();
 

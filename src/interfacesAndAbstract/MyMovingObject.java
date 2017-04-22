@@ -17,6 +17,7 @@ public abstract class MyMovingObject extends GameObject {
 	public boolean goingRight = false;
 	public boolean goingDown = false;
 	public boolean dead = false;
+	protected int standardVector;
 	
 	// public final int AMOUNTZERO = 2;
 
@@ -134,7 +135,7 @@ public abstract class MyMovingObject extends GameObject {
 	
 
 	public void pushedY(int newVector, boolean movingWallIsGoingUp,
-			boolean playerIsAboveWall, boolean isSticky) {
+			boolean playerIsAboveWall, boolean isSticky, int standardVector) {
 		// TODO
 		//hij gaat omhoog ik ga omlaag
 		if (playerIsAboveWall){
@@ -143,9 +144,12 @@ public abstract class MyMovingObject extends GameObject {
 				if (vector[1] > newVector)
 					vector[1] = newVector;
 				touchingDown = true;
-				
+				if (isSticky)
+					this.standardVector = standardVector;
 			}else {
 				vector[1] = newVector;
+				if (isSticky)
+					this.standardVector = standardVector;
 			}
 		} else {
 			goingDown = true;

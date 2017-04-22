@@ -117,7 +117,7 @@ public class SMovingWall extends MyMovingObject {
 		if (staticObject instanceof MyMovingObject){
 			((MyMovingObject) staticObject).touching[1] = this.type;
 			((MyMovingObject) staticObject).pushedY(vector[1], goingUp, 
-					staticObject.myRectangle.y < myRectangle.y, sticky);			
+					staticObject.myRectangle.y < myRectangle.y, sticky, vector[0]);			
 		}	
 	}
 	
