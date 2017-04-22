@@ -58,7 +58,7 @@ public class SMovingWall extends MyMovingObject {
 //		
 	}
 	
-	private void nextStepY(){
+	protected void nextStepY(){
 		stepY++;
 		goingUp = false;
 		goingDown = false;
@@ -67,7 +67,7 @@ public class SMovingWall extends MyMovingObject {
 		vector[1] = 0;
 	}
 	
-	private void nextStepX(){
+	protected void nextStepX(){
 		stepX++;
 		goingLeft = false;
 		goingRight = false;
@@ -108,7 +108,7 @@ public class SMovingWall extends MyMovingObject {
 	public void touchingX(int x, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
 			((MyMovingObject) staticObject).touching[0] = this.type;
-			((MyMovingObject) staticObject).pushedX(absoluteLocation[0], this.myRectangle.width * INCREASE, vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x);
+			((MyMovingObject) staticObject).pushedX(vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x);
 		}	
 	}
 
@@ -116,7 +116,7 @@ public class SMovingWall extends MyMovingObject {
 	public void touchingY(int y, GameObject staticObject) {
 		if (staticObject instanceof MyMovingObject){
 			((MyMovingObject) staticObject).touching[1] = this.type;
-			((MyMovingObject) staticObject).pushedY(absoluteLocation[1], vector[1], goingUp, 
+			((MyMovingObject) staticObject).pushedY(vector[1], goingUp, 
 					staticObject.myRectangle.y < myRectangle.y, sticky);			
 		}	
 	}

@@ -147,15 +147,18 @@ public class RenderAndLocation {
 		}
 	}
 
-	public static void movingWallCalculation(SMovingWall movingWall, SMyPlayer player, GameObject[] staticObjects) {
+	public static void movingWallCalculation(/* MyMovingObject */SMovingWall movingWall, SMyPlayer player,
+			GameObject[] staticObjects) {
 		int nextX = movingWall.nextX();
 		int nextY = movingWall.nextY();
-		
+
 		int positiveX = Math.abs(nextX);
 		int positiveY = Math.abs(nextY);
 		boolean yIsBigger;
 		int biggest;
 		int smallestInSteps;
+
+		boolean playerDown = player.goingDown;
 
 		if (positiveX < positiveY) {
 			biggest = positiveY;
@@ -166,68 +169,121 @@ public class RenderAndLocation {
 			smallestInSteps = positiveY;
 			yIsBigger = false;
 		}
-		
-	//TODO
+
+		// TODO
 		Rectangle tangle;
-		for (int big = 0; big <= biggest; big++) {
+		for (int big = 0; big <= biggest; big++)
 			for (int small = 0; small <= smallestInSteps; small++) {
-				
+
 				if (yIsBigger)
 					tangle = nextTangle(movingWall, small, big, movingWall.goingUp, movingWall.goingLeft);
 				else
 					tangle = nextTangle(movingWall, big, small, movingWall.goingUp, movingWall.goingLeft);
-				
-				if (movingWall.goingUp && !movingWall.touchingUp)
-					for (int ii = 0; ii < staticObjects.length; ii++) {
-						if (!staticObjects[ii].seen)
-							continue;
-						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 0)) {
-							if (yIsBigger)
-								movingWall.touchingY(-big, staticObjects[ii]);
-							else
-								movingWall.touchingY(-small, staticObjects[ii]);
-	
-							break;
-						}
+
+				if (movingWall.goingUp)
+					if (wallTester(tangle, player.myRectangle, (byte) 0)) {
+						movingWall.touchingY(0, player);
 					}
-				else if (!movingWall.goingUp && !movingWall.touchingDown)
-					for (int ii = 0; ii < staticObjects.length; ii++) {
-						if (!staticObjects[ii].seen)
-							continue;
-						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 2)) {
-							if (yIsBigger)
-								movingWall.touchingY(big, staticObjects[ii]);
-							else
-								movingWall.touchingY(small, staticObjects[ii]);
-	
-							break;
-						}
-					}
+
+				if (wallTester(tangle, player.myRectangle, (byte) 2)) {
+					movingWall.touchingY(0, player);
+				}
+
 				if (movingWall.goingLeft) {
-					for (int ii = 0; ii < staticObjects.length; ii++) {
-						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 3)) {
-							if (yIsBigger) {
-								movingWall.touchingX(-small, staticObjects[ii]);
-							} else {
-								movingWall.touchingX(-big, staticObjects[ii]);
-							}
-							break;
-						}
+					if (wallTester(tangle, player.myRectangle, (byte) 3)) {
+						movingWall.touchingX(0, player);
+
 					}
+
 				} else if (movingWall.goingRight) {
-					for (int ii = 0; ii < staticObjects.length; ii++) {
-						if (wallTester(tangle, staticObjects[ii].myRectangle, (byte) 1)) {
-							if (yIsBigger)
-								movingWall.touchingX(small, staticObjects[ii]);
-							else
-								movingWall.touchingX(big, staticObjects[ii]);
-							break;
-						}
+					if (wallTester(tangle, player.myRectangle, (byte) 1)) {
+						movingWall.touchingX(0, player);
 					}
 				}
+
 			}
-			
-	
+		isPlayerDead(player);
+		movingWall.update(); // has to be here or have to make a new one witch
+								// has this location and use that one
+
+		// Do the same thing but with player
+
+		nextX = player.nextX();
+		nextY = player.nextY();
+
+		positiveX = Math.abs(nextX);
+		positiveY = Math.abs(nextY);
+
+		if (positiveX < positiveY) {
+			biggest = positiveY;
+			smallestInSteps = positiveX;
+			yIsBigger = true;
+		} else {
+			biggest = positiveX;
+			smallestInSteps = positiveY;
+			yIsBigger = false;
+		}
+
+		if (player.goingDown) {
+			tangle = nextTangle(player, 0, 0, player.goingUp, player.goingLeft);
+			if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
+				movingWall.touchingY(0, player);
+			}
+		}
+
+		for (int big = 0; big <= biggest; big++)
+			for (int small = 0; small <= smallestInSteps; small++) {
+
+				if (yIsBigger)
+					tangle = nextTangle(player, small, big, player.goingUp, player.goingLeft);
+				else
+					tangle = nextTangle(player, big, small, player.goingUp, player.goingLeft);
+
+				if (player.goingUp) {
+					if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
+						movingWall.touchingY(0, player);
+					}
+
+				} else if (player.goingDown) {
+
+					if (wallTester(tangle, movingWall.myRectangle, (byte) 2)) {
+						movingWall.touchingY(0, player);
+					}
+				}
+				if (player.goingLeft) {
+					if (wallTester(tangle, movingWall.myRectangle, (byte) 3)) {
+						movingWall.touchingX(0, player);
+
+					}
+
+				} else if (player.goingRight) {
+					if (wallTester(tangle, movingWall.myRectangle, (byte) 1)) {
+						movingWall.touchingX(0, player);
+					}
+				}
+
+			}
+		if (playerDown != player.goingDown && player.goingDown) {
+			player.touchingUp = false;
+			walltest(player, staticObjects);
+			System.out.println(player.toString());
+			if (player.touchingDown)
+				player.dead = true;
+			return;
+//		} else if (player.touchingDown){//TODO somewhere else?
+//			if (player.goingDown)
+//				player.vector[1] = 0; 
+		}
+		isPlayerDead(player);
+
+	}
+
+	private static void isPlayerDead(SMyPlayer player) {
+		if (player.touchingDown && player.touchingUp) {
+			player.dead = true;
+		} else if (player.touchingLeft && player.touchingRight) {
+			player.dead = true;
+		}
 	}
 
 	/**
@@ -254,7 +310,7 @@ public class RenderAndLocation {
 			smallestInSteps = positiveY;
 			yIsBigger = false;
 		}
-		
+
 		for (int big = 0; big <= biggest; big++) {
 			for (int small = 0; small <= smallestInSteps; small++) {
 
@@ -331,10 +387,9 @@ public class RenderAndLocation {
 			if (yIsBigger) {
 				if (movingObject.touchingDown || movingObject.touchingUp)
 					break;
-				
+
 			} else if (movingObject.touchingLeft || movingObject.touchingRight)
 				break;
-			
 
 		}
 	}

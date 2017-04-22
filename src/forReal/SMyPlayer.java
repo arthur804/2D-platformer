@@ -100,30 +100,30 @@ public class SMyPlayer extends MyMovingObject {
 	}
 
 	protected void calcNextY() {
-		vector[1] = 40000;
-//		if (!up) {
-//			wallJumped = false;
-//			jumped = false;
-//		}
-//
-//		if (!touchingDown) {
-//			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
-//				// wallJump
-//				if (up)
-//					if (wallJump()) {
-//					}
-//					// WallSliding
-//					else if (vector[1] < touching[0].getMaxSlidingSpeed())
-//						vector[1] += touching[0].getSlide();
-//					else
-//						vector[1] -= touching[0].getMaxSlowDown();
-//			} else
-//				vector[1] += Formulas.FALINGSPEED;
-//			// going Down
-//		} else if (up) {
-//			jump();
-//			// going Up
-//		}
+//		vector[1] = 40000;
+		if (!up) {
+			wallJumped = false;
+			jumped = false;
+		}
+
+		if (!touchingDown) {
+			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
+				// wallJump
+				if (up)
+					if (wallJump()) {
+					}
+					// WallSliding
+					else if (vector[1] < touching[0].getMaxSlidingSpeed())
+						vector[1] += touching[0].getSlide();
+					else
+						vector[1] -= touching[0].getMaxSlowDown();
+			} else
+				vector[1] += Formulas.FALINGSPEED;
+			// going Down
+		} else if (up) {
+			jump();
+			// going Up
+		}
 //
 		reTrueY();
 
@@ -214,16 +214,22 @@ public class SMyPlayer extends MyMovingObject {
 
 	@Override
 	public void touchingX(int x, GameObject staticObject) {
-		if (staticObject.myRectangle.y > myRectangle.y + STEP_UP && staticObject.myRectangle.y < myRectangle.y + myRectangle.width +1) {
+		if (staticObject.canBeStepedOn && staticObject.myRectangle.y > myRectangle.y + STEP_UP && staticObject.myRectangle.y < myRectangle.y + myRectangle.width +1) {
+//			if (staticObject instanceof SMovingWall) {
+//				((SMovingWall) staticObject).touchingX(0, this);
+//				return;
+//			} SMovingWall should never have a step posiblity
 			absoluteLocation[1] = (staticObject.myRectangle.y - myRectangle.height) * INCREASE;
-			if (staticObject instanceof SMovingWall) {
-				((SMovingWall) staticObject).touchingX(0, this);
-				return;
-			}
 			if (goingDown)
 				vector[1] = 0;
 		} else
 			super.touchingX(x, staticObject);
 	}
 
+	//TODO remove
+	@Override
+	public String toString(){
+		return "toucing up " + touchingUp + " - down " + touchingDown + " - left " + touchingLeft + " - right " + touchingRight + 
+				" --- going up " + goingUp + " - down " + goingDown + " - left " + goingLeft + " - right " + goingRight;
+	}
 }

@@ -12,6 +12,7 @@ public abstract class GameObject {
 	public ThingsInTheWorld type;
 	public boolean seen = true;
 	protected Animation myAnimator;
+	public boolean canBeStepedOn = true;
 	
 	//public image image or something for sprites
 	

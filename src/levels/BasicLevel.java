@@ -48,10 +48,7 @@ public abstract class BasicLevel {
 	}
 	
 	public void colision(){
-		if (pl.dead){
-			restartMoi();
-			pl.dead = false;
-		}
+		
 		pl.preUpdate();
 
 		for (int i = 0; i < otherMovingObjects.length; i++)
@@ -59,18 +56,13 @@ public abstract class BasicLevel {
 		//how does this effect me, Player 
 		RenderAndLocation.walltest(pl, walls);
 
-		
 		for (int i = 0; i < otherMovingObjects.length; i++){
-//			if (otherMovingObjects[i] instanceof SMovingWall)
-//				RenderAndLocation.movingWallCalculation(otherMovingObjects[i], player);
-//			else
-//				RenderAndLocation.walltest(otherMovingObjects[i], player);
-			otherMovingObjects[i].update();
+			RenderAndLocation.movingWallCalculation((SMovingWall)otherMovingObjects[i],pl, walls);
 		}
-//		if (pl.goingDown != needsExstraTestintTest){
-//			RenderAndLocation.walltest(pl, walls);
-//			System.out.println(true);
-//		}
+		if (pl.dead){
+			restartMoi();
+			pl.dead = false;
+		}
 		pl.update();
 	}
 	

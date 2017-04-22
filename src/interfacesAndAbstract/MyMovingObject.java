@@ -27,12 +27,14 @@ public abstract class MyMovingObject extends GameObject {
 		super(bounds, e);
 		absoluteLocation[0] = bounds.x * INCREASE;
 		absoluteLocation[1] = bounds.y * INCREASE;
+		canBeStepedOn = false;
 	}	
 
 	 public MyMovingObject(Rectangle bounds, ThingsInTheWorld e, BufferedImage spriteSheet, int sizeSpriteX, int sizeSpriteY, int xPixelsBet,int yPixelsBet){
 		super(bounds, e, spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet);
 		absoluteLocation[0] = bounds.x * INCREASE;
 		absoluteLocation[1] = bounds.y * INCREASE;
+		canBeStepedOn = false;
 	}	
 	public Rectangle nextTangleOnlyY(int i) {
 		return new Rectangle(myRectangle.x, myRectangle.y + i, myRectangle.width, myRectangle.height);
@@ -47,21 +49,21 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 	public void touchingX(int x, GameObject staticObject) {
-		if (staticObject instanceof SMovingWall){
-			((SMovingWall)staticObject).touchingX(0, this);
-		} else{
+//		if (staticObject instanceof SMovingWall){
+//			((SMovingWall)staticObject).touchingX(0, this);
+//		} else{
 			vector[0] = x * INCREASE;
 			touching[0] = staticObject.type;
-		}
+//		}
 	}
 
 	public void touchingY(int y, GameObject staticObject) {
-		if (staticObject instanceof SMovingWall){
+		/*if (staticObject instanceof SMovingWall){
 			((SMovingWall)staticObject).touchingY(0, this);
-		} else {
+		} else {*/
 			vector[1] = y * INCREASE;
 			touching[1] = staticObject.type;
-		}
+//		}
 	}
 
 	public void update() {
@@ -87,7 +89,8 @@ public abstract class MyMovingObject extends GameObject {
 		int nextY = calc(1);
 //		if (goingDown){
 //			nextY += 1;
-//		} else if (goingUp){
+//		} 
+//		else if (goingUp){
 //			nextY -= 1;
 //		}
 		return nextY;
@@ -104,24 +107,21 @@ public abstract class MyMovingObject extends GameObject {
 	protected abstract void calcNextY();
 
 
-	public void pushedX(int calc2, int calc1, int newVector, boolean movingwallIsGoingLeft, boolean playerIsOnLeft) {
-		//(this.absoluteLocation[0] + vector[0] + extra);
-		int newLocation = 0;
+	public void pushedX(int newVector, boolean movingwallIsGoingLeft, boolean playerIsOnLeft) {
 		if (playerIsOnLeft){
-			newLocation = 0;//calc2 - myRectangle.width * INCREASE;			
+			touchingRight = true;
+			goingRight = true;
+				
 			if (movingwallIsGoingLeft){
-				if (vector[0] > newVector + INCREASE)
-					vector[0] = newVector + INCREASE;
-				newLocation = calc2 - myRectangle.width * INCREASE - 3*INCREASE;
+				if (vector[0] > newVector)
+					vector[0] = newVector;
 			}
 			else{
-				vector[0] = 0;			
-				newLocation = calc2 - myRectangle.width * INCREASE;		
+				vector[0] = 0;				
 			}
 			
 		} else {
-			
-			newLocation = calc2 + calc1;
+			touchingLeft = true;
 			if (!movingwallIsGoingLeft){
 				if (vector[0] < newVector)
 					vector[0] = newVector;
@@ -130,36 +130,30 @@ public abstract class MyMovingObject extends GameObject {
 			}
 			
 		}
-		absoluteLocation[0] = newLocation;
 	}
 	
 
-	public void pushedY(int calc1, int newVector, boolean movingWallIsGoingUp,
+	public void pushedY(int newVector, boolean movingWallIsGoingUp,
 			boolean playerIsAboveWall, boolean isSticky) {
 		// TODO
-		
+		//hij gaat omhoog ik ga omlaag
 		if (playerIsAboveWall){
+			touchingDown = true;
 			if (movingWallIsGoingUp){
-				
-					absoluteLocation[1] = (calc1/INCREASE - myRectangle.height)*INCREASE;
-					if (vector[1] > newVector)
-						vector[1] = newVector;
-					touchingDown = true;
+				if (vector[1] > newVector)
+					vector[1] = newVector;
+				touchingDown = true;
 				
 			}else {
-				goingDown = true;
-				goingUp = false;
 				vector[1] = newVector;
-				absoluteLocation[1] = calc1 - (myRectangle.height+1)*INCREASE;
 			}
 		} else {
-			
+			goingDown = true;
+			goingUp = false;
 			if (movingWallIsGoingUp){
 				vector[1] = 0; // if you want to hang on to something that moves you need to adapt this
 			} else {
-				//needs to be a check
-				goingDown = true;
-				goingUp = false;
+				touchingUp = true;
 				vector[1] = newVector + INCREASE;
 				
 			}
