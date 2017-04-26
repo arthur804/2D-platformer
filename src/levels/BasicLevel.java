@@ -57,7 +57,7 @@ public abstract class BasicLevel {
 		RenderAndLocation.walltest(pl, walls);
 
 		for (int i = 0; i < otherMovingObjects.length; i++){
-			RenderAndLocation.movingWallCalculation((BaseMovingWall)otherMovingObjects[i],pl, walls);
+			RenderAndLocation.movingWallCalculation(otherMovingObjects[i],pl, walls);
 		}
 		if (pl.dead){
 			restartMoi();

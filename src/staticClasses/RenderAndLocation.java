@@ -147,7 +147,7 @@ public class RenderAndLocation {
 		}
 	}
 
-	public static void movingWallCalculation(/* MyMovingObject */BaseMovingWall movingWall, SMyPlayer player,
+	public static void movingWallCalculation(MyMovingObject movingWall, SMyPlayer player,
 			GameObject[] staticObjects) {
 		int nextX = movingWall.nextX();
 		int nextY = movingWall.nextY();
