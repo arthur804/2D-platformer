@@ -3,8 +3,6 @@ package interfacesAndAbstract;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import forReal.SMovingWall;
-
 public abstract class MyMovingObject extends GameObject {
 
 	public boolean touchingLeft, touchingRight, touchingUp, touchingDown;
@@ -18,6 +16,9 @@ public abstract class MyMovingObject extends GameObject {
 	public boolean goingDown = false;
 	public boolean dead = false;
 	protected int standardVector;
+	
+	
+	public int bodyMass = 100;
 	
 	// public final int AMOUNTZERO = 2;
 
@@ -137,7 +138,6 @@ public abstract class MyMovingObject extends GameObject {
 	public void pushedY(int newVector, boolean movingWallIsGoingUp,
 			boolean playerIsAboveWall, boolean isSticky, int standardVector) {
 		// TODO
-		//hij gaat omhoog ik ga omlaag
 		if (playerIsAboveWall){
 			touchingDown = true;
 			if (movingWallIsGoingUp){
@@ -151,6 +151,7 @@ public abstract class MyMovingObject extends GameObject {
 				if (isSticky)
 					this.standardVector = standardVector;
 			}
+			System.out.println(newVector);
 		} else {
 			goingDown = true;
 			goingUp = false;

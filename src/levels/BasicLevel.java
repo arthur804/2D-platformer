@@ -3,7 +3,7 @@ package levels;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import forReal.SMovingWall;
+import MovingWalls.BaseMovingWall;
 import forReal.SMyPlayer;
 import forReal.TCamera;
 import interfacesAndAbstract.GameObject;
@@ -57,7 +57,7 @@ public abstract class BasicLevel {
 		RenderAndLocation.walltest(pl, walls);
 
 		for (int i = 0; i < otherMovingObjects.length; i++){
-			RenderAndLocation.movingWallCalculation((SMovingWall)otherMovingObjects[i],pl, walls);
+			RenderAndLocation.movingWallCalculation((BaseMovingWall)otherMovingObjects[i],pl, walls);
 		}
 		if (pl.dead){
 			restartMoi();

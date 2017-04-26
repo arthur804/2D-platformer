@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import MovingWalls.BaseMovingWall;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
@@ -36,7 +37,7 @@ public class SMyPlayer extends MyMovingObject {
 	protected void calcNextX() {
 		int speed;
 		int slowSpeed;
-		int standardSpeed = standardVector;
+
 		// get what speed we are able to walk at
 		if (touching[1] != null) {
 			speed = touching[1].getWalkingSpeed();
@@ -52,7 +53,7 @@ public class SMyPlayer extends MyMovingObject {
 			return;
 		// when you dont press up you need to be able to jump again if you touch
 
-		if (vector[0] > standardSpeed) {
+		if (vector[0] > standardVector) {
 			if (left) { // going left
 				vector[0] -= speed;
 
@@ -63,11 +64,11 @@ public class SMyPlayer extends MyMovingObject {
 			} else {
 				vector[0] -= slowSpeed;
 
-				if (vector[0] < standardSpeed)
-					vector[0] = standardSpeed;
+				if (vector[0] < standardVector)
+					vector[0] = standardVector;
 			}
 
-		} else if (vector[0] < standardSpeed) {
+		} else if (vector[0] < standardVector) {
 			if (left) {
 				vector[0] -= speed;
 				lookingRight = false;
@@ -76,8 +77,8 @@ public class SMyPlayer extends MyMovingObject {
 				lookingRight = true;
 			} else {
 				vector[0] += slowSpeed;
-				if (vector[0] > standardSpeed)
-					vector[0] = standardSpeed;
+				if (vector[0] > standardVector)
+					vector[0] = standardVector;
 			}
 
 		} else {
@@ -91,10 +92,10 @@ public class SMyPlayer extends MyMovingObject {
 		}
 
 		// TODO use what you are waling on
-		if (vector[0] > standardSpeed + Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = standardSpeed + Formulas.STANDARD_MAXWALKINGSPEED;
-		else if (vector[0] < standardSpeed -Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = standardSpeed -Formulas.STANDARD_MAXWALKINGSPEED;
+		if (vector[0] > standardVector + Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardVector + Formulas.STANDARD_MAXWALKINGSPEED;
+		else if (vector[0] < standardVector - Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardVector - Formulas.STANDARD_MAXWALKINGSPEED;
 
 		reTrueX();
 
@@ -103,6 +104,9 @@ public class SMyPlayer extends MyMovingObject {
 	protected void calcNextY() {
 //		vector[1] = 40000;
 		if (!up) {
+			if (vector[1] < -200){
+				vector[1] = -200;
+			} 
 			wallJumped = false;
 			jumped = false;
 		}
@@ -125,7 +129,6 @@ public class SMyPlayer extends MyMovingObject {
 			jump();
 			// going Up
 		}
-//
 		reTrueY();
 
 	}
@@ -196,7 +199,6 @@ public class SMyPlayer extends MyMovingObject {
 	@Override
 	public void draw(Graphics2D g) {
 		if (lookingRight != imageIsLookingRight) {
-			// all animators need to be fliped here
 			myAnimator.flip();
 			myAnimatorWalk.flip();
 			imageIsLookingRight = !imageIsLookingRight;
@@ -216,21 +218,19 @@ public class SMyPlayer extends MyMovingObject {
 	@Override
 	public void touchingX(int x, GameObject staticObject) {
 		if (staticObject.canBeStepedOn && staticObject.myRectangle.y > myRectangle.y + STEP_UP && staticObject.myRectangle.y < myRectangle.y + myRectangle.width +1) {
-//			if (staticObject instanceof SMovingWall) {
-//				((SMovingWall) staticObject).touchingX(0, this);
-//				return;
-//			} SMovingWall should never have a step posiblity
 			absoluteLocation[1] = (staticObject.myRectangle.y - myRectangle.height) * INCREASE;
-			if (goingDown)
+			if (goingDown){
 				vector[1] = 0;
+			}
 		} else
 			super.touchingX(x, staticObject);
 	}
-
-	//TODO remove
 	@Override
-	public String toString(){
-		return "toucing up " + touchingUp + " - down " + touchingDown + " - left " + touchingLeft + " - right " + touchingRight + 
-				" --- going up " + goingUp + " - down " + goingDown + " - left " + goingLeft + " - right " + goingRight;
+	public void touchingY(int y, GameObject staticObject) {
+		if (staticObject instanceof BaseMovingWall) {
+			((BaseMovingWall) staticObject).touchingY(0, this);
+		} else
+			super.touchingY(y, staticObject);
 	}
+
 }

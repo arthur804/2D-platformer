@@ -2,7 +2,7 @@ package staticClasses;
 
 import java.awt.Rectangle;
 
-import forReal.SMovingWall;
+import MovingWalls.BaseMovingWall;
 import forReal.SMyPlayer;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
@@ -147,7 +147,7 @@ public class RenderAndLocation {
 		}
 	}
 
-	public static void movingWallCalculation(/* MyMovingObject */SMovingWall movingWall, SMyPlayer player,
+	public static void movingWallCalculation(/* MyMovingObject */BaseMovingWall movingWall, SMyPlayer player,
 			GameObject[] staticObjects) {
 		int nextX = movingWall.nextX();
 		int nextY = movingWall.nextY();
@@ -266,14 +266,15 @@ public class RenderAndLocation {
 		if (playerDown != player.goingDown && player.goingDown) {
 			player.touchingUp = false;
 			walltest(player, staticObjects);
-			System.out.println(player.toString());
 			if (player.touchingDown)
 				player.dead = true;
 			return;
 //		} else if (player.touchingDown){//TODO somewhere else?
 //			if (player.goingDown)
 //				player.vector[1] = 0; 
-		}
+		} else if ((player.goingDown && player.touchingDown) && movingWall.goingDown)
+			walltest(player, staticObjects);
+		
 		isPlayerDead(player);
 
 	}
