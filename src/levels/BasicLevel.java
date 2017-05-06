@@ -3,9 +3,8 @@ package levels;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import MovingWalls.BaseMovingWall;
-import forReal.SMyPlayer;
-import forReal.TCamera;
+import eccentialItems.SMyPlayer;
+import eccentialItems.TCamera;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import staticClasses.ImagesOfLevel;
@@ -17,14 +16,13 @@ public abstract class BasicLevel {
 	private MyMovingObject[] otherMovingObjects;
 	protected SMyPlayer pl;
 	private TCamera cam;
-	private MyMovingObject[] player;
 	public static final ImagesOfLevel theBasicLevelImages = new ImagesOfLevel();
 	
 	public BasicLevel(GameObject[] walls, MyMovingObject[] otherMovingObjects){		
 		this.walls = walls;
 		this.otherMovingObjects = otherMovingObjects;
-		pl = new SMyPlayer(new Point(50,500), theBasicLevelImages.playerSprites, theBasicLevelImages.playerSpritesWalk,theBasicLevelImages.playerSpritesWidth, theBasicLevelImages.playerSpritesHeight, theBasicLevelImages.xDif, theBasicLevelImages.yDif);
-		 player = new MyMovingObject[]{ pl };
+		pl = new SMyPlayer(new Point(50,500), theBasicLevelImages.playerSprites, theBasicLevelImages.playerSpritesWidth, theBasicLevelImages.playerSpritesHeight, theBasicLevelImages.xDif, theBasicLevelImages.yDif, theBasicLevelImages.imagePlayerArray);
+		
 	}
 	
 	public void startCam(int widthOfScreen, int heightOfScreen){
@@ -48,7 +46,6 @@ public abstract class BasicLevel {
 	}
 	
 	public void colision(){
-		
 		pl.preUpdate();
 
 		for (int i = 0; i < otherMovingObjects.length; i++)
@@ -58,12 +55,14 @@ public abstract class BasicLevel {
 
 		for (int i = 0; i < otherMovingObjects.length; i++){
 			RenderAndLocation.movingWallCalculation(otherMovingObjects[i],pl, walls);
+//			otherMovingObjects[0].update();
 		}
 		if (pl.dead){
 			restartMoi();
 			pl.dead = false;
 		}
 		pl.update();
+//		System.out.println(pl.toString());
 	}
 	
 

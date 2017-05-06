@@ -1,12 +1,10 @@
-package MovingWalls;
+package movingWalls;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import interfacesAndAbstract.GameObject;
-import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
 
 public class NormalMovingWall extends BaseMovingWall {
@@ -44,10 +42,10 @@ public class NormalMovingWall extends BaseMovingWall {
 				}
 			}
 		}
-		if (vector[0] > flyingSpeed)
-			vector[0] = flyingSpeed;
-		else if (vector[0] < -flyingSpeed)
-			vector[0] = -flyingSpeed;
+		if (vector[0] > FLYING_SPEED)
+			vector[0] = FLYING_SPEED;
+		else if (vector[0] < -FLYING_SPEED)
+			vector[0] = -FLYING_SPEED;
 		//
 	}
 
@@ -91,10 +89,10 @@ public class NormalMovingWall extends BaseMovingWall {
 			}
 		}
 
-		if (vector[1] > flyingSpeed)
-			vector[1] = flyingSpeed;
-		else if (vector[1] < -flyingSpeed)
-			vector[1] = -flyingSpeed;
+		if (vector[1] > FLYING_SPEED)
+			vector[1] = FLYING_SPEED;
+		else if (vector[1] < -FLYING_SPEED)
+			vector[1] = -FLYING_SPEED;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import forReal.Animation;
+import eccentialItems.Animation;
 import staticClasses.RenderAndLocation;
 
 public abstract class GameObject {
@@ -42,9 +42,9 @@ public abstract class GameObject {
 		if (!seen)
 			return;
 		//TODO
-//		if (image != null)
-//			g.drawImage(image, rec.x, rec.y, null);
-//		else
+		if (image != null)
+			g.drawImage(image, rec.x, rec.y, null);
+		else
 			g.fill(myRectangle);
 	}
 	

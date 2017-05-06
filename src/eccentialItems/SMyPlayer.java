@@ -1,0 +1,268 @@
+package eccentialItems;
+
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+
+import interfacesAndAbstract.GameObject;
+import interfacesAndAbstract.MyMovingObject;
+import interfacesAndAbstract.PushAble;
+import interfacesAndAbstract.ThingsInTheWorld;
+import movingWalls.BaseMovingWall;
+import staticClasses.Formulas;
+
+public class SMyPlayer extends PushAble {
+
+	public boolean left, right, up, down;
+
+	public boolean lookingRight = true;
+	private boolean imageIsLookingRight = true;
+
+	public boolean wallJumped = false;
+	private boolean jumped = false;
+
+	private int heightLaunch = 0;
+	private int animationWalkFrames = 0;
+
+	private static final int CHANGE_FRAME_AMOUNT = 10;
+	private static final int STEP_UP = 5;
+
+	public SMyPlayer(Point rec, BufferedImage spriteSheet, int sizeSpriteX,
+			int sizeSpriteY, int xPixelsBet, int yPixelsBet, int[] playerSpriteArray) {
+		super(new Rectangle(rec, new Dimension(sizeSpriteX, sizeSpriteY)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY,
+				xPixelsBet, yPixelsBet);
+		myAnimator = new MultipleStatesAnimation(spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet, playerSpriteArray);
+	}
+
+	protected void calcNextX() {
+		int speed;
+		int slowSpeed;
+
+		// get what speed we are able to walk at
+		if (touching[1] != null) {
+			speed = touching[1].getWalkingSpeed();
+			slowSpeed = touching[1].getSlowDownSpeed();
+		} else {
+			speed = Formulas.STANDARGD_SPEEDFLYING;
+			slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING;
+		}
+
+		// if you are flying after a wall jump dont calculate new vector
+		if (wallJumped && up && !touchingDown)
+			return;
+		// when you dont press up you need to be able to jump again if you touch
+
+		if (vector[0] > standardVector) {
+			if (left) { // going left
+				vector[0] -= speed;
+
+				lookingRight = false;
+			} else if (right) {
+				vector[0] += speed;
+				lookingRight = true;
+			} else {
+				vector[0] -= slowSpeed;
+
+				if (vector[0] < standardVector)
+					vector[0] = standardVector;
+			}
+
+		} else if (vector[0] < standardVector) {
+			if (left) {
+				vector[0] -= speed;
+				lookingRight = false;
+			} else if (right) {
+				vector[0] += speed;
+				lookingRight = true;
+			} else {
+				vector[0] += slowSpeed;
+				if (vector[0] > standardVector)
+					vector[0] = standardVector;
+			}
+
+		} else {
+			if (!left && right) {
+				vector[0] += speed;
+				lookingRight = true;
+			} else if (left && !right) {
+				vector[0] -= speed;
+				lookingRight = false;
+			}
+		}
+
+		// TODO use what you are waling on
+		if (vector[0] > standardVector + Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardVector + Formulas.STANDARD_MAXWALKINGSPEED;
+		else if (vector[0] < standardVector - Formulas.STANDARD_MAXWALKINGSPEED)
+			vector[0] = standardVector - Formulas.STANDARD_MAXWALKINGSPEED;
+
+		reTrueX();
+
+	}
+
+	protected void calcNextY() {
+		if (!up) {
+			if (vector[1] < -200){
+				vector[1] = -200;
+			} 
+			wallJumped = false;
+			jumped = false;
+		}
+
+		if (!touchingDown) {
+			touchingNotMovingNow();
+			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
+				// wallJump
+				if (up)
+					if (wallJump()) {
+					}
+					// WallSliding
+					else if (vector[1] < touching[0].getMaxSlidingSpeed())
+						vector[1] += touching[0].getSlide();
+					else
+						vector[1] -= touching[0].getMaxSlowDown();
+			} else
+				vector[1] += Formulas.FALINGSPEED;
+			// going Down
+		} else if (up) {
+			jump();
+			// going Up
+		}
+		reTrueY();
+
+	}
+
+	private void reTrueY() {
+		if (vector[1] < 0) {
+			goingUp = true;
+			goingDown = false;
+		} else if (vector[1] > 0) {
+			goingDown = true;
+			goingUp = false;
+		}
+		touchingUp = touchingDown = false;
+		touching[1] = null;
+
+	}
+
+	private void reTrueX() {
+		touchingLeft = touchingRight = goingLeft = goingRight = false;
+		touching[0] = null;
+		standardVector = 0;
+		
+		if (vector[0] > 0) {
+			goingRight = true;
+		} else if (vector[0] < 0) {
+			goingLeft = true;
+		}
+
+	}
+
+	public void jump() {
+		if (touching[1] != null)
+			vector[1] = -touching[1].getJump() + heightLaunch;
+		jumped = true;
+		heighEnough = true;
+	}
+
+	private boolean wallJump() {
+		if ((jumped || wallJumped) && up)
+			return false;
+
+		if (touchingLeft) {
+			vector[0] = touching[0].getWallJumpDistance();
+		} else if (touchingRight) {
+			vector[0] = -touching[0].getWallJumpDistance();
+		}
+		vector[1] = -touching[0].getWallJumpHeight();
+		wallJumped = true;
+		lookingRight = !lookingRight;
+		return true;
+	}
+
+	@Override
+	public void preUpdate() {
+		super.preUpdate();
+		if (!touchingDown)
+			animationWalkFrames += 2;
+		else 
+			animationWalkFrames ++;
+	}
+
+	public void controls(boolean[] keysPressed) {
+		left = keysPressed[0];
+		up = keysPressed[1];
+		right = keysPressed[3];
+		down = keysPressed[2];
+	}
+
+	//For animation
+	private boolean heighEnough = false;
+	@Override
+	public void draw(Graphics2D g) {
+		if (lookingRight != imageIsLookingRight) {
+			myAnimator.flip();
+			imageIsLookingRight = !imageIsLookingRight;
+		}
+		if (animationWalkFrames >= CHANGE_FRAME_AMOUNT) {
+			animationWalkFrames = 0;
+			myAnimator.nextFrame();
+		}
+		if (goingDown && touchingDown && (left || right)) {
+			heighEnough = false;
+			((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(1);
+		} else if (!touchingDown){
+			if (goingDown && heighEnough){
+				if ((left || right)){		
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(3);
+				} else {
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(2);
+				} 
+			} else if (goingUp){
+				int mvec = -Formulas.STANDARDJUMPHEIGHT / 4;
+				if (vector[1] > mvec){
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(2);
+				} else if (vector[1] > mvec*2){
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(6);
+				} else if (vector[1] > mvec*3){
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(5);
+				} else if (vector[1] < -INCREASE){//TODO
+					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(4);
+				}
+			} else { //?? needed?
+				((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(0);
+			}
+		} else {
+			heighEnough = false;
+			((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(0);
+		}
+		super.baseDraw(g, myRectangle, myAnimator.getCorrectFrame());
+
+	}
+
+	@Override
+	public void touchingX(int x, GameObject staticObject) {
+		if (!goingUp && staticObject.canBeStepedOn && staticObject.myRectangle.y > myRectangle.y + STEP_UP && staticObject.myRectangle.y < myRectangle.y + myRectangle.width +1) {
+			absoluteLocation[1] = (staticObject.myRectangle.y - myRectangle.height) * INCREASE;
+			if (goingDown){
+				vector[1] = 0;
+			}
+		} else
+			super.touchingX(x, staticObject);
+	}
+	
+	@Override
+	public void pushedY(int newVector, boolean movingWallIsGoingUp, boolean playerIsAboveWall, boolean isSticky,
+			int standardVector, int newLocation) {
+		heightLaunch = newVector;
+		super.pushedY(newVector, movingWallIsGoingUp, playerIsAboveWall, isSticky, standardVector, newLocation);
+	}
+
+	public void touchingNotMovingNow(){
+		heightLaunch = 0;
+	}
+
+	
+}

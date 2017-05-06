@@ -11,8 +11,8 @@ public class ImagesOfLevel {
 	public ImagesOfLevel(){
 		
 		try {
-			playerSprites = ImageIO.read(new File(location + "PlayerSprite.png"));
-			playerSpritesWalk = ImageIO.read(new File(location + "PlayerSpriteWalk.png"));
+//			playerSprites = ImageIO.read(new File(location + "JXPManStandStill.png"));
+			playerSprites = ImageIO.read(new File(location + "JXPMANWALK.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -20,7 +20,9 @@ public class ImagesOfLevel {
 	}
 	private static final String location = (System.getProperty("user.dir") + "//Images//");
 	
+//	public BufferedImage playerSprites;
 	public BufferedImage playerSprites;
-	public BufferedImage playerSpritesWalk;
-	public final int playerSpritesWidth = 21, playerSpritesHeight = 30, xDif = 1, yDif = 0;
+	public final int playerSpritesWidth = 14, playerSpritesHeight = 27, xDif = 1, yDif = 0;
+
+	public final int[] imagePlayerArray = new int[]{1,3,1,3,1,1,1};
 }

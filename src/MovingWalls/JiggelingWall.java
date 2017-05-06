@@ -1,119 +1,143 @@
-package MovingWalls;
+package movingWalls;
 
-import java.awt.Point;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import forReal.SMyPlayer;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
+import interfacesAndAbstract.PushAble;
 import interfacesAndAbstract.ThingsInTheWorld;
 
 //TODO V that
 @SuppressWarnings("unused")
-public class JiggelingWall extends BaseMovingWall{
+ //@Deprecated //TODO it doesnt work
+public class JiggelingWall extends MyMovingObject {
 
-	
+	//TODO maybe also make this the pushing wall thingy?
 	private int xMaxWiggle;
 	private int yMaxWiggle;
 	private int xMinWiggle;
 	private int yMinWiggle;
-	private Point standard;
-	private int touchingYVector = 0;
+	private int[] standard;
+	private int touchingYVector = 100;
 	private int touchingXVector;
-	private int sensitivity;//TODO need this?
-	private boolean stoped = false;
+	private int slowDownYVector = 10;
+	private int slowDownXVector;
+	private int maxYFlyingSpeed;
+	private int maxXFlyingSpeed;
+	private boolean playerOnly;
 	
-	public JiggelingWall(Rectangle bounds, ThingsInTheWorld e, int yMaxWiggle, int xMaxWiggle , int xMaxSpeed, int yMaxSpeed, int flyingSpeed,
-			boolean sticky, int sensitivity) {
-		super(bounds, e, xMaxSpeed, yMaxSpeed, flyingSpeed, sticky);
-		this.xMaxWiggle = bounds.x + xMaxWiggle;
-		this.yMaxWiggle = bounds.y + yMaxWiggle;
-		this.xMinWiggle = bounds.x - xMaxWiggle;
-		this.yMinWiggle = bounds.y - yMaxWiggle;
-		this.standard = new Point(bounds.x, bounds.y);
-		this.sensitivity = sensitivity;
+	private int flying_Slowdown_SpeedX;
+	private int flying_Slowdown_SpeedY;
+	
+	private boolean stoped = false;
+
+	public JiggelingWall(Rectangle bounds, ThingsInTheWorld e, int yMaxWiggle, int xMaxWiggle, int xMaxSpeed,
+			int yMaxSpeed, int flyingSpeed, boolean sticky) {
+		super(bounds, e);
+		this.xMaxWiggle = (bounds.x + xMaxWiggle) * INCREASE;
+		this.yMaxWiggle = (bounds.y + yMaxWiggle) * INCREASE;
+		this.xMinWiggle = (bounds.x - xMaxWiggle) * INCREASE;
+		this.yMinWiggle = (bounds.y - yMaxWiggle) * INCREASE;
+		flying_Slowdown_SpeedY = flyingSpeed;
+		this.standard = new int[]{bounds.x * INCREASE, bounds.y * INCREASE};
 	}
 
 	@Override
 	protected void calcNextX() {
-		//test if have enough speed
-		
-		
+		// test if have enough speed
+
 	}
 
 	@Override
 	protected void calcNextY() {
-		if (touchingYVector != 0 || touchingUp || touchingDown){
-				vector[1] = touchingYVector;
-		} else
-			if (myRectangle.y > standard.y){//als het groter dan 0 is het verschil na een fix dan moet hij direct op nul gezet worden
-				vector[1] = -flyingSpeed;
-				if (vector[1] + absoluteLocation[1] < standard.y*INCREASE){
-					vector[1] = -absoluteLocation[1] + standard.y*INCREASE;
+		if (touchingUp || touchingDown) {
+
+			if (touchingUp) {
+				goingDown = true;
+				if (vector[1] == 0) {
+					vector[1] = touchingYVector;
+				} else {
+					vector[1] += flying_Slowdown_SpeedY;
+					if (vector[1] > maxYFlyingSpeed)
+						vector[1] = maxYFlyingSpeed;
 				}
-			} else {
-				vector[1] = flyingSpeed;
-				if (vector[1] + absoluteLocation[1] > standard.y*INCREASE){
-					vector[1] = -absoluteLocation[1] + standard.y*INCREASE;
+				if (vector[1] + absoluteLocation[1] > yMaxWiggle){
+					vector[1] = yMaxWiggle - absoluteLocation[1];
+				}
+
+			} 
+			if (touchingDown){
+				goingUp = true;
+				if (vector[1] == 0) {
+					vector[1] = -touchingYVector;
+				} else {
+					vector[1] -= flying_Slowdown_SpeedY;
+
+					if (vector[1] < -maxYFlyingSpeed)
+						vector[1] = -maxYFlyingSpeed;
+				}
+				if (vector[1] + absoluteLocation[1] < yMinWiggle){
+					vector[1] = yMinWiggle - absoluteLocation[1];
 				}
 			}
+		} else if (absoluteLocation[1] != standard[1]){
+			if (absoluteLocation[1] > standard[1]) {
+				vector[1] = -slowDownYVector;
+				if (vector[1] + absoluteLocation[1] > standard[1]) {
+					vector[1] = standard[1] - absoluteLocation[1];
+				}
+			} else if (absoluteLocation[1] < standard[1]) {
+				vector[1] = slowDownYVector;
+				if (vector[1] + absoluteLocation[1] < standard[1]) {
+					vector[1] = standard[1] - absoluteLocation[1];
+				}
+			}
+		}
+		else if (absoluteLocation[1] == standard[1]){
+			vector[1] = 0;
+		}
+
+//		System.out.println(vector[1] + "  x " + touchingUp/*absoluteLocation[1] + "  " + standard[1]*/);
 		reTrueY();
-		
+
 	}
-	
+
 	private void reTrueY() {
-		if (!touchingDown || !touchingUp)//TODO slowdown
-			touchingYVector = 0;
 		touchingDown = touchingUp = false;
 	}
 
 	@Override
-	public void touchingX(int x, GameObject staticObject) {
-		if (staticObject instanceof MyMovingObject){
-			//TODO test
-			touchingXVector = ((MyMovingObject) staticObject).vector[0];
-			boolean left = staticObject.myRectangle.x < myRectangle.x;
-			if (left)
-				touchingRight = true;
-			else
-				touchingLeft = true;
-			
-			((MyMovingObject) staticObject).touching[0] = this.type;
-			((MyMovingObject) staticObject).pushedX(vector[0], goingLeft, left);
-		}	
+	public void touchingY(int y, GameObject staticObject) {
+		// TODO Auto-generated method stub
+		boolean playerOnTop = staticObject.myRectangle.y < myRectangle.y;
+		if (playerOnTop){
+			goingUp = true;
+			touchingUp = true;
+		}else{
+			goingDown = true;
+			touchingDown = true;
+		}
+		((PushAble) staticObject).touching[1] = this.type;
+		int location;
+		boolean playerLocUp = staticObject.myRectangle.y < myRectangle.y;
+//		System.out.println(staticObject.myRectangle.y + "   " + myRectangle.y);
+		if (playerLocUp){
+			location = absoluteLocation[1] - staticObject.myRectangle.height*INCREASE;
+		} else {
+			location = absoluteLocation[1] + myRectangle.height*INCREASE;
+		}
+		((PushAble) staticObject).jiggleY(vector[1], playerLocUp, 
+				location);			
+//		System.out.println(staticObject.toString());
+		
 	}
 
 	@Override
-	public void touchingY(int y, GameObject staticObject) {
-		boolean up = staticObject.myRectangle.y < myRectangle.y;
-		if (up){
-			touchingUp = true;
-		}
-		else {
-			touchingDown = true;
-		}
-		if (staticObject instanceof SMyPlayer && touchingUp && ((SMyPlayer) staticObject).up){
-			touchingYVector = ((MyMovingObject) staticObject).vector[1];//bodyMass*2*sensitivity;
-		} else
-			touchingYVector = ((MyMovingObject) staticObject).vector[1];//bodyMass*sensitivity;
-		
-		if (!up)
-			touchingYVector = -touchingYVector;
-		
-		if (touchingYVector < -ySpeed)
-			touchingYVector = -ySpeed;
-		else if (touchingYVector > ySpeed)
-			touchingYVector = ySpeed;
-		
-		((MyMovingObject) staticObject).touching[1] = this.type;
-		if (up)
-			((MyMovingObject) staticObject).absoluteLocation[1] = -((MyMovingObject) staticObject).myRectangle.height*INCREASE + absoluteLocation[1];
-		else
-			((MyMovingObject) staticObject).absoluteLocation[1] = myRectangle.height*INCREASE + absoluteLocation[1] + INCREASE;
-		
-		((MyMovingObject) staticObject).pushedY(touchingYVector, !up, 
-				up, sticky, vector[0]);	
-			
+	public void draw(Graphics2D g) {
+		g.setColor(Color.RED);
+		super.baseDraw(g);
 	}
 
 }

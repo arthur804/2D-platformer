@@ -9,14 +9,13 @@ public abstract class MyMovingObject extends GameObject {
 	public int[] vector = new int[] { 0, 0 };
 	public ThingsInTheWorld[] touching = new ThingsInTheWorld[2];
 	public int[] absoluteLocation = new int[] { 0, 0 };
-	protected static final int INCREASE = 100;
+	public static final int INCREASE = 100;
 	public boolean goingUp = false;
 	public boolean goingLeft = false;
 	public boolean goingRight = false;
 	public boolean goingDown = false;
 	public boolean dead = false;
 	protected int standardVector;
-	
 	
 	public int bodyMass = 100;
 	
@@ -60,12 +59,10 @@ public abstract class MyMovingObject extends GameObject {
 	}
 
 	public void touchingY(int y, GameObject staticObject) {
-		/*if (staticObject instanceof SMovingWall){
-			((SMovingWall)staticObject).touchingY(0, this);
-		} else {*/
+		
 			vector[1] = y * INCREASE;
 			touching[1] = staticObject.type;
-//		}
+
 	}
 
 	public void update() {
@@ -77,6 +74,7 @@ public abstract class MyMovingObject extends GameObject {
 	public void preUpdate() {
 		calcNextX();
 		calcNextY();
+		
 	}
 	
 	public int nextX() {
@@ -108,65 +106,14 @@ public abstract class MyMovingObject extends GameObject {
 
 	protected abstract void calcNextY();
 
-
-	public void pushedX(int newVector, boolean movingwallIsGoingLeft, boolean playerIsOnLeft) {
-		if (playerIsOnLeft){
-			touchingRight = true;
-			goingRight = true;
-				
-			if (movingwallIsGoingLeft){
-				if (vector[0] > newVector)
-					vector[0] = newVector;
-			}
-			else{
-				vector[0] = 0;				
-			}
-			
-		} else {
-			touchingLeft = true;
-			if (!movingwallIsGoingLeft){
-				if (vector[0] < newVector)
-					vector[0] = newVector;
-			} else{
-				vector[0] = 0;
-			}
-			
-		}
-	}
 	
-
-	public void pushedY(int newVector, boolean movingWallIsGoingUp,
-			boolean playerIsAboveWall, boolean isSticky, int standardVector) {
-		// TODO
-		if (playerIsAboveWall){
-			touchingDown = true;
-			if (movingWallIsGoingUp){
-				if (vector[1] > newVector)
-					vector[1] = newVector;
-				touchingDown = true;
-				if (isSticky)
-					this.standardVector = standardVector;
-			}else {
-				vector[1] = newVector;
-				if (isSticky)
-					this.standardVector = standardVector;
-			}
-			System.out.println(newVector);
-		} else {
-			goingDown = true;
-			goingUp = false;
-			if (movingWallIsGoingUp){
-				vector[1] = 0; // if you want to hang on to something that moves you need to adapt this
-			} else {
-				touchingUp = true;
-				vector[1] = newVector + INCREASE;
-				
-			}
-		}
-		
+	@Override
+	public String toString(){
+		return "toucing up " + touchingUp + " - down " + touchingDown + " - left " + touchingLeft + " - right " + touchingRight + 
+				" --- going up " + goingUp + " - down " + goingDown + " - left " + goingLeft + " - right " + goingRight;
 	}
 
-
+	
 	
 	
 }

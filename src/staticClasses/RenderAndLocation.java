@@ -2,8 +2,7 @@ package staticClasses;
 
 import java.awt.Rectangle;
 
-import MovingWalls.BaseMovingWall;
-import forReal.SMyPlayer;
+import eccentialItems.SMyPlayer;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 
@@ -147,6 +146,11 @@ public class RenderAndLocation {
 		}
 	}
 
+//	private static int bitchboy = 0;
+
+//	bitchboy++;
+//	System.out.println(bitchboy);
+	
 	public static void movingWallCalculation(MyMovingObject movingWall, SMyPlayer player,
 			GameObject[] staticObjects) {
 		int nextX = movingWall.nextX();
@@ -157,7 +161,8 @@ public class RenderAndLocation {
 		boolean yIsBigger;
 		int biggest;
 		int smallestInSteps;
-
+		boolean touchingThisOne = false;
+		
 		boolean playerDown = player.goingDown;
 
 		if (positiveX < positiveY) {
@@ -170,7 +175,6 @@ public class RenderAndLocation {
 			yIsBigger = false;
 		}
 
-		// TODO
 		Rectangle tangle;
 		for (int big = 0; big <= biggest; big++)
 			for (int small = 0; small <= smallestInSteps; small++) {
@@ -180,29 +184,36 @@ public class RenderAndLocation {
 				else
 					tangle = nextTangle(movingWall, big, small, movingWall.goingUp, movingWall.goingLeft);
 
-				if (movingWall.goingUp)
+				if (movingWall.goingUp){
 					if (wallTester(tangle, player.myRectangle, (byte) 0)) {
 						movingWall.touchingY(0, player);
+						touchingThisOne = true;
+
 					}
+				} else if (movingWall.goingDown){
+					if (wallTester(tangle, player.myRectangle, (byte) 2)) {
+						movingWall.touchingY(0, player);
+						touchingThisOne = true;
 
-				if (wallTester(tangle, player.myRectangle, (byte) 2)) {
-					movingWall.touchingY(0, player);
+					}
 				}
-
 				if (movingWall.goingLeft) {
 					if (wallTester(tangle, player.myRectangle, (byte) 3)) {
 						movingWall.touchingX(0, player);
+						touchingThisOne = true;
 
 					}
 
 				} else if (movingWall.goingRight) {
 					if (wallTester(tangle, player.myRectangle, (byte) 1)) {
 						movingWall.touchingX(0, player);
+						touchingThisOne = true;
 					}
 				}
 
 			}
-		isPlayerDead(player);
+		if (touchingThisOne)
+			isPlayerDead(player, movingWall.goingUp || movingWall.goingDown);
 		movingWall.update(); // has to be here or have to make a new one witch
 								// has this location and use that one
 
@@ -224,63 +235,77 @@ public class RenderAndLocation {
 			yIsBigger = false;
 		}
 
-		if (player.goingDown) {
-			tangle = nextTangle(player, 0, 0, player.goingUp, player.goingLeft);
-			if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
-				movingWall.touchingY(0, player);
+		boolean yMove = (movingWall.goingUp || movingWall.goingDown);
+		if (!touchingThisOne){
+			if (player.goingDown && yMove) {
+				tangle = nextTangle(player, 0, 0, player.goingUp, player.goingLeft);
+				if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
+					movingWall.touchingY(0, player);
+				}
 			}
+	
+			for (int big = 0; big <= biggest; big++)
+				for (int small = 0; small <= smallestInSteps; small++) {
+	
+					if (yIsBigger)
+						tangle = nextTangle(player, small, big, player.goingUp, player.goingLeft);
+					else
+						tangle = nextTangle(player, big, small, player.goingUp, player.goingLeft);
+	
+					if (player.goingUp) {
+						if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
+							movingWall.touchingY(0, player);
+							touchingThisOne = true;
+						}
+	
+					} else if (player.goingDown) {
+						if (wallTester(tangle, movingWall.myRectangle, (byte) 2)) {
+							movingWall.touchingY(0, player);
+							touchingThisOne = true;
+						}
+					}
+					if (player.goingLeft) {
+						if (wallTester(tangle, movingWall.myRectangle, (byte) 3)) {
+							movingWall.touchingX(0, player);
+							touchingThisOne = true;
+						}
+	
+					} else if (player.goingRight) {
+						if (wallTester(tangle, movingWall.myRectangle, (byte) 1)) {
+							movingWall.touchingX(0, player);
+							touchingThisOne = true;
+						}
+					}
+	
+				}
 		}
-
-		for (int big = 0; big <= biggest; big++)
-			for (int small = 0; small <= smallestInSteps; small++) {
-
-				if (yIsBigger)
-					tangle = nextTangle(player, small, big, player.goingUp, player.goingLeft);
-				else
-					tangle = nextTangle(player, big, small, player.goingUp, player.goingLeft);
-
-				if (player.goingUp) {
-					if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
-						movingWall.touchingY(0, player);
-					}
-
-				} else if (player.goingDown) {
-
-					if (wallTester(tangle, movingWall.myRectangle, (byte) 2)) {
-						movingWall.touchingY(0, player);
-					}
+		if (touchingThisOne){
+			if (playerDown != player.goingDown && player.goingDown) {
+				if (yMove){
+					walltest(player, staticObjects);
+					if (player.touchingDown && player.touchingUp)
+						player.dead = true;
+					return;
+				} else {
+					player.touchingY(0, player);//TODO maybe?
 				}
-				if (player.goingLeft) {
-					if (wallTester(tangle, movingWall.myRectangle, (byte) 3)) {
-						movingWall.touchingX(0, player);
-
-					}
-
-				} else if (player.goingRight) {
-					if (wallTester(tangle, movingWall.myRectangle, (byte) 1)) {
-						movingWall.touchingX(0, player);
-					}
-				}
-
+					
+			} else if ((player.goingDown && player.touchingDown) && movingWall.goingDown){
+				player.touchingDown = false;
+				walltest(player, staticObjects);
+				if (player.touchingDown){
+					player.touchingNotMovingNow();
+				} else
+					player.touchingDown = true;
+				//TODO
 			}
-		if (playerDown != player.goingDown && player.goingDown) {
-			player.touchingUp = false;
-			walltest(player, staticObjects);
-			if (player.touchingDown)
-				player.dead = true;
-			return;
-//		} else if (player.touchingDown){//TODO somewhere else?
-//			if (player.goingDown)
-//				player.vector[1] = 0; 
-		} else if ((player.goingDown && player.touchingDown) && movingWall.goingDown)
-			walltest(player, staticObjects);
-		
-		isPlayerDead(player);
+			isPlayerDead(player, yMove);
+		}
 
 	}
 
-	private static void isPlayerDead(SMyPlayer player) {
-		if (player.touchingDown && player.touchingUp) {
+	private static void isPlayerDead(SMyPlayer player, boolean goingUpOrDown) {
+		if (player.touchingDown && player.touchingUp && goingUpOrDown) {
 			player.dead = true;
 		} else if (player.touchingLeft && player.touchingRight) {
 			player.dead = true;
