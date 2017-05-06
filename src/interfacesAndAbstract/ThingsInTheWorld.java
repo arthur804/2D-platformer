@@ -4,14 +4,14 @@ import staticClasses.Formulas;
 
 public enum ThingsInTheWorld {
 
-	WALL(0,Formulas.STANDARDJUMPHEIGHT,Formulas.STANDARGD_SPEED,Formulas.STANDARGD_SLOWDOWNSPEED,Formulas.STANDARGD_WALLFALLINGSPEED,Formulas.STANDARGD_WALLJUMPHEIGHT,Formulas.STANDARGD_WALLJUMPDISTANCE,Formulas.STANDARGD_MORETHEMAXWALLSPEEDSLOWDOWN, Formulas.STANDARGD_MAXWALLSPEED), 
-	CLIMBINGWALL(1,0,0,0,0,0,0,0,0), 
-	PLAYER(2,0,0,0,0,0,0,0,0);
+	WALL(Formulas.STANDARDJUMPHEIGHT,Formulas.STANDARGD_SPEED,Formulas.STANDARGD_SLOWDOWNSPEED,Formulas.STANDARGD_WALLFALLINGSPEED,Formulas.STANDARGD_WALLJUMPHEIGHT,Formulas.STANDARGD_WALLJUMPDISTANCE,Formulas.STANDARGD_MORETHEMAXWALLSPEEDSLOWDOWN, Formulas.STANDARGD_MAXWALLSPEED), 
+	CLIMBINGWALL(0,0,0,0,0,0,0,0), 
+	WATER(0,0,0,0,0,0,0,0), 
+	PLAYER(0,0,0,0,0,0,0,0);
 	
-	private final int numVal, wallSlide, walkingSpeed, slowDownWalkingSpeed, wallJumpHeight, wallJumpDistance, maxSlowDown, maxSlidingSpeed, jumpHeight;
+	private final int wallSlide, walkingSpeed, slowDownWalkingSpeed, wallJumpHeight, wallJumpDistance, maxSlowDown, maxSlidingSpeed, jumpHeight;
 
-	private ThingsInTheWorld(int numVal, int jumpHeight, int walkingSpeed, int slowdownSpeed,int wallSlide, int wallJumpHeight, int wallJumpDistance, int maxSlowDown, int maxSlidingSpeed) {
-        this.numVal = numVal;
+	private ThingsInTheWorld(int jumpHeight, int walkingSpeed, int slowdownSpeed,int wallSlide, int wallJumpHeight, int wallJumpDistance, int maxSlowDown, int maxSlidingSpeed) {
         this.jumpHeight = jumpHeight;
         this.wallSlide = wallSlide;
         this.wallJumpHeight = wallJumpHeight;
@@ -20,10 +20,6 @@ public enum ThingsInTheWorld {
         this.slowDownWalkingSpeed = slowdownSpeed;
         this.maxSlowDown = maxSlowDown;
         this.maxSlidingSpeed = maxSlidingSpeed;
-    }
-
-    public int getNumVal() {
-        return numVal;
     }
     
     public int getSlide() {

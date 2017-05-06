@@ -1,5 +1,7 @@
 package staticClasses;
 
+import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import eccentialItems.SMyPlayer;
@@ -11,29 +13,20 @@ public class RenderAndLocation {
 	private RenderAndLocation() {
 	}
 
-	public static boolean isObjectInSight(Rectangle shape, int beginX, int beginY, int endX, int endY) {
-
-		boolean seen = false;
-		if (shape.x < endX && shape.y < endY) {
-			if (shape.x < beginX) {
-				if (shape.y > beginY) {
-					seen = true;
-				}
-				if (shape.y + shape.height > beginY) {
-					seen = true;
-				}
-			}
-			if (shape.x + shape.getWidth() > beginX) {
-				if (shape.y > beginY) {
-					seen = true;
-				}
-				if (shape.y + shape.height > beginY) {
-					seen = true;
-
-				}
-			}
-		}
-		return seen;
+	public static boolean isObjectContained(Rectangle shape, Rectangle container) {
+		Point p = shape.getLocation();
+		if (container.contains(p))
+			return true;
+		p.x += shape.width;
+		if (container.contains(p))
+			return true;
+		p.y += shape.height;
+		if (container.contains(p))
+			return true;
+		p.x -= shape.width;
+		if (container.contains(p))
+			return true;
+		return false;
 	}
 
 	// ---------------- seen

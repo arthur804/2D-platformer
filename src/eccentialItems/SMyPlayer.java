@@ -6,11 +6,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
+import interfacesAndAbstract.ContainsMovers;
 import interfacesAndAbstract.GameObject;
-import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.PushAble;
 import interfacesAndAbstract.ThingsInTheWorld;
-import movingWalls.BaseMovingWall;
 import staticClasses.Formulas;
 
 public class SMyPlayer extends PushAble {
@@ -25,6 +24,8 @@ public class SMyPlayer extends PushAble {
 
 	private int heightLaunch = 0;
 	private int animationWalkFrames = 0;
+	//you will only ever be albe to be in one thing this means that if you want to have under water plants and you have to be in water and in those plants you have to make an underwater variant of the plant and give it a higher priority 
+	private ContainsMovers iAmIn = null;
 
 	private static final int CHANGE_FRAME_AMOUNT = 10;
 	private static final int STEP_UP = 5;
@@ -37,6 +38,7 @@ public class SMyPlayer extends PushAble {
 	}
 
 	protected void calcNextX() {
+		//TODO container
 		int speed;
 		int slowSpeed;
 
@@ -103,6 +105,7 @@ public class SMyPlayer extends PushAble {
 	}
 
 	protected void calcNextY() {
+		//TODO container
 		if (!up) {
 			if (vector[1] < -200){
 				vector[1] = -200;
@@ -164,7 +167,6 @@ public class SMyPlayer extends PushAble {
 		if (touching[1] != null)
 			vector[1] = -touching[1].getJump() + heightLaunch;
 		jumped = true;
-		heighEnough = true;
 	}
 
 	private boolean wallJump() {
@@ -198,8 +200,6 @@ public class SMyPlayer extends PushAble {
 		down = keysPressed[2];
 	}
 
-	//For animation
-	private boolean heighEnough = false;
 	@Override
 	public void draw(Graphics2D g) {
 		if (lookingRight != imageIsLookingRight) {
@@ -211,10 +211,9 @@ public class SMyPlayer extends PushAble {
 			myAnimator.nextFrame();
 		}
 		if (goingDown && touchingDown && (left || right)) {
-			heighEnough = false;
 			((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(1);
 		} else if (!touchingDown){
-			if (goingDown && heighEnough){
+			if (goingDown){
 				if ((left || right)){		
 					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(3);
 				} else {
@@ -231,11 +230,8 @@ public class SMyPlayer extends PushAble {
 				} else if (vector[1] < -INCREASE){//TODO
 					((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(4);
 				}
-			} else { //?? needed?
-				((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(0);
-			}
+			} 
 		} else {
-			heighEnough = false;
 			((MultipleStatesAnimation)(myAnimator)).setAnimationGetting(0);
 		}
 		super.baseDraw(g, myRectangle, myAnimator.getCorrectFrame());

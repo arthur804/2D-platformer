@@ -49,8 +49,8 @@ public abstract class GameObject {
 	}
 	
 	//TODO
-	public void sightTest(int beginX, int beginY, int endX, int endY){
-		seen = RenderAndLocation.isObjectInSight(myRectangle, beginX, beginY, endX, endY);
+	public void sightTest(Rectangle cameraRectanlge){
+		seen = RenderAndLocation.isObjectContained(myRectangle, cameraRectanlge);
 	}
 	
 	public abstract void draw(Graphics2D g);

@@ -3,6 +3,8 @@ package levels;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import containers.Water;
+import interfacesAndAbstract.ContainsMovers;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
@@ -15,30 +17,11 @@ public class WallPlayTestLevel extends BasicLevel {
 
 	public WallPlayTestLevel() {
 
-		super(fillMeUp(), new MyMovingObject[] {
-//				new NormalMovingWall(new Rectangle(200, 510, 40, 50), ThingsInTheWorld.WALL,
-//						new Point[] { new Point(200, 510), new Point(150, 510) }, 10, 10, 100, true),
-				
-//					new NormalMovingWall(new Rectangle(200, 580, 40, 40), ThingsInTheWorld.WALL,
-//						new Point[] { new Point(200, 580), new Point(200, 590) }, 10, 10, 100, true), 
-					
-					new NormalMovingWall(new Rectangle(200, 450, 40, 50), ThingsInTheWorld.WALL,
-							new Point[] { new Point(200, 450), new Point(200, 550) }, 10, 10, 1000, true), 
-					
-//					new NormalMovingWall(new Rectangle(300, 550, 140, 50), ThingsInTheWorld.WALL,
-//						new Point[] { new Point(300, 500), new Point(310, 600) }, 10, 10, 100, false),
-					
-				
-				new RotatorWallPlatform(new Rectangle(300, 500, 140, 50), ThingsInTheWorld.WALL,
-						1.5, true, true, 10, 6),
-				
-					
-					new JiggelingWall(new Rectangle(10, 500, 100, 30), ThingsInTheWorld.WALL, 30, 30, 200, 200 , 150, false)
-						});
+		super(fillMeUpWall(), fillMeUpMove(), fillMeUpContainer());
 	}
 	
-	private static GameObject[] fillMeUp(){
-		int amount = 10000;
+	private static GameObject[] fillMeUpWall(){
+		int amount = 100;
 		GameObject[] fa = new GameObject[amount];
 		fa[0] = new Wall(new Rectangle(3, 587, 4240, 72));
 		
@@ -52,5 +35,34 @@ public class WallPlayTestLevel extends BasicLevel {
 		return fa;
 		
 	}
+	private static MyMovingObject[] fillMeUpMove(){
+		return new MyMovingObject[] {
+//				new NormalMovingWall(new Rectangle(200, 510, 40, 50), ThingsInTheWorld.WALL,
+//				new Point[] { new Point(200, 510), new Point(150, 510) }, 10, 10, 100, true),
+		
+//			new NormalMovingWall(new Rectangle(200, 580, 40, 40), ThingsInTheWorld.WALL,
+//				new Point[] { new Point(200, 580), new Point(200, 590) }, 10, 10, 100, true), 
+			
+			new NormalMovingWall(new Rectangle(200, 450, 40, 50), ThingsInTheWorld.WALL,
+					new Point[] { new Point(200, 450), new Point(200, 550) }, 10, 10, 1000, true), 
+			
+//			new NormalMovingWall(new Rectangle(300, 550, 140, 50), ThingsInTheWorld.WALL,
+//				new Point[] { new Point(300, 500), new Point(310, 600) }, 10, 10, 100, false),
+			
+		
+//		new RotatorWallPlatform(new Rectangle(300, 500, 140, 50), ThingsInTheWorld.WALL,
+//				1.5, true, true, 10, 6),
+		
+			
+			new JiggelingWall(new Rectangle(10, 500, 100, 30), ThingsInTheWorld.WALL, 30, 30, 200, 200 , 150, false)
+				};
+		
+	}
+	
 
+	private static ContainsMovers[] fillMeUpContainer(){
+		return new ContainsMovers[] {
+				new Water(new Rectangle(300, 500, 100, 30), 0)
+		};
+	}
 }
