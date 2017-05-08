@@ -14,6 +14,7 @@ public class RenderAndLocation {
 	}
 
 	public static boolean isObjectContained(Rectangle shape, Rectangle container) {
+		//TODO faster?
 		Point p = shape.getLocation();
 		if (container.contains(p))
 			return true;

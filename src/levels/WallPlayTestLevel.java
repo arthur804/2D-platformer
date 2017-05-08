@@ -10,7 +10,6 @@ import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
 import movingWalls.JiggelingWall;
 import movingWalls.NormalMovingWall;
-import movingWalls.RotatorWallPlatform;
 import otherGameObjects.Wall;
 
 public class WallPlayTestLevel extends BasicLevel {
@@ -62,7 +61,7 @@ public class WallPlayTestLevel extends BasicLevel {
 
 	private static ContainsMovers[] fillMeUpContainer(){
 		return new ContainsMovers[] {
-				new Water(new Rectangle(300, 500, 100, 30), 0)
+				new Water(new Rectangle(300, 500, 100, 100), 0)
 		};
 	}
 }

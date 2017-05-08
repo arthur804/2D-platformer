@@ -46,16 +46,15 @@ public abstract class PushAble extends MyMovingObject{
 		absoluteLocation[1] = newLocation;
 		if (playerIsAboveWall){
 			touchingDown = true;
+			goingDown = true;
 			if (movingWallIsGoingUp){
 				if (vector[1] + INCREASE > newVector){
 					vector[1] = newVector;
-					goingDown = true;
 				}
 				if (isSticky)
 					this.standardVector = standardVector;
 			}else {
 				vector[1] = newVector;
-				goingDown = true;
 				if (isSticky)
 					this.standardVector = standardVector;
 				absoluteLocation[1] -= newVector;

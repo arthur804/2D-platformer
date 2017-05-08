@@ -59,14 +59,7 @@ public abstract class BasicLevel {
 	public void colision(){
 		
 		pl.preUpdate();
-		
-		for(int i = 0; i < containers.length; i++){
-			if (containers[i].isItIn(pl)){
-				pl.dead = true;
-				break;
-			}
-			
-		}
+		testIfInSomething();
 		
 		for (int i = 0; i < otherMovingObjects.length; i++)
 			otherMovingObjects[i].preUpdate();
@@ -85,6 +78,18 @@ public abstract class BasicLevel {
 //		System.out.println(pl.toString());
 	}
 	
+
+	private void testIfInSomething() {
+		boolean fart = true;
+		for(int i = 0; i < containers.length; i++)
+			if (containers[i].isItIn(pl)){
+				pl.isIn(containers[i]);
+				fart = false;
+				break;
+			}
+		if (fart)
+			pl.isIn(null);
+	}
 
 	public void controls(boolean[] keysPressed) {
 		pl.controls(keysPressed);

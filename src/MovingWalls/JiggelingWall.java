@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import eccentialItems.SMyPlayer;
 import interfacesAndAbstract.GameObject;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.PushAble;
@@ -52,9 +53,8 @@ public class JiggelingWall extends MyMovingObject {
 
 	@Override
 	protected void calcNextY() {
-		if (touchingUp || touchingDown) {
+		if (touchingUp) {
 
-			if (touchingUp) {
 				goingDown = true;
 				if (vector[1] == 0) {
 					vector[1] = touchingYVector;
@@ -67,36 +67,24 @@ public class JiggelingWall extends MyMovingObject {
 					vector[1] = yMaxWiggle - absoluteLocation[1];
 				}
 
-			} 
-			if (touchingDown){
-				goingUp = true;
-				if (vector[1] == 0) {
-					vector[1] = -touchingYVector;
-				} else {
-					vector[1] -= flying_Slowdown_SpeedY;
-
-					if (vector[1] < -maxYFlyingSpeed)
-						vector[1] = -maxYFlyingSpeed;
-				}
-				if (vector[1] + absoluteLocation[1] < yMinWiggle){
-					vector[1] = yMinWiggle - absoluteLocation[1];
-				}
-			}
+			
 		} else if (absoluteLocation[1] != standard[1]){
 			if (absoluteLocation[1] > standard[1]) {
 				vector[1] = -slowDownYVector;
-				if (vector[1] + absoluteLocation[1] > standard[1]) {
+				if (vector[1] + absoluteLocation[1] < standard[1]) {					
 					vector[1] = standard[1] - absoluteLocation[1];
 				}
-			} else if (absoluteLocation[1] < standard[1]) {
+			} 
+			else if (absoluteLocation[1] < standard[1]) {
 				vector[1] = slowDownYVector;
-				if (vector[1] + absoluteLocation[1] < standard[1]) {
+				if (vector[1] + absoluteLocation[1] > standard[1]) {
 					vector[1] = standard[1] - absoluteLocation[1];
 				}
 			}
 		}
 		else if (absoluteLocation[1] == standard[1]){
 			vector[1] = 0;
+			System.out.println(true);
 		}
 
 //		System.out.println(vector[1] + "  x " + touchingUp/*absoluteLocation[1] + "  " + standard[1]*/);
@@ -116,21 +104,22 @@ public class JiggelingWall extends MyMovingObject {
 			goingUp = true;
 			touchingUp = true;
 		}else{
-			goingDown = true;
-			touchingDown = true;
+			//TODO
+			return;
 		}
 		((PushAble) staticObject).touching[1] = this.type;
 		int location;
-		boolean playerLocUp = staticObject.myRectangle.y < myRectangle.y;
-//		System.out.println(staticObject.myRectangle.y + "   " + myRectangle.y);
-		if (playerLocUp){
-			location = absoluteLocation[1] - staticObject.myRectangle.height*INCREASE;
-		} else {
-			location = absoluteLocation[1] + myRectangle.height*INCREASE;
-		}
-		((PushAble) staticObject).jiggleY(vector[1], playerLocUp, 
-				location);			
-//		System.out.println(staticObject.toString());
+		location = absoluteLocation[1] - staticObject.myRectangle.height*INCREASE;
+		
+		//TODO
+		boolean goingUp = false;
+		if (vector[1] == 0)//we are standing still
+			goingUp = true;
+		((PushAble) staticObject).pushedY(vector[1], goingUp, 
+				true , false, vector[0], location);	
+		((PushAble) staticObject).touchingDown = ((PushAble) staticObject).goingDown = true;
+		if (staticObject instanceof SMyPlayer)
+			((SMyPlayer) staticObject).touchingNotMovingNow();
 		
 	}
 

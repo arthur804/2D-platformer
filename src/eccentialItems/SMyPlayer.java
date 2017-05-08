@@ -38,28 +38,43 @@ public class SMyPlayer extends PushAble {
 	}
 
 	protected void calcNextX() {
-		//TODO container
+		//TODO container make better
 		int speed;
 		int slowSpeed;
-
-		// get what speed we are able to walk at
-		if (touching[1] != null) {
-			speed = touching[1].getWalkingSpeed();
-			slowSpeed = touching[1].getSlowDownSpeed();
-		} else {
-			speed = Formulas.STANDARGD_SPEEDFLYING;
-			slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING;
+		int maxWalk;
+		boolean isItBigger;
+		if (iAmIn != null){
+			if (iAmIn.MOVE_IN_X){
+			ThingsInTheWorld type = iAmIn.type;
+			speed = type.getWalkingSpeed();
+			slowSpeed = type.getSlowDownWalkingSpeed();
+			maxWalk = type.getMaxWalkingSpeed();
+			isItBigger = type.isWalkSlowerThenSlowdown();
+			} else {
+				vector[0] = 0;
+				return;
+			}
+		}else {
+			if (touching[1] != null) {
+				speed = touching[1].getWalkingSpeed();
+				slowSpeed = touching[1].getSlowDownWalkingSpeed();
+				isItBigger = touching[1].isWalkSlowerThenSlowdown();
+			} else {
+				speed = Formulas.STANDARGD_SPEEDFLYING;
+				slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING;
+				isItBigger = false;
+			}
+			// TODO use what you are waling on
+			maxWalk = Formulas.STANDARD_MAXWALKINGSPEED;
+			if (touching[0] != null)
+				maxWalk = touching[0].getMaxWalkingSpeed();
+		
 		}
-
-		// if you are flying after a wall jump dont calculate new vector
-		if (wallJumped && up && !touchingDown)
-			return;
-		// when you dont press up you need to be able to jump again if you touch
-
 		if (vector[0] > standardVector) {
 			if (left) { // going left
 				vector[0] -= speed;
-
+				if (isItBigger)
+					vector[0] -= slowSpeed;
 				lookingRight = false;
 			} else if (right) {
 				vector[0] += speed;
@@ -77,6 +92,8 @@ public class SMyPlayer extends PushAble {
 				lookingRight = false;
 			} else if (right) {
 				vector[0] += speed;
+				if (isItBigger)
+					vector[0] += slowSpeed;
 				lookingRight = true;
 			} else {
 				vector[0] += slowSpeed;
@@ -95,17 +112,29 @@ public class SMyPlayer extends PushAble {
 		}
 
 		// TODO use what you are waling on
-		if (vector[0] > standardVector + Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = standardVector + Formulas.STANDARD_MAXWALKINGSPEED;
-		else if (vector[0] < standardVector - Formulas.STANDARD_MAXWALKINGSPEED)
-			vector[0] = standardVector - Formulas.STANDARD_MAXWALKINGSPEED;
-
+		
+		if (vector[0] > standardVector + maxWalk)
+			vector[0] = standardVector + maxWalk;
+		else if (vector[0] < standardVector - maxWalk)
+			vector[0] = standardVector - maxWalk;
 		reTrueX();
 
 	}
 
+	
+
 	protected void calcNextY() {
 		//TODO container
+		if (iAmIn != null){
+			
+		}else{
+			normalYCalc();
+		}
+		reTrueY();
+
+	}
+
+	private void normalYCalc(){
 		if (!up) {
 			if (vector[1] < -200){
 				vector[1] = -200;
@@ -122,10 +151,10 @@ public class SMyPlayer extends PushAble {
 					if (wallJump()) {
 					}
 					// WallSliding
-					else if (vector[1] < touching[0].getMaxSlidingSpeed())
-						vector[1] += touching[0].getSlide();
+					else if (vector[1] < touching[0].getMaxSlidingSpeedOrArrowDown())
+						vector[1] += touching[0].getWallSlideOrGliding();
 					else
-						vector[1] -= touching[0].getMaxSlowDown();
+						vector[1] -= touching[0].getMaxSlowDownOrGlidingMax();
 			} else
 				vector[1] += Formulas.FALINGSPEED;
 			// going Down
@@ -133,10 +162,7 @@ public class SMyPlayer extends PushAble {
 			jump();
 			// going Up
 		}
-		reTrueY();
-
 	}
-
 	private void reTrueY() {
 		if (vector[1] < 0) {
 			goingUp = true;
@@ -165,7 +191,7 @@ public class SMyPlayer extends PushAble {
 
 	public void jump() {
 		if (touching[1] != null)
-			vector[1] = -touching[1].getJump() + heightLaunch;
+			vector[1] = -touching[1].getJumpHeight() + heightLaunch;
 		jumped = true;
 	}
 
@@ -174,11 +200,11 @@ public class SMyPlayer extends PushAble {
 			return false;
 
 		if (touchingLeft) {
-			vector[0] = touching[0].getWallJumpDistance();
+			vector[0] = touching[0].getWallJumpDistanceOrMaxFallingSpeed();
 		} else if (touchingRight) {
-			vector[0] = -touching[0].getWallJumpDistance();
+			vector[0] = -touching[0].getWallJumpDistanceOrMaxFallingSpeed();
 		}
-		vector[1] = -touching[0].getWallJumpHeight();
+		vector[1] = -touching[0].getWallJumpHeightOrFallingSpeed();
 		wallJumped = true;
 		lookingRight = !lookingRight;
 		return true;
@@ -258,6 +284,11 @@ public class SMyPlayer extends PushAble {
 
 	public void touchingNotMovingNow(){
 		heightLaunch = 0;
+	}
+
+	public void isIn(ContainsMovers containsMovers) {
+		iAmIn = containsMovers;
+		
 	}
 
 	
