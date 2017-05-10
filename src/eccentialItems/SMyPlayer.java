@@ -35,7 +35,7 @@ public class SMyPlayer extends PushAble {
 	
 	public SMyPlayer(Point rec, BufferedImage spriteSheet, int sizeSpriteX,
 			int sizeSpriteY, int xPixelsBet, int yPixelsBet, int[] playerSpriteArray) {
-		super(new Rectangle(rec, new Dimension(sizeSpriteX, sizeSpriteY)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY,
+		super(new Rectangle(rec, new Dimension(sizeSpriteX, sizeSpriteY)), ThingsInTheWorld.NO_COLISION, spriteSheet, sizeSpriteX, sizeSpriteY,
 				xPixelsBet, yPixelsBet);
 		myAnimator = new MultipleStatesAnimation(spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet, playerSpriteArray);
 	}
@@ -138,6 +138,7 @@ public class SMyPlayer extends PushAble {
 	}
 
 	private void iAmInYCalc() {		
+		touchingNotMovingNow();
 		if (up) {
 			if (touchingDown || iAmIn.canJump(jumped))
 				vector[1] = -iAmIn.type.getJumpHeight() + heightLaunch;
@@ -149,9 +150,7 @@ public class SMyPlayer extends PushAble {
 				} 
 				wallJumped = false;
 				jumped = false;
-			}
-			touchingNotMovingNow();
-			//TODO arrowDOWN
+			}			
 			if (down){
 				vector[1] += iAmIn.type.getMaxSlidingSpeedOrArrowDown();
 				if (vector[1] > iAmIn.ARROWDOWNMAXSPEED)
@@ -167,7 +166,6 @@ public class SMyPlayer extends PushAble {
 
 	private void normalYCalc(){
 		if (justOut && up) {
-			System.out.println(true);
 			vector[1] += lastLeaveVector;
 		} else if (!touchingDown) {
 			if (!up) {

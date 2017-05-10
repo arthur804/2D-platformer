@@ -28,7 +28,7 @@ public enum ThingsInTheWorld {
 			Formulas.WATER_MAXGLIDINGSPEED,
 			Formulas.WATER_ARROWDOWN),
 	
-	PLAYER(0,0,0,0,0,0,0,0,0);
+	NO_COLISION(0,0,0,0,0,0,0,0,0);
 	
 	private ThingsInTheWorld(int jumpHeight, int walkingSpeed, int slowdownSpeed, int maxWalkingSpeed, int wallSlideOrGliding, int wallJumpHeightOrFallingSpeed, int wallJumpDistanceOrMaxFallingSpeed, int maxSlowDownOrGlidingMax, int maxSlidingSpeedOrArrowDown) {
 		this.jumpHeight = jumpHeight;

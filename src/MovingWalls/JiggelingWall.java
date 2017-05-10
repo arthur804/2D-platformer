@@ -94,19 +94,29 @@ public class JiggelingWall extends MyMovingObject {
 	private void reTrueY() {
 		touchingDown = touchingUp = false;
 	}
+	
+	@Override
+	public void touchingX(int x, GameObject staticObject){
 
+		((PushAble) staticObject).touching[0] = this.type;
+		((PushAble) staticObject).pushedX(vector[0], goingLeft, staticObject.myRectangle.x < myRectangle.x);
+	}
+	
 	@Override
 	public void touchingY(int y, GameObject staticObject) {
 		// TODO Auto-generated method stub
+		((PushAble) staticObject).touching[1] = this.type;
 		boolean playerOnTop = staticObject.myRectangle.y < myRectangle.y;
 		if (playerOnTop){
 			goingUp = true;
 			touchingUp = true;
 		}else{
-			//TODO
+			int location;
+			location = absoluteLocation[1] + myRectangle.height*INCREASE;
+			((PushAble) staticObject).pushedY(vector[1], goingUp, 
+					playerOnTop , false, 0, location);		
 			return;
 		}
-		((PushAble) staticObject).touching[1] = this.type;
 		int location;
 		location = absoluteLocation[1] - staticObject.myRectangle.height*INCREASE;
 		
