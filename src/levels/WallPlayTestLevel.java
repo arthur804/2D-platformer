@@ -61,7 +61,7 @@ public class WallPlayTestLevel extends BasicLevel {
 
 	private static ContainsMovers[] fillMeUpContainer(){
 		return new ContainsMovers[] {
-				new Water(new Rectangle(300, 500, 100, 100), 0)
+				new Water(new Rectangle(300, 100, 600, 600), 0)
 		};
 	}
 }

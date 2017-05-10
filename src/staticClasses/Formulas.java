@@ -25,10 +25,13 @@ public class Formulas {
 	public static final int WATER_FALLINGSPEED = 10;
 	public static final int WATER_WALKINGSPEED = 10;
 	public static final int WATER_SLOWDOWNWALKINGSPEED = 20;
-	public static final int WATER_MAXFALLINGSPEED = 10;
+	public static final int WATER_MAXFALLINGSPEED = 200;
 	public static final int WATER_MAXWALKINGSPEED = 250;
 	public static final int WATER_GLIDINGSPEED = 10;
 	public static final int WATER_MAXGLIDINGSPEED = 10;
-	public static final int WATER_JUMPHEIGHT = 10;
-	public static final int WATER_ARROWDOWN = 10;
+	public static final int WATER_JUMPHEIGHT = 200;
+	public static final int WATER_ARROWDOWN = 75;
+	public static final int WATER_MAXARROWDOWNSPEED = 400;
+	public static final int WATER_LEAVINGVETOR = -300;
+	public static final int NOJUMPOUT = -10000000;
 }

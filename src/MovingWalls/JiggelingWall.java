@@ -84,7 +84,6 @@ public class JiggelingWall extends MyMovingObject {
 		}
 		else if (absoluteLocation[1] == standard[1]){
 			vector[1] = 0;
-			System.out.println(true);
 		}
 
 //		System.out.println(vector[1] + "  x " + touchingUp/*absoluteLocation[1] + "  " + standard[1]*/);

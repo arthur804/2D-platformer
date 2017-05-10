@@ -1,18 +1,18 @@
 package containers;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import interfacesAndAbstract.ContainsMovers;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
+import staticClasses.Formulas;
 
 public class Water extends ContainsMovers{
 
 	public Water(Rectangle bounds, int rainLevelMinRequired) {
-		super(bounds, ThingsInTheWorld.WATER, true, true, true, false, 1);
+		super(bounds, ThingsInTheWorld.WATER, true, true, true, false, 1, true, Formulas.NOJUMPOUT, 5, Formulas.WATER_MAXARROWDOWNSPEED, Formulas.WATER_LEAVINGVETOR);
 		// TODO Auto-generated constructor stub
 		this.rainLevelMinRequired = rainLevelMinRequired;
 	}

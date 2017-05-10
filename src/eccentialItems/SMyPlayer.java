@@ -24,12 +24,15 @@ public class SMyPlayer extends PushAble {
 
 	private int heightLaunch = 0;
 	private int animationWalkFrames = 0;
+	private int lastLeaveVector = 0;
 	//you will only ever be albe to be in one thing this means that if you want to have under water plants and you have to be in water and in those plants you have to make an underwater variant of the plant and give it a higher priority 
 	private ContainsMovers iAmIn = null;
 
 	private static final int CHANGE_FRAME_AMOUNT = 10;
 	private static final int STEP_UP = 5;
-
+	private static final int JUMPOUT = -200;
+	private boolean justOut = false;
+	
 	public SMyPlayer(Point rec, BufferedImage spriteSheet, int sizeSpriteX,
 			int sizeSpriteY, int xPixelsBet, int yPixelsBet, int[] playerSpriteArray) {
 		super(new Rectangle(rec, new Dimension(sizeSpriteX, sizeSpriteY)), ThingsInTheWorld.PLAYER, spriteSheet, sizeSpriteX, sizeSpriteY,
@@ -45,11 +48,11 @@ public class SMyPlayer extends PushAble {
 		boolean isItBigger;
 		if (iAmIn != null){
 			if (iAmIn.MOVE_IN_X){
-			ThingsInTheWorld type = iAmIn.type;
-			speed = type.getWalkingSpeed();
-			slowSpeed = type.getSlowDownWalkingSpeed();
-			maxWalk = type.getMaxWalkingSpeed();
-			isItBigger = type.isWalkSlowerThenSlowdown();
+				ThingsInTheWorld type = iAmIn.type;
+				speed = type.getWalkingSpeed();
+				slowSpeed = type.getSlowDownWalkingSpeed();
+				maxWalk = type.getMaxWalkingSpeed();
+				isItBigger = type.isWalkSlowerThenSlowdown();
 			} else {
 				vector[0] = 0;
 				return;
@@ -126,7 +129,7 @@ public class SMyPlayer extends PushAble {
 	protected void calcNextY() {
 		//TODO container
 		if (iAmIn != null){
-			
+			iAmInYCalc();
 		}else{
 			normalYCalc();
 		}
@@ -134,16 +137,46 @@ public class SMyPlayer extends PushAble {
 
 	}
 
-	private void normalYCalc(){
-		if (!up) {
-			if (vector[1] < -200){
-				vector[1] = -200;
-			} 
-			wallJumped = false;
-			jumped = false;
+	private void iAmInYCalc() {		
+		if (up) {
+			if (touchingDown || iAmIn.canJump(jumped))
+				vector[1] = -iAmIn.type.getJumpHeight() + heightLaunch;
+			jumped = true;
+		} else if (!touchingDown) {
+			if (!up) {
+				if (vector[1] < iAmIn.JUMPOUT){
+					vector[1] = iAmIn.JUMPOUT;
+				} 
+				wallJumped = false;
+				jumped = false;
+			}
+			touchingNotMovingNow();
+			//TODO arrowDOWN
+			if (down){
+				vector[1] += iAmIn.type.getMaxSlidingSpeedOrArrowDown();
+				if (vector[1] > iAmIn.ARROWDOWNMAXSPEED)
+					vector[1] = iAmIn.ARROWDOWNMAXSPEED;
+			}else{
+				vector[1] += iAmIn.GRAVITY;
+				if (vector[1] > iAmIn.type.getWallJumpDistanceOrMaxFallingSpeed())
+					vector[1] = iAmIn.type.getWallJumpDistanceOrMaxFallingSpeed();
+			}
+			// going Down
 		}
+	}
 
-		if (!touchingDown) {
+	private void normalYCalc(){
+		if (justOut && up) {
+			System.out.println(true);
+			vector[1] += lastLeaveVector;
+		} else if (!touchingDown) {
+			if (!up) {
+				if (vector[1] < JUMPOUT){
+					vector[1] = JUMPOUT;
+				} 
+				wallJumped = false;
+				jumped = false;
+			}
 			touchingNotMovingNow();
 			if (!goingUp && (touchingLeft || touchingRight)) {// Sliding walls
 				// wallJump
@@ -171,7 +204,7 @@ public class SMyPlayer extends PushAble {
 			goingDown = true;
 			goingUp = false;
 		}
-		touchingUp = touchingDown = false;
+		touchingUp = touchingDown = justOut = false;
 		touching[1] = null;
 
 	}
@@ -190,7 +223,7 @@ public class SMyPlayer extends PushAble {
 	}
 
 	public void jump() {
-		if (touching[1] != null)
+		if (touchingDown)
 			vector[1] = -touching[1].getJumpHeight() + heightLaunch;
 		jumped = true;
 	}
@@ -287,7 +320,14 @@ public class SMyPlayer extends PushAble {
 	}
 
 	public void isIn(ContainsMovers containsMovers) {
+		//TODO thinkAbout speed
+		if (iAmIn != null && containsMovers == null){
+			justOut = true;
+			lastLeaveVector = iAmIn.containerLeavingvetor;
+		}
 		iAmIn = containsMovers;
+	
+		jumped = false;
 		
 	}
 
