@@ -15,7 +15,7 @@ public class TGameFrame extends JPanel{
 	private static final long serialVersionUID = 1042398314087468935L;
 	
 	private Timer time;
-	private char[] keysC = new char[] { 'a', 'w', 's', 'd', 'j', 'k', 'l' , 'r'};
+	private char[] keysC = new char[] { 'a', 'w', 's', 'd', 'j', 'k', 'l' , 'r', 'x', 'z'};
 	private boolean[] keysB = new boolean[keysC.length];
 	private TLevelManager theMan;
 	
@@ -90,7 +90,7 @@ public class TGameFrame extends JPanel{
 				break;
 			}
 		//for testing if you press R(not actualy R but in this version it is its actualy the last key in the list)
-		if (keysB[keysC.length - 1])
+		if (keysB[7])
 			time.start();
 		theMan.controls(keysB);
 	}

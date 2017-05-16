@@ -4,33 +4,50 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import interfacesAndAbstract.ContainsMovers;
 import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
+import staticClasses.Formulas;
 
 public class Spear extends MyMovingObject{
 	
-	private static final int STANDARD_THROWINGSPEED = 6;
+	private boolean thrown;
+	private boolean landed;
+	private boolean wantsToDisappear;
+	private ContainsMovers iAmIn = null;
 	
-
-	public Spear(Rectangle bounds, ThingsInTheWorld e, int throwingCorner) {
-		super(bounds, e);
-		vector[1] = ((int) (STANDARD_THROWINGSPEED * Math.cos(Math.toRadians(throwingCorner))));
-		vector[0] = ((int) (STANDARD_THROWINGSPEED * Math.sin(Math.toRadians(throwingCorner))));
-		System.out.println(vector[1] + "  " + vector[0]);
+	public Spear() {
+		super(new Rectangle(10, 10, 10, 10), ThingsInTheWorld.NO_COLISION);
 	}
 
+	public void setCorner(int throwingCorner){
+		vector[1] = ((int) (Formulas.STANDARD_THROWINGSPEED_SPEAR * Math.cos(Math.toRadians(throwingCorner))));
+		vector[0] = ((int) (Formulas.STANDARD_THROWINGSPEED_SPEAR * Math.sin(Math.toRadians(throwingCorner))));
+		thrown = true;
+	}
 	@Override
 	protected void calcNextX() {
-		// TODO Auto-generated method stub
-		
+		if (iAmIn != null){
+			vector[1] += iAmIn.spearSlowDownX;
+		} else 
+			vector[1] += Formulas.STANDARD_XSLOWDOWN_SPEAR;
 	}
 
 	@Override
-	protected void calcNextY() {
-		// TODO Auto-generated method stub
+	protected void calcNextY() {		
+		if (iAmIn != null){
+			vector[1] += iAmIn.SpearFallingSpeed;
+		} else 
+			vector[1] += Formulas.STANDARD_FALLINGSPEED_SPEAR;
+		
 		
 	}
-
+	@Override
+	public void preUpdate() {
+		if (thrown && !landed){
+			super.preUpdate();
+		}
+	}
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(Color.orange);

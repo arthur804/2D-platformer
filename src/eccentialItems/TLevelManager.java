@@ -1,16 +1,20 @@
 package eccentialItems;
 
 import java.awt.Graphics2D;
-
 import levels.*;
+
+
 public class TLevelManager {
 
 
 	private BasicLevel lvl2;
-	
+
+	private int width, height;
 	
 	public TLevelManager(int width, int height){
 		lvl2 = new WallPlayTestLevel();		
+		this.height = height;
+		this.width = width;
 		lvl2.startCam(width, height);
 	}
 
@@ -30,6 +34,7 @@ public class TLevelManager {
 	}
 	
 	public void restartLevel(){
-		lvl2.restartMoi();
+		lvl2 = new WallPlayTestLevel();	
+		lvl2.startCam(width, height);
 	}
 }

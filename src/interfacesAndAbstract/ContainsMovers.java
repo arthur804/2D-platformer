@@ -2,10 +2,12 @@ package interfacesAndAbstract;
 
 import java.awt.Rectangle;
 
+import staticClasses.Formulas;
 import staticClasses.RenderAndLocation;
 
 public abstract class ContainsMovers extends GameObject {
 	
+	public final int SpearFallingSpeed;
 	public final boolean ALWAYS_ABLE_TO_JUMP;
 	public final boolean MOVE_IN_Y;
 	
@@ -23,8 +25,9 @@ public abstract class ContainsMovers extends GameObject {
 	public final int GRAVITY;
 	public final int ARROWDOWNMAXSPEED;
 	public final int containerLeavingvetor;
+	public final int spearSlowDownX;
 	
-	public ContainsMovers(Rectangle bounds, ThingsInTheWorld e, boolean alwaysAbleToMove, boolean moveInY, boolean moveInX, boolean requiresActionToEnter, int priority, boolean haveToRepressJumpKey, int jumpOut, int gravity, int arrowDownMaxSpeed, int waterLeavingvetor){
+	public ContainsMovers(Rectangle bounds, ThingsInTheWorld e, boolean alwaysAbleToMove, boolean moveInY, boolean moveInX, boolean requiresActionToEnter, int priority, boolean haveToRepressJumpKey, int jumpOut, int gravity, int arrowDownMaxSpeed, int waterLeavingvetor, int spearSpeed, int spearXSlowdown){
 		super(bounds, e);
 		ALWAYS_ABLE_TO_JUMP = alwaysAbleToMove;
 		MOVE_IN_Y = moveInY;
@@ -37,6 +40,8 @@ public abstract class ContainsMovers extends GameObject {
 		this.GRAVITY = gravity;
 		this.ARROWDOWNMAXSPEED = arrowDownMaxSpeed;
 		this.containerLeavingvetor = waterLeavingvetor;
+		SpearFallingSpeed = spearSpeed;
+		spearSlowDownX = spearXSlowdown;
 	}
 
 	//get jump		get x speed ezv

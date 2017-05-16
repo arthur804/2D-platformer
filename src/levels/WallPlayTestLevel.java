@@ -4,19 +4,16 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import containers.Water;
-import eccentialItems.Spear;
 import interfacesAndAbstract.ContainsMovers;
 import interfacesAndAbstract.GameObject;
-import interfacesAndAbstract.MyMovingObject;
 import interfacesAndAbstract.ThingsInTheWorld;
-import movingWalls.JiggelingWall;
+import movingWalls.BaseMovingWall;
 import movingWalls.NormalMovingWall;
 import otherGameObjects.Wall;
 
 public class WallPlayTestLevel extends BasicLevel {
 
 	public WallPlayTestLevel() {
-
 		super(fillMeUpWall(), fillMeUpMove(), fillMeUpContainer());
 	}
 	
@@ -31,12 +28,12 @@ public class WallPlayTestLevel extends BasicLevel {
 		}
 //		, new LWall(new Rectangle(3, 300, 4240, 70))
 		fa[14] = new Wall(new Rectangle(500, 20, 20, 40));
-		fa = new GameObject[]{new Wall(new Rectangle(3, 587, 4240, 2)), new Wall(new Rectangle(300, 550, 4, 50))};/*, new LWall(new Rectangle(200, 510, 150, 50))*/
+		fa = new GameObject[]{new Wall(new Rectangle(3, 587, 4240, 2))};/*, new LWall(new Rectangle(200, 510, 150, 50))*/
 		return fa;
 		
 	}
-	private static MyMovingObject[] fillMeUpMove(){
-		return new MyMovingObject[] {
+	private static BaseMovingWall[] fillMeUpMove(){
+		return new BaseMovingWall[] {
 //				new NormalMovingWall(new Rectangle(200, 510, 40, 50), ThingsInTheWorld.WALL,
 //				new Point[] { new Point(200, 510), new Point(150, 510) }, 10, 10, 100, true),
 		
@@ -54,10 +51,8 @@ public class WallPlayTestLevel extends BasicLevel {
 //				1.5, true, true, 10, 6),
 		
 			
-			new JiggelingWall(new Rectangle(10, 500, 100, 30), ThingsInTheWorld.WALL, 30, 30, 200, 200 , 150, false),
+//			new JiggelingWall(new Rectangle(10, 500, 100, 30), ThingsInTheWorld.WALL, 30, 30, 200, 200 , 150, false)
 			
-			new Spear(new Rectangle(10, 10, 10, 
-					10), ThingsInTheWorld.NO_COLISION, 90)
 				};
 		
 	}

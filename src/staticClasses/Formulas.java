@@ -34,4 +34,9 @@ public class Formulas {
 	public static final int WATER_MAXARROWDOWNSPEED = 400;
 	public static final int WATER_LEAVINGVETOR = -300;
 	public static final int NOJUMPOUT = -10000000;
+	
+	public static final int STANDARD_THROWINGSPEED_SPEAR = 380;
+	public static final int STANDARD_FALLINGSPEED_SPEAR = 10;
+	public static final int STANDARD_XSLOWDOWN_SPEAR = 1;
+	public static final int WATER_FALLINGSPEED_SPEAR = 20;
 }

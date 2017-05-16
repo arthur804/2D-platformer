@@ -12,7 +12,7 @@ import staticClasses.Formulas;
 public class Water extends ContainsMovers{
 
 	public Water(Rectangle bounds, int rainLevelMinRequired) {
-		super(bounds, ThingsInTheWorld.WATER, true, true, true, false, 1, true, Formulas.NOJUMPOUT, 5, Formulas.WATER_MAXARROWDOWNSPEED, Formulas.WATER_LEAVINGVETOR);
+		super(bounds, ThingsInTheWorld.WATER, true, true, true, false, 1, true, Formulas.NOJUMPOUT, 5, Formulas.WATER_MAXARROWDOWNSPEED, Formulas.WATER_LEAVINGVETOR, Formulas.WATER_FALLINGSPEED_SPEAR, Formulas.STANDARD_XSLOWDOWN_SPEAR);
 		// TODO Auto-generated constructor stub
 		this.rainLevelMinRequired = rainLevelMinRequired;
 	}

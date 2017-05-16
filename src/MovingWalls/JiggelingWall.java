@@ -13,7 +13,7 @@ import interfacesAndAbstract.ThingsInTheWorld;
 //TODO V that
 @SuppressWarnings("unused")
  //@Deprecated //TODO it doesnt work
-public class JiggelingWall extends MyMovingObject {
+public class JiggelingWall extends BaseMovingWall {
 
 	//TODO maybe also make this the pushing wall thingy?
 	private int xMaxWiggle;
@@ -30,18 +30,16 @@ public class JiggelingWall extends MyMovingObject {
 	private boolean playerOnly;
 	
 	private int flying_Slowdown_SpeedX;
-	private int flying_Slowdown_SpeedY;
 	
 	private boolean stoped = false;
 
 	public JiggelingWall(Rectangle bounds, ThingsInTheWorld e, int yMaxWiggle, int xMaxWiggle, int xMaxSpeed,
 			int yMaxSpeed, int flyingSpeed, boolean sticky) {
-		super(bounds, e);
+		super(bounds, e, flyingSpeed, flyingSpeed, flyingSpeed, sticky);
 		this.xMaxWiggle = (bounds.x + xMaxWiggle) * INCREASE;
 		this.yMaxWiggle = (bounds.y + yMaxWiggle) * INCREASE;
 		this.xMinWiggle = (bounds.x - xMaxWiggle) * INCREASE;
 		this.yMinWiggle = (bounds.y - yMaxWiggle) * INCREASE;
-		flying_Slowdown_SpeedY = flyingSpeed;
 		this.standard = new int[]{bounds.x * INCREASE, bounds.y * INCREASE};
 	}
 
@@ -59,7 +57,7 @@ public class JiggelingWall extends MyMovingObject {
 				if (vector[1] == 0) {
 					vector[1] = touchingYVector;
 				} else {
-					vector[1] += flying_Slowdown_SpeedY;
+					vector[1] += ySpeed;
 					if (vector[1] > maxYFlyingSpeed)
 						vector[1] = maxYFlyingSpeed;
 				}

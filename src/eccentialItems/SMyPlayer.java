@@ -31,7 +31,15 @@ public class SMyPlayer extends PushAble {
 	private static final int CHANGE_FRAME_AMOUNT = 10;
 	private static final int STEP_UP = 5;
 	private static final int JUMPOUT = -200;
+	private Spear mySpear;
+	
+	//TODO give be able to give different values
+	private int spearThrowingCorner = 90;
 	private boolean justOut = false;
+
+	private boolean spearPickUp;
+
+	private boolean spearThrow;
 	
 	public SMyPlayer(Point rec, BufferedImage spriteSheet, int sizeSpriteX,
 			int sizeSpriteY, int xPixelsBet, int yPixelsBet, int[] playerSpriteArray) {
@@ -40,8 +48,26 @@ public class SMyPlayer extends PushAble {
 		myAnimator = new MultipleStatesAnimation(spriteSheet, sizeSpriteX, sizeSpriteY, xPixelsBet, yPixelsBet, playerSpriteArray);
 	}
 
+	public void pickUpSpear(){
+		//TODO something to activate this
+		if (spearPickUp){
+			mySpear = new Spear();
+			spearPickUp = false;
+			spearUpdateLocation();
+		}
+	}
+	
+	public boolean wannaThrowSpear(){
+		return (spearThrow && mySpear != null);
+	}
+	public Spear throwSpear() { //TODO{
+		mySpear.setCorner(spearThrowingCorner);
+		Spear mySpear = this.mySpear;
+		this.mySpear = null;
+		return mySpear;
+	}
+	
 	protected void calcNextX() {
-		//TODO container make better
 		int speed;
 		int slowSpeed;
 		int maxWalk;
@@ -67,7 +93,6 @@ public class SMyPlayer extends PushAble {
 				slowSpeed = Formulas.STANDARGD_SLOWDOWNSPEEDFLYING;
 				isItBigger = false;
 			}
-			// TODO use what you are waling on
 			maxWalk = Formulas.STANDARD_MAXWALKINGSPEED;
 			if (touching[0] != null)
 				maxWalk = touching[0].getMaxWalkingSpeed();
@@ -113,8 +138,6 @@ public class SMyPlayer extends PushAble {
 				lookingRight = false;
 			}
 		}
-
-		// TODO use what you are waling on
 		
 		if (vector[0] > standardVector + maxWalk)
 			vector[0] = standardVector + maxWalk;
@@ -243,6 +266,9 @@ public class SMyPlayer extends PushAble {
 
 	@Override
 	public void preUpdate() {
+		//TODO better this mucho
+		if (spearPickUp)
+			pickUpSpear();
 		super.preUpdate();
 		if (!touchingDown)
 			animationWalkFrames += 2;
@@ -255,6 +281,8 @@ public class SMyPlayer extends PushAble {
 		up = keysPressed[1];
 		right = keysPressed[3];
 		down = keysPressed[2];
+		spearPickUp = keysPressed[8];
+		spearThrow = keysPressed[9];
 	}
 
 	@Override
@@ -293,6 +321,9 @@ public class SMyPlayer extends PushAble {
 		}
 		super.baseDraw(g, myRectangle, myAnimator.getCorrectFrame());
 
+		if (mySpear != null)
+			mySpear.draw(g);
+
 	}
 
 	@Override
@@ -329,5 +360,19 @@ public class SMyPlayer extends PushAble {
 		
 	}
 
+	@Override
+	public void update() {
+		super.update();
+		if (mySpear != null){
+			spearUpdateLocation();
+			
+		}
+	}
+	//TODO put this in spear
+	private void spearUpdateLocation(){
+		mySpear.absoluteLocation[1] = absoluteLocation[1];
+		mySpear.absoluteLocation[0] = absoluteLocation[0];
+		mySpear.myRectangle.setLocation(myRectangle.getLocation());
+	}
 	
 }

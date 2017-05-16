@@ -1,6 +1,5 @@
 package staticClasses;
 
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -15,6 +14,7 @@ public class RenderAndLocation {
 
 	public static boolean isObjectContained(Rectangle shape, Rectangle container) {
 		//TODO faster?
+		// if left is smaller then right and right is bigger then left?
 		Point p = shape.getLocation();
 		if (container.contains(p))
 			return true;
@@ -145,10 +145,10 @@ public class RenderAndLocation {
 //	bitchboy++;
 //	System.out.println(bitchboy);
 	
-	public static void movingWallCalculation(MyMovingObject movingWall, SMyPlayer player,
-			GameObject[] staticObjects) {
-		int nextX = movingWall.nextX();
-		int nextY = movingWall.nextY();
+	public static void movingWallCalculation(MyMovingObject movingObject, MyMovingObject otherMovingObject,
+			GameObject[] staticObjects, boolean isPlayer) {
+		int nextX = movingObject.nextX();
+		int nextY = movingObject.nextY();
 
 		int positiveX = Math.abs(nextX);
 		int positiveY = Math.abs(nextY);
@@ -157,7 +157,7 @@ public class RenderAndLocation {
 		int smallestInSteps;
 		boolean touchingThisOne = false;
 		
-		boolean playerDown = player.goingDown;
+		boolean playerDown = otherMovingObject.goingDown;
 
 		if (positiveX < positiveY) {
 			biggest = positiveY;
@@ -169,52 +169,52 @@ public class RenderAndLocation {
 			yIsBigger = false;
 		}
 
-		Rectangle tangle;
+		Rectangle tangle = null;
 		for (int big = 0; big <= biggest; big++)
 			for (int small = 0; small <= smallestInSteps; small++) {
 
 				if (yIsBigger)
-					tangle = nextTangle(movingWall, small, big, movingWall.goingUp, movingWall.goingLeft);
+					tangle = nextTangle(movingObject, small, big, movingObject.goingUp, movingObject.goingLeft);
 				else
-					tangle = nextTangle(movingWall, big, small, movingWall.goingUp, movingWall.goingLeft);
+					tangle = nextTangle(movingObject, big, small, movingObject.goingUp, movingObject.goingLeft);
 
-				if (movingWall.goingUp){
-					if (wallTester(tangle, player.myRectangle, (byte) 0)) {
-						movingWall.touchingY(0, player);
+				if (movingObject.goingUp){
+					if (wallTester(tangle, otherMovingObject.myRectangle, (byte) 0)) {
+						movingObject.touchingY(0, otherMovingObject);
 						touchingThisOne = true;
 
 					}
-				} else if (movingWall.goingDown){
-					if (wallTester(tangle, player.myRectangle, (byte) 2)) {
-						movingWall.touchingY(0, player);
+				} else if (movingObject.goingDown){
+					if (wallTester(tangle, otherMovingObject.myRectangle, (byte) 2)) {
+						movingObject.touchingY(0, otherMovingObject);
 						touchingThisOne = true;
 
 					}
 				}
-				if (movingWall.goingLeft) {
-					if (wallTester(tangle, player.myRectangle, (byte) 3)) {
-						movingWall.touchingX(0, player);
+				if (movingObject.goingLeft) {
+					if (wallTester(tangle, otherMovingObject.myRectangle, (byte) 3)) {
+						movingObject.touchingX(0, otherMovingObject);
 						touchingThisOne = true;
 
 					}
 
-				} else if (movingWall.goingRight) {
-					if (wallTester(tangle, player.myRectangle, (byte) 1)) {
-						movingWall.touchingX(0, player);
+				} else if (movingObject.goingRight) {
+					if (wallTester(tangle, otherMovingObject.myRectangle, (byte) 1)) {
+						movingObject.touchingX(0, otherMovingObject);
 						touchingThisOne = true;
 					}
 				}
 
 			}
-		if (touchingThisOne)
-			isPlayerDead(player, movingWall.goingUp || movingWall.goingDown);
-		movingWall.update(); // has to be here or have to make a new one witch
+		if (isPlayer && touchingThisOne)
+			isPlayerDead(((SMyPlayer) otherMovingObject), movingObject.goingUp || movingObject.goingDown);
+		// has to be here or have to make a new one witch
 								// has this location and use that one
 
 		// Do the same thing but with player
 
-		nextX = player.nextX();
-		nextY = player.nextY();
+		nextX = otherMovingObject.nextX();
+		nextY = otherMovingObject.nextY();
 
 		positiveX = Math.abs(nextX);
 		positiveY = Math.abs(nextY);
@@ -228,13 +228,13 @@ public class RenderAndLocation {
 			smallestInSteps = positiveY;
 			yIsBigger = false;
 		}
-
-		boolean yMove = (movingWall.goingUp || movingWall.goingDown);
+		Rectangle tanglePL;
+		boolean yMove = (movingObject.goingUp || movingObject.goingDown);
 		if (!touchingThisOne){
-			if (player.goingDown && yMove) {
-				tangle = nextTangle(player, 0, 0, player.goingUp, player.goingLeft);
-				if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
-					movingWall.touchingY(0, player);
+			if (otherMovingObject.goingDown && yMove) {
+				tanglePL = nextTangle(otherMovingObject, 0, 0, otherMovingObject.goingUp, otherMovingObject.goingLeft);
+				if (wallTester(tanglePL, tangle, (byte) 0)) {
+					movingObject.touchingY(0, otherMovingObject);
 				}
 			}
 	
@@ -242,64 +242,75 @@ public class RenderAndLocation {
 				for (int small = 0; small <= smallestInSteps; small++) {
 	
 					if (yIsBigger)
-						tangle = nextTangle(player, small, big, player.goingUp, player.goingLeft);
+						tanglePL = nextTangle(otherMovingObject, small, big, otherMovingObject.goingUp, otherMovingObject.goingLeft);
 					else
-						tangle = nextTangle(player, big, small, player.goingUp, player.goingLeft);
+						tanglePL = nextTangle(otherMovingObject, big, small, otherMovingObject.goingUp, otherMovingObject.goingLeft);
 	
-					if (player.goingUp) {
-						if (wallTester(tangle, movingWall.myRectangle, (byte) 0)) {
-							movingWall.touchingY(0, player);
+					if (otherMovingObject.goingUp) {
+						if (wallTester(tanglePL, tangle, (byte) 0)) {
+							movingObject.touchingY(0, otherMovingObject);
 							touchingThisOne = true;
 						}
 	
-					} else if (player.goingDown) {
-						if (wallTester(tangle, movingWall.myRectangle, (byte) 2)) {
-							movingWall.touchingY(0, player);
+					} else if (otherMovingObject.goingDown) {
+						if (wallTester(tanglePL, tangle, (byte) 2)) {
+							movingObject.touchingY(0, otherMovingObject);
 							touchingThisOne = true;
 						}
 					}
-					if (player.goingLeft) {
-						if (wallTester(tangle, movingWall.myRectangle, (byte) 3)) {
-							movingWall.touchingX(0, player);
+					if (otherMovingObject.goingLeft) {
+						if (wallTester(tanglePL, tangle, (byte) 3)) {
+							movingObject.touchingX(0, otherMovingObject);
 							touchingThisOne = true;
 						}
 	
-					} else if (player.goingRight) {
-						if (wallTester(tangle, movingWall.myRectangle, (byte) 1)) {
-							movingWall.touchingX(0, player);
+					} else if (otherMovingObject.goingRight) {
+						if (wallTester(tanglePL, tangle, (byte) 1)) {
+							movingObject.touchingX(0, otherMovingObject);
 							touchingThisOne = true;
 						}
 					}
 	
 				}
 		}
-		if (touchingThisOne){
-			if (playerDown != player.goingDown && player.goingDown) {
+//		System.out.println(otherMovingObject.toString());
+		if (isPlayer && touchingThisOne){
+			if (playerDown != otherMovingObject.goingDown && otherMovingObject.goingDown) {
 				if (yMove){
-					walltest(player, staticObjects);
-					if (player.touchingDown && player.touchingUp)
-						player.dead = true;
-					return;
+					//TODO maybe? it does make the program faster to do it like this because it wont test the going left and right if it is unnecicary witch it usualy is
+					//*sigh it doesnt work if i dont put the goingLeft
+					//and right to false so i put them to false so the program only tests 
+					//the going down this results in a bug that is unnoticable where if you go with
+					//high speed to the right but are touching the thing that would squach you if you are standing still you will still die
+					boolean goingLeft = otherMovingObject.goingLeft;
+					boolean goingRight = otherMovingObject.goingRight;
+					otherMovingObject.goingLeft = false;
+					otherMovingObject.goingRight = false;
+					walltest(otherMovingObject, staticObjects);
+					if (otherMovingObject.touchingDown && otherMovingObject.touchingUp){
+						otherMovingObject.dead = true;
+						return;
+					} 
+					otherMovingObject.goingLeft = goingLeft;
+					otherMovingObject.goingRight = goingRight;
 				} else {
-					player.touchingY(0, player);//TODO maybe?
+					otherMovingObject.touchingY(0, otherMovingObject);//TODO maybe?
 				}
-					
-			} else if ((player.goingDown && player.touchingDown) && movingWall.goingDown){
-				player.touchingDown = false;
-				walltest(player, staticObjects);
-				if (player.touchingDown){
-					player.touchingNotMovingNow();
+				
+			} else if ((otherMovingObject.goingDown && otherMovingObject.touchingDown) && movingObject.goingDown){
+				otherMovingObject.touchingDown = false;
+				walltest(otherMovingObject, staticObjects);
+				if (otherMovingObject.touchingDown){
+					((SMyPlayer) otherMovingObject).touchingNotMovingNow();
 				} else
-					player.touchingDown = true;
-				//TODO
+					otherMovingObject.touchingDown = true;
 			}
-			isPlayerDead(player, yMove);
 		}
 
 	}
 
 	private static void isPlayerDead(SMyPlayer player, boolean goingUpOrDown) {
-		if (player.touchingDown && player.touchingUp && goingUpOrDown) {
+		if (goingUpOrDown && player.touchingDown && player.touchingUp) {
 			player.dead = true;
 		} else if (player.touchingLeft && player.touchingRight) {
 			player.dead = true;
